@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: safetymap-backend
+
+  config: 
+    import: optional:file:.env[.properties]
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 5
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
