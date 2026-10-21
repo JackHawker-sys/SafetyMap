@@ -31,17 +31,17 @@
       "street_id": 1,
       "ward_id": 1,
       "segment_order": 1,
-      "start_latitude": 10.9829,
-      "start_longitude": 106.6756,
-      "end_latitude": 10.9786,
-      "end_longitude": 106.6756,
-      "length_m": 476,
+      "start_latitude": 10.982572,
+      "start_longitude": 106.675314,
+      "end_latitude": 10.980179,
+      "end_longitude": 106.675711,
+      "length_m": 270,
       "road_class": "SECONDARY",
       "road_shape": {
         "type": "LineString",
         "coordinates": [
-          [106.6756, 10.9829],
-          [106.6756, 10.9786]
+          [106.675314, 10.982572],
+          [106.675711, 10.980179]
         ]
       }
     },
@@ -50,17 +50,17 @@
       "street_id": 1,
       "ward_id": 1,
       "segment_order": 2,
-      "start_latitude": 10.9786,
-      "start_longitude": 106.6756,
-      "end_latitude": 10.9751,
-      "end_longitude": 106.6755,
-      "length_m": 387,
+      "start_latitude": 10.980179,
+      "start_longitude": 106.675711,
+      "end_latitude": 10.975859,
+      "end_longitude": 106.675593,
+      "length_m": 481,
       "road_class": "SECONDARY",
       "road_shape": {
         "type": "LineString",
         "coordinates": [
-          [106.6756, 10.9786],
-          [106.6755, 10.9751]
+          [106.675711, 10.980179],
+          [106.675593, 10.975859]
         ]
       }
     },
@@ -69,17 +69,19 @@
       "street_id": 1,
       "ward_id": 1,
       "segment_order": 3,
-      "start_latitude": 10.9751,
-      "start_longitude": 106.6755,
-      "end_latitude": 10.9709,
-      "end_longitude": 106.6754,
-      "length_m": 465,
+      "start_latitude": 10.975859,
+      "start_longitude": 106.675593,
+      "end_latitude": 10.97093,
+      "end_longitude": 106.675335,
+      "length_m": 556,
       "road_class": "SECONDARY",
       "road_shape": {
         "type": "LineString",
         "coordinates": [
-          [106.6755, 10.9751],
-          [106.6754, 10.9709]
+          [106.675593, 10.975859],
+          [106.675239, 10.97413],
+          [106.675518, 10.972984],
+          [106.675335, 10.97093]
         ]
       }
     }
@@ -117,8 +119,8 @@
       "type": "ACCIDENT",
       "status": "VERIFIED",
       "source": "USER_REPORT",
-      "latitude": 10.9805,
-      "longitude": 106.6704,
+      "latitude": 10.981782,
+      "longitude": 106.675445,
       "occurred_at": "2026-10-18T07:30:00Z"
     },
     {
@@ -135,8 +137,8 @@
       "type": "ROBBERY",
       "status": "VERIFIED",
       "source": "NEWS_EXTRACTION",
-      "latitude": 10.9811,
-      "longitude": 106.6709,
+      "latitude": 10.975088,
+      "longitude": 106.6754,
       "occurred_at": "2026-10-15T20:10:00Z"
     },
     {
@@ -153,8 +155,8 @@
       "type": "NATURAL_DISASTER",
       "status": "VERIFIED",
       "source": "MANUAL",
-      "latitude": 10.9838,
-      "longitude": 106.6732,
+      "latitude": 10.978279,
+      "longitude": 106.675614,
       "occurred_at": "2026-10-19T16:00:00Z"
     },
     {
@@ -171,8 +173,8 @@
       "type": "ACCIDENT",
       "status": "PENDING",
       "source": "USER_REPORT",
-      "latitude": 10.9842,
-      "longitude": 106.6735,
+      "latitude": 10.971927,
+      "longitude": 106.675424,
       "occurred_at": "2026-10-21T05:00:00Z"
     }
   ]
