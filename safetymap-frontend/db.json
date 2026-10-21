@@ -1,0 +1,179 @@
+{
+  "provinces": [
+    {
+      "id": 1,
+      "code": "79",
+      "name": "Thành phố Hồ Chí Minh",
+      "type": "THANH_PHO"
+    }
+  ],
+  "wards": [
+    {
+      "id": 1,
+      "code": "MOCK-PL",
+      "name": "Phường Phú Lợi",
+      "type": "PHUONG",
+      "province_id": 1
+    }
+  ],
+  "streets": [
+    {
+      "id": 1,
+      "province_id": 1,
+      "parent_street_id": null,
+      "name": "Trần Văn Ơn",
+      "street_type": "ROAD"
+    }
+  ],
+  "road_segments": [
+    {
+      "id": 1,
+      "street_id": 1,
+      "ward_id": 1,
+      "segment_order": 1,
+      "start_latitude": 10.9829,
+      "start_longitude": 106.6756,
+      "end_latitude": 10.9786,
+      "end_longitude": 106.6756,
+      "length_m": 476,
+      "road_class": "SECONDARY",
+      "road_shape": {
+        "type": "LineString",
+        "coordinates": [
+          [106.6756, 10.9829],
+          [106.6756, 10.9786]
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "street_id": 1,
+      "ward_id": 1,
+      "segment_order": 2,
+      "start_latitude": 10.9786,
+      "start_longitude": 106.6756,
+      "end_latitude": 10.9751,
+      "end_longitude": 106.6755,
+      "length_m": 387,
+      "road_class": "SECONDARY",
+      "road_shape": {
+        "type": "LineString",
+        "coordinates": [
+          [106.6756, 10.9786],
+          [106.6755, 10.9751]
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "street_id": 1,
+      "ward_id": 1,
+      "segment_order": 3,
+      "start_latitude": 10.9751,
+      "start_longitude": 106.6755,
+      "end_latitude": 10.9709,
+      "end_longitude": 106.6754,
+      "length_m": 465,
+      "road_class": "SECONDARY",
+      "road_shape": {
+        "type": "LineString",
+        "coordinates": [
+          [106.6755, 10.9751],
+          [106.6754, 10.9709]
+        ]
+      }
+    }
+  ],
+  "danger_scores": [
+    {
+      "id": 1,
+      "segment_id": 1,
+      "score": 65.0,
+      "confidence_level": 0.8,
+      "incident_count": 2,
+      "calculated_at": "2026-10-20T00:00:00Z"
+    },
+    {
+      "id": 2,
+      "segment_id": 3,
+      "score": 35.0,
+      "confidence_level": 0.6,
+      "incident_count": 1,
+      "calculated_at": "2026-10-20T00:00:00Z"
+    }
+  ],
+  "incidents": [
+    {
+      "id": 1,
+      "house_number": "12",
+      "street_id": 1,
+      "neighborhood": "Khu phố Phú Lợi 6",
+      "ward_id": 1,
+      "segment_id": 1,
+      "segment_position": 0.33,
+      "location_precision": "EXACT",
+      "description": "Va chạm giữa xe máy và ô tô tại ngã tư",
+      "severity": "HIGH",
+      "type": "ACCIDENT",
+      "status": "VERIFIED",
+      "source": "USER_REPORT",
+      "latitude": 10.9805,
+      "longitude": 106.6704,
+      "occurred_at": "2026-10-18T07:30:00Z"
+    },
+    {
+      "id": 2,
+      "house_number": null,
+      "street_id": 1,
+      "neighborhood": null,
+      "ward_id": 1,
+      "segment_id": 1,
+      "segment_position": 0.73,
+      "location_precision": "STREET",
+      "description": "Giật túi xách người đi bộ",
+      "severity": "MEDIUM",
+      "type": "ROBBERY",
+      "status": "VERIFIED",
+      "source": "NEWS_EXTRACTION",
+      "latitude": 10.9811,
+      "longitude": 106.6709,
+      "occurred_at": "2026-10-15T20:10:00Z"
+    },
+    {
+      "id": 3,
+      "house_number": "88",
+      "street_id": 1,
+      "neighborhood": "Khu phố Phú Lợi 6",
+      "ward_id": 1,
+      "segment_id": 3,
+      "segment_position": 0.53,
+      "location_precision": "EXACT",
+      "description": "Ngập nước sau mưa lớn, xe chết máy",
+      "severity": "LOW",
+      "type": "NATURAL_DISASTER",
+      "status": "VERIFIED",
+      "source": "MANUAL",
+      "latitude": 10.9838,
+      "longitude": 106.6732,
+      "occurred_at": "2026-10-19T16:00:00Z"
+    },
+    {
+      "id": 4,
+      "house_number": null,
+      "street_id": 1,
+      "neighborhood": null,
+      "ward_id": 1,
+      "segment_id": 3,
+      "segment_position": 0.8,
+      "location_precision": "STREET",
+      "description": "Người dùng báo có tai nạn, chưa xác minh",
+      "severity": "MEDIUM",
+      "type": "ACCIDENT",
+      "status": "PENDING",
+      "source": "USER_REPORT",
+      "latitude": 10.9842,
+      "longitude": 106.6735,
+      "occurred_at": "2026-10-21T05:00:00Z"
+    }
+  ]
+}
