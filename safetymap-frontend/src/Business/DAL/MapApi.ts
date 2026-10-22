@@ -1,13 +1,25 @@
 import type { RoadSegment, DangerScore, Incident } from "../Models/MapModels";
 
-const API_URL = "http://localhost:3001";//* */
-
-async function getJson<T>(path: string): Promise<T> {
-    const res = await fetch(`${API_URL}${path}`);
-    if (!res.ok) throw new Error(`Gọi ${path} lỗi: ${res.status}`);
-    return res.json() as Promise<T>;
+// Cấu trúc file public/db.json
+interface Db {
+    road_segments: RoadSegment[];
+    danger_scores: DangerScore[];
+    incidents: Incident[];
 }
 
-export const getRoadSegments = () => getJson<RoadSegment[]>("/road_segments");
-export const getDangerScores = () => getJson<DangerScore[]>("/danger_scores");
-export const getIncidents = () => getJson<Incident[]>("/incidents");
+// Chỉ tải db.json một lần, các lần gọi sau dùng lại kết quả
+let dbPromise: Promise<Db> | null = null;
+
+function loadDb(): Promise<Db> {
+    if (!dbPromise) {
+        dbPromise = fetch("/db.json").then((res) => {
+            if (!res.ok) throw new Error(`Tải db.json lỗi: ${res.status}`);
+            return res.json() as Promise<Db>;
+        });
+    }
+    return dbPromise;
+}
+
+export const getRoadSegments = async () => (await loadDb()).road_segments;
+export const getDangerScores = async () => (await loadDb()).danger_scores;
+export const getIncidents = async () => (await loadDb()).incidents;
