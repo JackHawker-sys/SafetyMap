@@ -6,7 +6,7 @@ import CoordPicker from "./CoordPicker";
 
 // Tâm bản đồ: khoảng giữa Việt Nam
 const PHU_LOI_CENTER: LatLngExpression = [10.9822, 106.6719];
-const VIETNAM_CENTER: LatLngExpression = [16.0, 107.5];
+// const VIETNAM_CENTER: LatLngExpression = [16.0, 107.5];
 
 // Khung giới hạn: không cho kéo bản đồ ra quá xa Việt Nam
 // (đã tính cả Hoàng Sa và Trường Sa ở phía đông)
