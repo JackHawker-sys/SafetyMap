@@ -1,32 +1,58 @@
-# React + TypeScript + Vite
+# SafetyMap Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+A web map that shows how dangerous each road segment is and where verified incidents have happened.
 
-Currently, two official plugins are available:
+Built with React, TypeScript, Vite, Leaflet and MapLibre GL.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Getting started
 
-## React Compiler
+Requires Node.js `20.19+` or `22.12+`.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the Oxlint configuration
-
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
-
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+```bash
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Run `npm install` again whenever `package.json` changes after you pull new code.
+
+## Scripts
+
+| Command | Description |
+|---|---|
+| `npm run dev` | Start the development server |
+| `npm run server` | Serve `public/db.json` with json-server on port 3001 |
+| `npm run build` | Type-check and build for production into `dist/` |
+| `npm run preview` | Preview the production build |
+| `npm run lint` | Lint the code with Oxlint |
+
+## Project structure
+
+```
+public/
+  db.json        Sample data (road segments, danger scores, incidents)
+  map/           Map style used by the app
+scripts/         Helper scripts for generating the map style
+src/
+  Business/      Data access (DAL), logic and models
+  GUIs/          Components and pages
+```
+
+## Map
+
+The base map is rendered in the browser with MapLibre GL, using vector tiles from
+[OpenFreeMap](https://openfreemap.org) (data from [OpenStreetMap](https://www.openstreetmap.org/copyright))
+and the style file in `public/map/`. Leaflet draws the app's own layers (road segments, incidents, popups) on top.
+
+An internet connection is required to load the base map.
+
+The style file is generated. To regenerate it, see the usage notes at the top of
+`scripts/patch-liberty.mjs` and avoid editing the output by hand.
+
+The attribution shown in the corner of the map is required by the data providers and must be kept.
+
+## Development tools
+
+In development mode, `CoordPicker` helps draw new road segments:
+left-click adds a point, right-click starts a new segment from the last point,
+and the resulting JSON is printed to the console.
+ list of rules and categories.
