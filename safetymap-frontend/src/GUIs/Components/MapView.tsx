@@ -5,7 +5,7 @@ import { loadMapData, type MapData } from "../../Business/Logic/MapLogic";
 import CoordPicker from "./CoordPicker";
 import MapLibreLayer from "./MapLibreLayer";
 
-// Tâm bản đồ: khoảng giữa Việt Nam
+// Tâm bản đồ: khoảng giữa Phú Lợi
 const PHU_LOI_CENTER: LatLngExpression = [10.9822, 106.6719];
 // const VIETNAM_CENTER: LatLngExpression = [16.0, 107.5];
 
@@ -17,9 +17,9 @@ const VIETNAM_BOUNDS: LatLngBoundsExpression = [
 ];
 
 // File style MapLibre (đã ẩn nhãn TQ, thêm nhãn Hoàng Sa, Trường Sa tiếng Việt)
-// Đặt tại public/map/openfreemap_positron.json
+// Đặt tại public/map/openfreemap_liberty_vn.json
 const MAP_STYLE_URL = new URL(
-    "/map/openfreemap_positron.json",
+    "/map/openfreemap_liberty_vn.json",
     window.location.origin,
 ).href;
 

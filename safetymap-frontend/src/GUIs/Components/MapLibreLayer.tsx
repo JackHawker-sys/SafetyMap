@@ -17,7 +17,6 @@ const MapLibreLayer = createLayerComponent<L.Layer, Props>(
     ({ style, attribution }, ctx) => {
         const layer = L.maplibreGL({ style, attribution } as any);
 
-        // Ghi log lỗi
         layer.on("add", () => {
             layer
                 .getMaplibreMap()
