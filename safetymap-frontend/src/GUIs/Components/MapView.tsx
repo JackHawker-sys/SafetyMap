@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
-import { MapContainer, TileLayer, Polyline, CircleMarker, Popup } from "react-leaflet";
+import { MapContainer, Polyline, CircleMarker, Popup } from "react-leaflet";
 import type { LatLngBoundsExpression, LatLngExpression } from "leaflet";
 import { loadMapData, type MapData } from "../../Business/Logic/MapLogic";
 import CoordPicker from "./CoordPicker";
+import MapLibreLayer from "./MapLibreLayer";
 
 // Tâm bản đồ: khoảng giữa Việt Nam
 const PHU_LOI_CENTER: LatLngExpression = [10.9822, 106.6719];
@@ -14,6 +15,18 @@ const VIETNAM_BOUNDS: LatLngBoundsExpression = [
     [7.0, 101.5],  // góc Tây Nam
     [24.0, 118.0], // góc Đông Bắc
 ];
+
+// File style MapLibre (đã ẩn nhãn TQ, thêm nhãn Hoàng Sa, Trường Sa tiếng Việt)
+// Đặt tại public/map/openfreemap_positron.json
+const MAP_STYLE_URL = new URL(
+    "/map/openfreemap_positron.json",
+    window.location.origin,
+).href;
+
+const MAP_ATTRIBUTION =
+    '&copy; <a href="https://openfreemap.org">OpenFreeMap</a> ' +
+    '<a href="https://www.openmaptiles.org/">&copy; OpenMapTiles</a> ' +
+    'Data from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
 
 export default function MapView() {
     const [data, setData] = useState<MapData>({ segments: [], incidents: [] });
@@ -29,14 +42,12 @@ export default function MapView() {
             center={PHU_LOI_CENTER}
             zoom={16}
             minZoom={5}
+            maxZoom={18}
             maxBounds={VIETNAM_BOUNDS}
             maxBoundsViscosity={1.0}
             style={{ height: "100%", width: "100%" }}
         >
-            <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
+            <MapLibreLayer style={MAP_STYLE_URL} attribution={MAP_ATTRIBUTION} />
 
             {import.meta.env.DEV && <CoordPicker />}
 
