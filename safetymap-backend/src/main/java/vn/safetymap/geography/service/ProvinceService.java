@@ -19,7 +19,7 @@ public class ProvinceService {
     public List<ProvinceResponse> findAll() {
         return provinceRepository.findAll(Sort.by("name"))
                 .stream()
-                .map(p -> new ProvinceResponse(p.getId(),p.getCode(),p.getName(),p.getType()))
+                .map(p -> new ProvinceResponse(p.getId(), p.getCode(), p.getName(), p.getType()))
                 .toList();
     }
 }

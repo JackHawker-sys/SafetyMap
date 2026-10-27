@@ -8,25 +8,25 @@ import org.locationtech.jts.geom.MultiPolygon;
 
 import java.time.Instant;
 
-@Entity 
-@Table(name="provinces")
+@Entity
+@Table(name = "provinces")
 @Setter
-@Getter 
-@NoArgsConstructor 
+@Getter
+@NoArgsConstructor
 public class Province {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable= false, unique=true, length=10)
+    @Column(nullable = false, unique = true, length = 10)
     private String code;
 
-    @Column(nullable= false, unique=true, length=150)
+    @Column(nullable = false, unique = true, length = 150)
     private String name;
 
     @Enumerated(EnumType.STRING)
-    @Column (length=20)
+    @Column(length = 20)
     private ProvinceType type;
 
     @Column(columnDefinition = "geometry(MultiPolygon,4326)")

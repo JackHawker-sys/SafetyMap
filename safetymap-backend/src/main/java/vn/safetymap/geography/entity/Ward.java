@@ -9,14 +9,14 @@ import org.locationtech.jts.geom.MultiPolygon;
 import java.time.Instant;
 
 @Entity
-@Table(name="wards")
+@Table(name = "wards")
 @Getter
 @Setter
 @NoArgsConstructor
 public class Ward {
 
     @Id
-    @GeneratedValue(strategy  = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(nullable = false, unique = true, length = 10)
@@ -25,7 +25,7 @@ public class Ward {
     @Column(nullable = false, length = 150)
     private String name;
 
-     @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     @Column(length = 20)
     private WardType type;
 
