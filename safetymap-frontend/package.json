@@ -11,7 +11,10 @@
     "server": "json-server --watch ./public/db.json --port 3001"
   },
   "dependencies": {
+    "@maplibre/maplibre-gl-leaflet": "^0.1.4",
+    "@react-leaflet/core": "^3.0.0",
     "leaflet": "^1.9.4",
+    "maplibre-gl": "^6.15.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-leaflet": "^5.0.0"
