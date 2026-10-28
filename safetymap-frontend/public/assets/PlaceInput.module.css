@@ -1,0 +1,70 @@
+.wrapper {
+    position: relative;
+}
+
+.label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+    margin-bottom: 4px;
+}
+
+.inputRow {
+    display: flex;
+    gap: 6px;
+}
+
+.input {
+    flex: 1;
+    min-width: 0;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.input:focus {
+    outline: none;
+    border-color: #1976d2;
+    box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+}
+
+.list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 1100;
+    /* cao hơn control của Leaflet (1000) */
+    margin: 4px 0 0;
+    padding: 4px 0;
+    list-style: none;
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.item {
+    padding: 8px 10px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.active {
+    background: #e3f2fd;
+}
+
+.hint {
+    padding: 8px 10px;
+    font-size: 13px;
+    color: #888;
+}
+
+.error {
+    padding: 8px 10px;
+    font-size: 13px;
+    color: #d32f2f;
+}

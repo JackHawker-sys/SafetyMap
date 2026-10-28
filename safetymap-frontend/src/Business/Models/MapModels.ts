@@ -41,3 +41,16 @@ export interface Incident {
     longitude: number;
     occurred_at: string;
 }
+
+// Một địa điểm đã chọn (từ gợi ý hoặc GPS), dùng chung cho cả app
+export interface GeoPlace {
+    id: string;
+    label: string;
+    position: [number, number]; // [lat, lng] cho Leaflet
+}
+
+// Cặp điểm đi / điểm đến của một lần tìm đường
+export interface RoutePoints {
+    from: GeoPlace | null;
+    to: GeoPlace | null;
+}

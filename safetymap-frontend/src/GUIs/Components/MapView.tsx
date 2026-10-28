@@ -1,9 +1,12 @@
 import { useEffect, useState } from "react";
-import { MapContainer, Polyline, CircleMarker, Popup } from "react-leaflet";
+import { MapContainer, Polyline, CircleMarker, Popup, Tooltip } from "react-leaflet";
 import type { LatLngBoundsExpression, LatLngExpression } from "leaflet";
 import { loadMapData, type MapData } from "../../Business/Logic/MapLogic";
 import CoordPicker from "./CoordPicker";
 import MapLibreLayer from "./MapLibreLayer";
+import MapLegend from "./MapLegend";
+import type { GeoPlace } from "../../Business/Models/MapModels";
+import FitToPlaces from "./FitToPlaces";
 
 // Tâm bản đồ: khoảng giữa Phú Lợi
 const PHU_LOI_CENTER: LatLngExpression = [10.9822, 106.6719];
@@ -28,13 +31,20 @@ const MAP_ATTRIBUTION =
     '<a href="https://www.openmaptiles.org/">&copy; OpenMapTiles</a> ' +
     'Data from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
 
-export default function MapView() {
+interface Props {
+    from: GeoPlace | null;
+    to: GeoPlace | null;
+}
+
+export default function MapView({ from, to }: Props) {
     const [data, setData] = useState<MapData>({ segments: [], incidents: [] });
 
     useEffect(() => {
+        let cancelled = false;
         loadMapData()
-            .then(setData)
-            .catch((err) => console.error("Lỗi tải dữ liệu:", err));
+            .then((mapData) => { if (!cancelled) setData(mapData) })
+            .catch((err) => { if (!cancelled) console.error("Lỗi tải dữ liệu", err); });
+        return () => { cancelled = true; };
     }, []);
 
     return (
@@ -48,7 +58,7 @@ export default function MapView() {
             style={{ height: "100%", width: "100%" }}
         >
             <MapLibreLayer style={MAP_STYLE_URL} attribution={MAP_ATTRIBUTION} />
-
+            <MapLegend />
             {import.meta.env.DEV && <CoordPicker />}
 
             {data.segments.map((seg) => (
@@ -78,6 +88,28 @@ export default function MapView() {
                     </Popup>
                 </CircleMarker>
             ))}
+
+            <FitToPlaces from={from} to={to} />
+
+            {from && (
+                <CircleMarker
+                    center={from.position}
+                    radius={9}
+                    pathOptions={{ color: "#fff", weight: 3, fillColor: "#1976d2", fillOpacity: 1 }}
+                >
+                    <Tooltip direction="top" offset={[0, -8]}>Điểm đi: {from.label}</Tooltip>
+                </CircleMarker>
+            )}
+
+            {to && (
+                <CircleMarker
+                    center={to.position}
+                    radius={9}
+                    pathOptions={{ color: "#fff", weight: 3, fillColor: "#6a1b9a", fillOpacity: 1 }}
+                >
+                    <Tooltip direction="top" offset={[0, -8]}>Điểm đến: {to.label}</Tooltip>
+                </CircleMarker>
+            )}
         </MapContainer>
     );
 }

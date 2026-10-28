@@ -1,6 +1,7 @@
 import type {
     RoadSegment, DangerScore, Incident, IncidentSeverity, LineString,
 } from "../Models/MapModels";
+import { getDangerLevel, type DangerLevel } from "./DangerLevel";
 import { getRoadSegments, getDangerScores, getIncidents } from "../DAL/MapApi";
 
 // Dữ liệu đã xử lý xong, GUI chỉ việc vẽ
@@ -10,6 +11,7 @@ export interface SegmentView {
     lengthM: number;
     positions: [number, number][]; // [lat, lng] cho Leaflet
     score: number;
+    level: DangerLevel;
     color: string;
 }
 
@@ -28,12 +30,12 @@ export interface MapData {
     incidents: IncidentView[];
 }
 
-// Điểm 0–100 -> màu
-export function scoreColor(score: number): string {
-    if (score >= 60) return "#d32f2f";
-    if (score >= 30) return "#f57c00";
-    return "#388e3c";
-}
+export const SEVERITY_LABEL: Record<IncidentSeverity, string> = {
+    LOW: "Nhẹ",
+    MEDIUM: "Trung bình",
+    HIGH: "Nghiêm trọng",
+    CRITICAL: "Rất nghiêm trọng",
+};
 
 export const SEVERITY_COLOR: Record<IncidentSeverity, string> = {
     LOW: "#43a047",
@@ -47,24 +49,35 @@ export function toLatLngs(line: LineString): [number, number][] {
     return line.coordinates.map(([lng, lat]) => [lat, lng]);
 }
 
-// Điểm hiện tại của một đoạn = dòng có calculated_at mới nhất; không có dòng nào thì là 0
-export function latestScoreOf(segmentId: number, scores: DangerScore[]): number {
-    const rows = scores
-        .filter((s) => s.segment_id === segmentId)
-        .sort((a, b) => b.calculated_at.localeCompare(a.calculated_at));
-    return rows.length > 0 ? rows[0].score : 0;
+// Duyệt danger_scores MỘT lần, giữ lại dòng mới nhất của mỗi segment
+export function buildLatestScoreMap(scores: DangerScore[]): Map<number, number> {
+    const latest = new Map<number, { score: number; time: number }>();
+    for (const row of scores) {
+        const time = Date.parse(row.calculated_at);
+        if (Number.isNaN(time)) continue; // bỏ dòng có ngày lỗi
+        const cur = latest.get(row.segment_id);
+        if (!cur || time > cur.time) {
+            latest.set(row.segment_id, { score: row.score, time });
+        }
+    }
+    const result = new Map<number, number>();
+    latest.forEach((v, id) => result.set(id, v.score));
+    return result;
 }
 
 export function toSegmentViews(segments: RoadSegment[], scores: DangerScore[]): SegmentView[] {
+    const latestScores = buildLatestScoreMap(scores); // O(n), chỉ 1 lần
     return segments.map((seg) => {
-        const score = latestScoreOf(seg.id, scores);
+        const score = latestScores.get(seg.id) ?? 0;  // O(1) mỗi đoạn
+        const info = getDangerLevel(score);
         return {
             id: seg.id,
             order: seg.segment_order,
             lengthM: seg.length_m,
             positions: toLatLngs(seg.road_shape),
             score,
-            color: scoreColor(score),
+            level: info.level,
+            color: info.color,
         };
     });
 }
