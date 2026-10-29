@@ -1,6 +1,5 @@
 package vn.safetymap.geography.entity;
 
-
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,11 +7,11 @@ import lombok.Setter;
 
 import java.time.Instant;
 
-@Entity 
+@Entity
 @Table(name = "streets")
-@Getter 
-@Setter 
-@NoArgsConstructor 
+@Getter
+@Setter
+@NoArgsConstructor
 
 public class Street {
     @Id
@@ -20,7 +19,7 @@ public class Street {
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn (name = "provinceiD", nullable = false)
+    @JoinColumn(name = "province_id", nullable = false)
     private Province province;
 
     @ManyToOne(fetch = FetchType.LAZY)
