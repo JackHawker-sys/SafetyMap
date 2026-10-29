@@ -1,0 +1,39 @@
+.page {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+}
+
+.sidebar {
+    width: 340px;
+    flex-shrink: 0;
+    padding: 16px;
+    background: #fafafa;
+    border-right: 1px solid #e0e0e0;
+    overflow-y: auto;
+    box-sizing: border-box;
+}
+
+.map {
+    flex: 1;
+    min-width: 0;
+    position: relative;
+}
+
+/* Điện thoại: sidebar lên trên, bản đồ bên dưới */
+@media (max-width: 768px) {
+    .page {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .map {
+        flex: 1;
+        min-height: 0;
+    }
+}

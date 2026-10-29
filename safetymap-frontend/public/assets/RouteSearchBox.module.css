@@ -1,0 +1,59 @@
+.box {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.title {
+    margin: 0 0 4px;
+    font-size: 18px;
+}
+
+.iconButton {
+    width: 38px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.iconButton:disabled {
+    cursor: wait;
+    opacity: 0.6;
+}
+
+.swapButton {
+    align-self: flex-end;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    background: #fff;
+    cursor: pointer;
+    margin: -4px 0;
+}
+
+.searchButton {
+    margin-top: 6px;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background: #1976d2;
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.searchButton:disabled,
+.swapButton:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}
+
+.error {
+    font-size: 12px;
+    color: #d32f2f;
+    margin-top: -6px;
+}
