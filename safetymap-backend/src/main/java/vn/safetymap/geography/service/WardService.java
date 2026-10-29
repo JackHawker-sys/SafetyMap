@@ -19,7 +19,7 @@ public class WardService {
     private final ProvinceRepository provinceRepository;
     private final WardRepository wardRepository;
 
-    @Transactional(readOnly = true)
+    @Transactional(readOnly = true) 
     public List<WardResponse> findByProvince(Integer provinceId) {
         if (!provinceRepository.existsById(provinceId)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Province not found");

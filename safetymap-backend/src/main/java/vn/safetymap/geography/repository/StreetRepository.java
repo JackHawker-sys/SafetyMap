@@ -21,7 +21,7 @@ public interface StreetRepository extends JpaRepository<Street, Integer> {
                                   @Param("q") String q,
                                   Pageable pageable);
 
-       @Query("""
+      @Query("""
             SELECT s FROM Street s
             JOIN FETCH s.province
             WHERE LOWER(s.name) LIKE LOWER(CONCAT('%', :q, '%'))
