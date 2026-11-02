@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import vn.safetymap.geography.dto.ProvinceResponse;
 import vn.safetymap.geography.repository.ProvinceRepository;
+import vn.safetymap.common.exception.NotFoundException;
 
 import java.util.List;
 
