@@ -1,0 +1,321 @@
+/* Dùng chung cho PlacePanel và DirectionsPanel */
+.panel {
+    display: flex;
+    flex-direction: column;
+    color: #202124;
+}
+
+/* ---------- PlacePanel ---------- */
+.placeHeader {
+    padding: 8px 24px 4px;
+}
+
+.placeTitleRow {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.placeName {
+    flex: 1;
+    margin: 6px 0 0;
+    font-size: 22px;
+    font-weight: 400;
+    line-height: 1.3;
+    word-break: break-word;
+}
+
+.placeAddress {
+    margin: 4px 0 0;
+    font-size: 14px;
+    color: #70757a;
+}
+
+.closeButton {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #5f6368;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.closeButton:hover {
+    background: #f1f3f4;
+}
+
+.actions {
+    display: flex;
+    gap: 28px;
+    padding: 16px 24px 20px;
+    border-bottom: 1px solid #e8eaed;
+}
+
+.action {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+    font: inherit;
+    color: #1a73e8;
+}
+
+.action:disabled {
+    cursor: progress;
+    opacity: 0.6;
+}
+
+.actionCircle {
+    display: grid;
+    place-items: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid #dadce0;
+    color: #1a73e8;
+    background: #fff;
+    transition: background 0.15s;
+}
+
+.action:hover .actionCircle {
+    background: #f1f8fe;
+}
+
+.action:focus-visible .actionCircle {
+    outline: 2px solid #1a73e8;
+    outline-offset: 2px;
+}
+
+.actionPrimary,
+.action:hover .actionPrimary {
+    background: #1a73e8;
+    border-color: #1a73e8;
+    color: #fff;
+}
+
+.actionOn {
+    background: #e8f0fe;
+    border-color: #e8f0fe;
+}
+
+.actionLabel {
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.infoList {
+    list-style: none;
+    margin: 0;
+    padding: 8px 0;
+}
+
+.infoRow {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 10px 24px;
+    font-size: 14px;
+}
+
+.infoIcon {
+    color: #1a73e8;
+    flex-shrink: 0;
+}
+
+.infoText {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.muted {
+    font-size: 12px;
+    color: #70757a;
+}
+
+.smallButton {
+    display: grid;
+    place-items: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 8px;
+    border: none;
+    border-radius: 16px;
+    background: transparent;
+    color: #5f6368;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.smallButton:hover {
+    background: #f1f3f4;
+}
+
+.errorText {
+    margin: 8px 24px 0;
+    font-size: 13px;
+    color: #d93025;
+}
+
+/* ---------- DirectionsPanel ---------- */
+.directionsTop {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 8px 8px 0;
+}
+
+.directionsTitle {
+    flex: 1;
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+.routeFields {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 8px 4px 16px;
+}
+
+.routeInputs {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Đường chấm nối giữa chấm điểm đi và ghim điểm đến */
+.routeConnector {
+    position: absolute;
+    left: 11px;
+    top: 30px;
+    height: 22px;
+    border-left: 2px dotted #9aa0a6;
+    pointer-events: none;
+}
+
+.fromDot {
+    display: block;
+    width: 10px;
+    height: 10px;
+    border: 2px solid #202124;
+    border-radius: 50%;
+}
+
+.toPin {
+    color: #ea4335;
+}
+
+.swapButton {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #5f6368;
+    cursor: pointer;
+}
+
+.swapButton:hover:not(:disabled) {
+    background: #f1f3f4;
+}
+
+.swapButton:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.inlineIconButton {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #1a73e8;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.inlineSpacer {
+    width: 32px;
+    flex-shrink: 0;
+}
+
+.inlineIconButton:hover:not(:disabled) {
+    background: #e8f0fe;
+}
+
+.inlineIconButton:disabled {
+    cursor: progress;
+}
+
+.spin {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.mapHint {
+    margin: 10px 24px 0 52px;
+    font-size: 12px;
+    color: #70757a;
+}
+
+.mapHint b {
+    color: #1a73e8;
+    font-weight: 500;
+}
+
+.searchButton {
+    margin: 16px 24px 0 52px;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 20px;
+    background: #1a73e8;
+    color: #fff;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.searchButton:hover:not(:disabled) {
+    background: #1765cc;
+}
+
+.searchButton:disabled {
+    background: #dadce0;
+    color: #80868b;
+    cursor: not-allowed;
+}
+
+.notice {
+    margin: 12px 24px 16px 52px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: #fef7e0;
+    color: #8a6100;
+    font-size: 13px;
+}

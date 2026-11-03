@@ -42,11 +42,24 @@ export interface Incident {
     occurred_at: string;
 }
 
-// Một địa điểm đã chọn (từ gợi ý hoặc GPS), dùng chung cho cả app
+// Điểm này đến từ đâu -> quyết định hành vi giao diện (có bay bản đồ tới không, hiện tiêu đề gì)
+export type PlaceSource = "SEARCH" | "MAP" | "GPS" | "SAVED";
+
+// Một địa điểm đã chọn (từ gợi ý, click bản đồ, GPS hoặc danh sách đã lưu), dùng chung cho cả app
 export interface GeoPlace {
     id: string;
-    label: string;
+    label: string;              // chuỗi đầy đủ, hiện trong ô input
+    name: string;               // dòng tiêu đề lớn trên sidebar (vd: "1056 Phạm Văn Đồng")
+    address: string | null;     // dòng phụ bên dưới (vd: "Phường Phú Lợi, TP. Hồ Chí Minh")
     position: [number, number]; // [lat, lng] cho Leaflet
+    source: PlaceSource;
+}
+
+// Một điểm người dùng đã bấm "Lưu"
+export interface SavedPlace {
+    key: string;                // khóa chống trùng, sinh từ tọa độ (xem PlaceLogic.placeKey)
+    place: GeoPlace;
+    savedAt: string;            // ISO string
 }
 
 // Cặp điểm đi / điểm đến của một lần tìm đường

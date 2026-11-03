@@ -1,13 +1,10 @@
+import { ENV } from "../Config/Env";
 import type { GeoPlace } from "../Models/MapModels";
-
-const PHOTON_URL = "https://photon.komoot.io/api/";
-
+import { VN_BBOX } from "../Config/MapConfig";
 const FETCH_LIMIT = 20;  // xin Photon nhiều để còn dư sau khi gộp trùng
 const MAX_RESULTS = 8;   // số dòng hiện cho người dùng
 
 // Chỉ tìm trong khung Việt Nam: minLng,minLat,maxLng,maxLat
-// (khớp với VIETNAM_BOUNDS trong MapView, nhưng thứ tự lng trước)
-const VN_BBOX = "101.5,7.0,118.0,24.0";
 
 const MIN_QUERY_LENGTH = 3;
 
@@ -43,12 +40,17 @@ function toGeoPlace(feature: PhotonFeature): GeoPlace {
     const parts = [properties.name, streetPart, properties.district, properties.city ?? properties.county, properties.state]
         .filter((x): x is string => !!x && x.trim() !== "");
 
-    const label = [...new Set(parts)].join(", ");
+    const uniqueParts = [...new Set(parts)];
+    const fallback = `${lat.toFixed(5)},${lng.toFixed(5)}`;
 
     return {
         id: `${properties.osm_type}${properties.osm_id}`,
-        label: label || `${lat.toFixed(5)},${lng.toFixed(5)}`,
+        label: uniqueParts.join(", ") || fallback,
+        // Giống Google: phần đầu làm tiêu đề, phần còn lại làm dòng địa chỉ
+        name: uniqueParts[0] ?? fallback,
+        address: uniqueParts.slice(1).join(", ") || null,
         position: [lat, lng],
+        source: "SEARCH",
     };
 }
 
@@ -71,7 +73,7 @@ export async function searchPlaces(query: string,
         params.set("lon", String(nearLng));
     }
 
-    const res = await fetch(`${PHOTON_URL}?${params}`, { signal });
+    const res = await fetch(`${ENV.geocoderUrl}?${params}`, { signal });
     if (!res.ok) throw new Error(`Tìm địa chỉ lỗi: ${res.status}`);
 
     const data = (await res.json()) as PhotonResponse;
@@ -98,12 +100,15 @@ export function getMyLocation(): Promise<GeoPlace> {
             (pos) => resolve({
                 id: `my-location-${pos.timestamp}`,
                 label: "Vị trí của tôi",
+                name: "Vị trí của tôi",
+                address: null,
                 position: [pos.coords.latitude, pos.coords.longitude],
+                source: "GPS",
             }),
 
             (err) => reject(new Error(
                 err.code === err.PERMISSION_DENIED
-                    ? "Bạn đã chặn quyền truy cạp miễn phí"
+                    ? "Bạn đã chặn quyền truy cập vị trí"
                     : "Không lấy được vị trí, thử lại sau",
             )),
             { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 },
