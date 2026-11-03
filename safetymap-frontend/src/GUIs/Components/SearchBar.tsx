@@ -1,7 +1,7 @@
 import { useEffect, useId, useState, type ChangeEvent } from "react";
 import type { GeoPlace, SavedPlace } from "../../Business/Models/MapModels";
 import { usePlaceSuggestions } from "../Hooks/usePlaceSuggestions";
-import { useListNavigation } from "../Hooks/useListNavigation.ts";
+import { useListNavigation } from "../Hooks/useListNavigation";
 import { BookmarkFilledIcon, CloseIcon, DirectionsIcon, PinIcon, SearchIcon } from "./Icons";
 import styles from "../../../public/assets/SearchBar.module.css";
 

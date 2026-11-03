@@ -18,19 +18,21 @@ const COPIED_RESET_MS = 1500;
 
 // Sidebar trái khi đã chọn 1 điểm (giống thẻ địa điểm của Google Maps)
 export default function PlacePanel({ place, saved, saving, saveError, onDirections, onToggleSave, onClose }: Props) {
-    const [copied, setCopied] = useState(false);
+    // Lưu ID của điểm vừa bấm sao chép -> khi đổi sang điểm khác, tự reset mà không cần useEffect
+    const [copiedPlaceId, setCopiedPlaceId] = useState<string | null>(null);
     const timer = useRef<number | undefined>(undefined);
 
     // Đổi sang điểm khác hoặc đóng panel -> hủy timer, tránh setState sau khi component đã unmount
     useEffect(() => () => window.clearTimeout(timer.current), []);
-    useEffect(() => setCopied(false), [place.id]);
+
+    const copied = copiedPlaceId === place.id;
 
     async function copyCoords() {
         try {
             await navigator.clipboard.writeText(formatCoords(place.position));
-            setCopied(true);
+            setCopiedPlaceId(place.id);
             window.clearTimeout(timer.current); // bấm liên tục -> chỉ giữ timer mới nhất
-            timer.current = window.setTimeout(() => setCopied(false), COPIED_RESET_MS);
+            timer.current = window.setTimeout(() => setCopiedPlaceId(null), COPIED_RESET_MS);
         } catch {
             // Trình duyệt chặn clipboard (http, iframe) -> bỏ qua, tọa độ vẫn hiện để tự chọn
         }
