@@ -11,7 +11,6 @@ import vn.safetymap.geography.service.ProvinceService;
 import vn.safetymap.geography.service.WardService;
 
 import java.util.List;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/v1/provinces")
