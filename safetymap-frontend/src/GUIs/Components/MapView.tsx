@@ -1,15 +1,26 @@
 import { memo, useEffect, useState } from "react";
-import { MapContainer, Polyline, CircleMarker, Marker, Popup, Tooltip, ZoomControl } from "react-leaflet";
+import { MapContainer, Polyline, CircleMarker, Marker, Popup, Tooltip, useMap } from "react-leaflet";
 import { loadMapData, type MapData } from "../../Business/Logic/MapLogic";
 import CoordPicker from "./CoordPicker";
 import MapLibreLayer from "./MapLibreLayer";
-import MapLegend from "./MapLegend";
+import MapOverlay from "./MapOverlay";
 import MapClickHandler from "./MapClickHandler";
 import type { GeoPlace, SavedPlace } from "../../Business/Models/MapModels";
 import FitToPlaces, { type MapInsets } from "./FitToPlaces";
 import { savedPinIcon, selectedPinIcon } from "./MapMarkers";
 import { DEFAULT_CENTER, VIETNAM_BOUNDS } from "../../Business/Config/MapConfig";
 import { ENV } from "../../Business/Config/Env";
+
+function MapResizeWatcher() {
+    const map = useMap();
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            map.invalidateSize();
+        }, 200);
+        return () => clearTimeout(timer);
+    }, [map]);
+    return null;
+}
 
 const MAP_ATTRIBUTION =
     '&copy; <a href="https://openfreemap.org">OpenFreeMap</a> ' +
@@ -77,14 +88,15 @@ export default function MapView({ selected, from, to, savedPlaces, insets, onMap
             maxZoom={18}
             maxBounds={VIETNAM_BOUNDS}
             maxBoundsViscosity={1.0}
-            zoomControl={false} // góc trên-trái nhường cho thanh tìm kiếm
+            zoomControl={false}
+            attributionControl={false}
             style={{ height: "100%", width: "100%" }}
         >
+            <MapResizeWatcher />
             {/* File style MapLibre (đã ẩn nhãn TQ, thêm nhãn Hoàng Sa, Trường Sa tiếng Việt)
                 Đặt tại public/map/openfreemap_liberty_vn.json */}
             <MapLibreLayer style={ENV.mapStyleUrl} attribution={MAP_ATTRIBUTION} />
-            <ZoomControl position="topright" />
-            <MapLegend />
+            <MapOverlay />
 
             {/* Hai công cụ cùng nghe click bản đồ -> chỉ bật 1 cái */}
             {ENV.enableCoordPicker ? <CoordPicker /> : <MapClickHandler onClick={onMapClick} />}

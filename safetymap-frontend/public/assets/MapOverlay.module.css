@@ -1,0 +1,204 @@
+/* Combined Map Overlay Widgets */
+
+/* --- Bottom-Right Group (Zoom Controls & Legend) --- */
+.bottomRightStack {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+    margin-right: 18px !important;
+    margin-bottom: 20px !important;
+    pointer-events: auto;
+}
+
+.zoomGroup {
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-radius: 12px;
+    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.14), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.85);
+    overflow: hidden;
+}
+
+.zoomBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: transparent;
+    border: none;
+    font-size: 19px;
+    font-weight: 500;
+    color: #3c4043;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.zoomBtn:hover {
+    background: rgba(255, 255, 255, 0.95);
+    color: #1a73e8;
+}
+
+.zoomBtn:active {
+    background: #e8f0fe;
+}
+
+.zoomDivider {
+    height: 1px;
+    background: rgba(0, 0, 0, 0.08);
+    width: 100%;
+}
+
+.legendCard {
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    padding: 14px 16px;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    font-size: 12.5px;
+    line-height: 1.6;
+    min-width: 175px;
+}
+
+.legendTitle {
+    font-weight: 700;
+    font-size: 11px;
+    color: #5f6368;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-bottom: 5px;
+}
+
+.legendRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #202124;
+    font-weight: 500;
+}
+
+.lineSwatch {
+    width: 22px;
+    height: 5px;
+    border-radius: 3px;
+    flex-shrink: 0;
+}
+
+.dotSwatch {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
+}
+
+/* --- Bottom-Left Group (Info / Attribution Modal) --- */
+.bottomLeftStack {
+    position: relative;
+    margin: 14px !important;
+    pointer-events: auto;
+}
+
+.infoBtn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+    font-weight: 600;
+    color: #5f6368;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s ease;
+}
+
+.infoBtn:hover {
+    background: #ffffff;
+    color: #1a73e8;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+
+.infoModal {
+    position: absolute;
+    bottom: 42px;
+    left: 0;
+    width: 270px;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-radius: 14px;
+    box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.16), 0 2px 8px -2px rgba(0, 0, 0, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    padding: 14px 16px;
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: #3c4043;
+    z-index: 1000;
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 700;
+    font-size: 13px;
+    color: #202124;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    padding-bottom: 6px;
+}
+
+.closeBtn {
+    background: none;
+    border: none;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    color: #80868b;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: color 0.15s ease, background 0.15s ease;
+}
+
+.closeBtn:hover {
+    color: #202124;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.modalBody p {
+    margin: 0 0 8px;
+    color: #5f6368;
+}
+
+.modalBody ul {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.modalBody li {
+    margin-bottom: 4px;
+}
+
+.modalBody a {
+    color: #1a73e8;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.modalBody a:hover {
+    text-decoration: underline;
+}
