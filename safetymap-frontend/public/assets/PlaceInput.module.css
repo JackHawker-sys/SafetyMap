@@ -2,69 +2,100 @@
     position: relative;
 }
 
-.label {
-    display: block;
-    font-size: 12px;
-    font-weight: 600;
-    color: #555;
-    margin-bottom: 4px;
+/* Ẩn khỏi màn hình nhưng trình đọc màn hình vẫn đọc được */
+.srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
 }
 
 .inputRow {
     display: flex;
-    gap: 6px;
+    align-items: center;
+    gap: 8px;
+}
+
+.leading {
+    display: grid;
+    place-items: center;
+    width: 24px;
+    flex-shrink: 0;
 }
 
 .input {
     flex: 1;
     min-width: 0;
-    padding: 8px 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    font: inherit;
     font-size: 14px;
+    color: #202124;
+    background: #fff;
 }
 
 .input:focus {
     outline: none;
-    border-color: #1976d2;
-    box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+    border-color: #1a73e8;
+    box-shadow: 0 0 0 1px #1a73e8;
+}
+
+/* Ô đang nhận điểm click từ bản đồ */
+.activeRow .input {
+    border-color: #1a73e8;
 }
 
 .list {
     position: absolute;
     top: 100%;
-    left: 0;
+    left: 32px;
     right: 0;
-    z-index: 1100;
-    /* cao hơn control của Leaflet (1000) */
+    z-index: 1300;
     margin: 4px 0 0;
     padding: 4px 0;
     list-style: none;
     background: #fff;
-    border-radius: 6px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    max-height: 240px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    max-height: 280px;
     overflow-y: auto;
 }
 
 .item {
-    padding: 8px 10px;
-    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    padding: 8px 12px;
     cursor: pointer;
 }
 
 .active {
-    background: #e3f2fd;
+    background: #f1f3f4;
 }
 
-.hint {
-    padding: 8px 10px;
+.itemName {
+    font-size: 14px;
+    color: #202124;
+}
+
+.itemAddress {
+    font-size: 12px;
+    color: #70757a;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.hint,
+.error {
+    padding: 8px 12px;
     font-size: 13px;
-    color: #888;
+    color: #70757a;
 }
 
 .error {
-    padding: 8px 10px;
-    font-size: 13px;
-    color: #d32f2f;
+    color: #d93025;
 }

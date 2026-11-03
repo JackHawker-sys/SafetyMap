@@ -4,3 +4,37 @@ body,
   margin: 0;
   height: 100%;
 }
+
+body {
+  font-family: Roboto, "Segoe UI", system-ui, -apple-system, sans-serif;
+  background: #e5e3df;
+  color: #202124;
+}
+
+/* Điện thoại: thanh tìm kiếm chiếm hết chiều ngang -> đẩy nút zoom xuống dưới nó */
+@media (max-width: 768px) {
+  .leaflet-top.leaflet-right {
+    top: 64px;
+  }
+}
+
+/* Marker divIcon (MapMarkers.ts): bỏ nền trắng mặc định của Leaflet */
+.sm-pin {
+  background: none;
+  border: none;
+}
+
+.sm-pin svg {
+  display: block;
+  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3));
+}
+
+.sm-saved-dot {
+  display: block;
+  width: 12px;
+  height: 12px;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: #1a73e8;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}

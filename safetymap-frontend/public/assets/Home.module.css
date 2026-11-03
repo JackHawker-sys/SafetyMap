@@ -1,39 +1,96 @@
+/* Bản đồ phủ toàn màn hình, thanh tìm kiếm + sidebar nổi bên trên (giống Google Maps) */
 .page {
-    display: flex;
+    position: relative;
     height: 100vh;
+    height: 100dvh;
+    /* điện thoại: không bị thanh địa chỉ trình duyệt che */
     width: 100%;
-}
-
-.sidebar {
-    width: 340px;
-    flex-shrink: 0;
-    padding: 16px;
-    background: #fafafa;
-    border-right: 1px solid #e0e0e0;
-    overflow-y: auto;
-    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .map {
-    flex: 1;
-    min-width: 0;
-    position: relative;
+    position: absolute;
+    inset: 0;
 }
 
-/* Điện thoại: sidebar lên trên, bản đồ bên dưới */
+/* z-index > 1000 (control của Leaflet) */
+.searchSlot {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 384px;
+    z-index: 1200;
+}
+
+.panel {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 408px;
+    /* khớp PANEL_WIDTH_PX trong Home.tsx */
+    z-index: 1100;
+    background: #fff;
+    box-shadow: 0 0 16px rgba(0, 0, 0, 0.18);
+    overflow-y: auto;
+    box-sizing: border-box;
+    animation: slideIn 0.18s ease-out;
+}
+
+/* Khi có thanh tìm kiếm phía trên (chế độ xem điểm) thì chừa chỗ cho nó */
+.panelWithSearch {
+    padding-top: 72px;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(-24px);
+        opacity: 0;
+    }
+
+    to {
+        transform: none;
+        opacity: 1;
+    }
+}
+
+/* Điện thoại: thanh tìm kiếm trên cùng, sidebar thành bottom sheet */
 @media (max-width: 768px) {
-    .page {
-        flex-direction: column;
+    .searchSlot {
+        left: 12px;
+        right: 12px;
+        width: auto;
     }
 
-    .sidebar {
-        width: 100%;
-        border-right: none;
-        border-bottom: 1px solid #e0e0e0;
+    .panel {
+        top: auto;
+        right: 0;
+        width: auto;
+        max-height: 50dvh;
+        /* khớp SHEET_RATIO trong Home.tsx */
+        border-radius: 16px 16px 0 0;
+        animation-name: slideUp;
     }
 
-    .map {
-        flex: 1;
-        min-height: 0;
+    .panelWithSearch {
+        padding-top: 0;
+    }
+
+    @keyframes slideUp {
+        from {
+            transform: translateY(24px);
+            opacity: 0;
+        }
+
+        to {
+            transform: none;
+            opacity: 1;
+        }
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .panel {
+        animation: none;
     }
 }

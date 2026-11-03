@@ -1,93 +1,87 @@
-import { useId, useState, type ChangeEvent, type KeyboardEvent, type ReactNode } from "react";
+import { useEffect, useId, useRef, useState, type ChangeEvent, type ReactNode } from "react";
 import type { GeoPlace } from "../../Business/Models/MapModels";
 import { usePlaceSuggestions } from "../Hooks/usePlaceSuggestions";
+import { useListNavigation } from "../Hooks/useListNavigation.ts";
 import styles from "../../../public/assets/PlaceInput.module.css";
 
 interface Props {
-    label: string;
+    label: string;            // đọc bởi trình đọc màn hình (ẩn trên giao diện)
     placeholder: string;
     value: GeoPlace | null;
     onChange: (place: GeoPlace | null) => void;
-    extraAction?: ReactNode; // "khe" để chèn nút phụ, ví dụ nút GPS
-    near?: [number, number]; // [lat, lng] để ưu tiên kết quả gần đó
+    onFocus?: () => void;     // báo cho cha biết ô này đang được chọn (để click bản đồ điền vào đây)
+    active?: boolean;         // ô đang nhận điểm click từ bản đồ
+    autoFocus?: boolean;
+    leading?: ReactNode;      // chấm tròn / ghim bên trái
+    extraAction?: ReactNode;  // "khe" để chèn nút phụ, ví dụ nút GPS
+    near?: [number, number];  // [lat, lng] để ưu tiên kết quả gần đó
 }
 
-export default function PlaceInput({ label, placeholder, value, onChange, extraAction, near }: Props) {
+const MIN_QUERY = 3;
+
+export default function PlaceInput({
+    label, placeholder, value, onChange, onFocus, active = false, autoFocus = false, leading, extraAction, near,
+}: Props) {
     const inputId = useId();
     const listId = `${inputId}-list`;
 
     const [text, setText] = useState(value?.label ?? "");
     const [open, setOpen] = useState(false);
-    const [activeIndex, setActiveIndex] = useState(-1);
 
-    // Chỉ tìm khi danh sách đang mở -> chọn xong không gửi request cho chính label đó
-    const { results, loading, error } = usePlaceSuggestions(open ? text : "", near?.[0], near?.[1]);
+    // Phân biệt "cha xóa giá trị" (đảo chiều, click bản đồ...) với "chính ô này xóa vì người dùng đang gõ".
+    // Nếu không phân biệt: gõ 1 chữ -> onChange(null) -> effect bên dưới xóa sạch chữ vừa gõ.
+    const clearedByTyping = useRef(false);
 
-    // Khi cha đổi value (GPS, đảo chiều) -> cập nhật chữ trong ô
-    const [preValue, setPreValue] = useState(value);
-    if (value != preValue) {
-        setPreValue(value);
-        if (value)
-            setText(value.label);
-    }
+    useEffect(() => {
+        if (value) setText(value.label);
+        else if (!clearedByTyping.current) setText("");
+        clearedByTyping.current = false;
+    }, [value]);
+
+    const isTyping = open && !value && text.trim().length >= MIN_QUERY;
+    const { results, loading, error } = usePlaceSuggestions(isTyping ? text : "", near?.[0], near?.[1]);
 
     function select(place: GeoPlace) {
         onChange(place);
         setText(place.label);
         setOpen(false);
-        setActiveIndex(-1);
     }
+
+    const nav = useListNavigation(results, select, () => setOpen(false));
 
     function handleType(e: ChangeEvent<HTMLInputElement>) {
         setText(e.target.value);
         setOpen(true);
-        setActiveIndex(-1);
-        if (value)
+        nav.setActiveIndex(-1);
+        if (value) {
+            clearedByTyping.current = true;
             onChange(null);
-    }
-
-    function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
-        if (e.key === "Escape") {
-            setOpen(false);
-            return;
-        }
-
-        if (!open || results.length === 0)
-            return;
-
-        if (e.key === "ArrowDown") {
-            e.preventDefault();
-            setActiveIndex((i) => (i + 1) % results.length);
-        } else if (e.key === "ArrowUp") {
-            e.preventDefault();
-            setActiveIndex((i) => (i <= 0 ? results.length - 1 : i - 1));
-        } else if (e.key === "Enter") {
-            e.preventDefault();
-            select(results[activeIndex >= 0 ? activeIndex : 0]);
         }
     }
 
-    const showList = open && (loading || error !== null || results.length > 0);
+    const showList = isTyping && (loading || error !== null || results.length > 0);
 
     return (
         <div className={styles.wrapper}>
-            <label htmlFor={inputId} className={styles.label}>{label}</label>
+            <label htmlFor={inputId} className={styles.srOnly}>{label}</label>
 
-            <div className={styles.inputRow}>
+            <div className={`${styles.inputRow} ${active ? styles.activeRow : ""}`}>
+                {leading && <span className={styles.leading}>{leading}</span>}
                 <input
                     id={inputId}
                     className={styles.input}
                     value={text}
                     placeholder={placeholder}
                     autoComplete="off"
+                    autoFocus={autoFocus}
                     role="combobox"
                     aria-expanded={showList}
                     aria-controls={listId}
                     onChange={handleType}
-                    onKeyDown={handleKeyDown}
+                    onKeyDown={nav.handleKeyDown}
                     onFocus={() => {
-                        if (!value && text.trim().length >= 3)
-                            setOpen(true);
+                        onFocus?.();
+                        setOpen(true);
                     }}
                     onBlur={() => setOpen(false)}
                 />
@@ -102,15 +96,16 @@ export default function PlaceInput({ label, placeholder, value, onChange, extraA
                         <li
                             key={geoPlace.id}
                             role="option"
-                            aria-selected={i === activeIndex}
-                            className={i === activeIndex ? `${styles.item} ${styles.active}` : styles.item}
+                            aria-selected={i === nav.activeIndex}
+                            className={i === nav.activeIndex ? `${styles.item} ${styles.active}` : styles.item}
                             onMouseDown={(e) => {
                                 e.preventDefault(); // giữ focus, không để blur đóng list trước
-                                select(geoPlace)
+                                select(geoPlace);
                             }}
-                            onMouseEnter={() => setActiveIndex(i)}
+                            onMouseEnter={() => nav.setActiveIndex(i)}
                         >
-                            {geoPlace.label}
+                            <span className={styles.itemName}>{geoPlace.name}</span>
+                            {geoPlace.address && <span className={styles.itemAddress}>{geoPlace.address}</span>}
                         </li>
                     ))}
                 </ul>
