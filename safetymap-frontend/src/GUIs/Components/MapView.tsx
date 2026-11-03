@@ -1,35 +1,37 @@
 import { useEffect, useState } from "react";
-import { MapContainer, Polyline, CircleMarker, Popup, Tooltip } from "react-leaflet";
+import { MapContainer, Polyline, CircleMarker, Popup, Tooltip, useMap } from "react-leaflet";
 import type { LatLngBoundsExpression, LatLngExpression } from "leaflet";
 import { loadMapData, type MapData } from "../../Business/Logic/MapLogic";
 import CoordPicker from "./CoordPicker";
 import MapLibreLayer from "./MapLibreLayer";
-import MapLegend from "./MapLegend";
+import MapOverlay from "./MapOverlay";
 import type { GeoPlace } from "../../Business/Models/MapModels";
 import FitToPlaces from "./FitToPlaces";
 
+function MapResizeWatcher() {
+    const map = useMap();
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            map.invalidateSize();
+        }, 200);
+        return () => clearTimeout(timer);
+    }, [map]);
+    return null;
+}
+
 // Tâm bản đồ: khoảng giữa Phú Lợi
 const PHU_LOI_CENTER: LatLngExpression = [10.9822, 106.6719];
-// const VIETNAM_CENTER: LatLngExpression = [16.0, 107.5];
 
 // Khung giới hạn: không cho kéo bản đồ ra quá xa Việt Nam
-// (đã tính cả Hoàng Sa và Trường Sa ở phía đông)
 const VIETNAM_BOUNDS: LatLngBoundsExpression = [
     [7.0, 101.5],  // góc Tây Nam
     [24.0, 118.0], // góc Đông Bắc
 ];
 
-// File style MapLibre (đã ẩn nhãn TQ, thêm nhãn Hoàng Sa, Trường Sa tiếng Việt)
-// Đặt tại public/map/openfreemap_liberty_vn.json
 const MAP_STYLE_URL = new URL(
     "/map/openfreemap_liberty_vn.json",
     window.location.origin,
 ).href;
-
-const MAP_ATTRIBUTION =
-    '&copy; <a href="https://openfreemap.org">OpenFreeMap</a> ' +
-    '<a href="https://www.openmaptiles.org/">&copy; OpenMapTiles</a> ' +
-    'Data from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
 
 interface Props {
     from: GeoPlace | null;
@@ -55,10 +57,13 @@ export default function MapView({ from, to }: Props) {
             maxZoom={18}
             maxBounds={VIETNAM_BOUNDS}
             maxBoundsViscosity={1.0}
+            zoomControl={false}
+            attributionControl={false}
             style={{ height: "100%", width: "100%" }}
         >
-            <MapLibreLayer style={MAP_STYLE_URL} attribution={MAP_ATTRIBUTION} />
-            <MapLegend />
+            <MapResizeWatcher />
+            <MapLibreLayer style={MAP_STYLE_URL} />
+            <MapOverlay />
             {import.meta.env.DEV && <CoordPicker />}
 
             {data.segments.map((seg) => (

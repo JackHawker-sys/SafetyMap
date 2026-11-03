@@ -1,39 +1,30 @@
 .page {
-    display: flex;
+    position: relative;
     height: 100vh;
-    width: 100%;
-}
-
-.sidebar {
-    width: 340px;
-    flex-shrink: 0;
-    padding: 16px;
-    background: #fafafa;
-    border-right: 1px solid #e0e0e0;
-    overflow-y: auto;
-    box-sizing: border-box;
+    width: 100vw;
+    overflow: hidden;
 }
 
 .map {
-    flex: 1;
-    min-width: 0;
-    position: relative;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
 }
 
-/* Điện thoại: sidebar lên trên, bản đồ bên dưới */
-@media (max-width: 768px) {
-    .page {
-        flex-direction: column;
-    }
+.sidebar {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 1000;
+    max-width: 380px;
+    width: calc(100vw - 32px);
+    pointer-events: auto;
+}
 
+@media (max-width: 480px) {
     .sidebar {
-        width: 100%;
-        border-right: none;
-        border-bottom: 1px solid #e0e0e0;
-    }
-
-    .map {
-        flex: 1;
-        min-height: 0;
+        top: 8px;
+        left: 8px;
+        width: calc(100vw - 16px);
     }
 }

@@ -21,7 +21,7 @@ export default function RouteSearchBox({ from, to, onFormChange, onToChange, onS
     const [gpsError, setGpsError] = useState<string | null>(null);
 
     async function handleMyLocation() {
-        setLocating(false);
+        setLocating(true);
         setGpsError(null);
         try {
             onFormChange(await getMyLocation());
@@ -46,12 +46,13 @@ export default function RouteSearchBox({ from, to, onFormChange, onToChange, onS
                 extraAction={
                     <button
                         type="button"
-                        className={styles.inconButton}
+                        className={styles.iconButton}
                         onClick={handleMyLocation}
                         disabled={locating}
-                        title="Dùng vị trí hiện tại"
+                        title="Dùng vị trí hiện tại của tôi"
+                        aria-label="Vị trí hiện tại"
                     >
-                        {locating ? "..." : "📍"}
+                        {locating ? "⏳" : "📍"}
                     </button>
                 }
                 near={to?.position ?? DEFAULT_NEAR}
