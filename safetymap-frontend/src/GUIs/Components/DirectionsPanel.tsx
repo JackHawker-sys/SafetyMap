@@ -33,12 +33,18 @@ export default function DirectionsPanel({
 
     async function handleMyLocation() {
         const requestId = ++gpsRequestId.current;
-        setLocating(true); // (code cũ để false -> nút không bao giờ hiện trạng thái đang định vị)
+        setLocating(true);
         setGpsError(null);
+        const start = Date.now();
         try {
             const place = await getMyLocation();
+            // Đảm bảo icon xoay tối thiểu 600ms để người dùng thấy rõ phản hồi trực quan
+            const delay = Math.max(0, 600 - (Date.now() - start));
+            if (delay > 0) await new Promise((r) => setTimeout(r, delay));
             if (requestId === gpsRequestId.current) onFieldChange("from", place);
         } catch (err) {
+            const delay = Math.max(0, 600 - (Date.now() - start));
+            if (delay > 0) await new Promise((r) => setTimeout(r, delay));
             if (requestId === gpsRequestId.current)
                 setGpsError(err instanceof Error ? err.message : "Không lấy được vị trí");
         } finally {

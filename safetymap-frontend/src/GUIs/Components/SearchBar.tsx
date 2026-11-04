@@ -17,7 +17,9 @@ interface Props {
 const MIN_QUERY = 3;
 const MAX_SAVED_SHOWN = 5;
 
-export default function SearchBar({ value, savedPlaces, near, onSelect, onClear, onOpenDirections }: Props) {
+export default function SearchBar({
+    value, savedPlaces, near, onSelect, onClear, onOpenDirections,
+}: Props) {
     const inputId = useId();
     const listId = `${inputId}-list`;
 
@@ -64,12 +66,14 @@ export default function SearchBar({ value, savedPlaces, near, onSelect, onClear,
     return (
         <div className={`${styles.wrapper} ${showList ? styles.wrapperOpen : ""}`}>
             <div className={styles.bar}>
-                <SearchIcon className={styles.leadingIcon} />
+                <label htmlFor={inputId} className={styles.leadingLabel} aria-label="Tìm kiếm" title="Tìm kiếm">
+                    <SearchIcon className={styles.leadingIcon} />
+                </label>
                 <input
                     id={inputId}
                     className={styles.input}
                     value={text}
-                    placeholder="Tìm kiếm trên SafetyMap"
+                    placeholder="Tìm kiếm địa điểm hoặc tuyến đường..."
                     autoComplete="off"
                     role="combobox"
                     aria-label="Tìm kiếm địa điểm"

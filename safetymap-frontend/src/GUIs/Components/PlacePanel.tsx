@@ -38,6 +38,7 @@ export default function PlacePanel({ place, saved, saving, saveError, onDirectio
         }
     }
 
+    // TODO(backend): gọi API điểm nguy hiểm các đoạn đường quanh điểm này
     return (
         <section className={styles.panel} aria-label={`Thông tin ${place.name}`}>
             <header className={styles.placeHeader}>
@@ -77,7 +78,6 @@ export default function PlacePanel({ place, saved, saving, saveError, onDirectio
                     <ShieldIcon className={styles.infoIcon} />
                     <span className={styles.infoText}>
                         Mức an toàn khu vực
-                        {/* TODO(backend): gọi API điểm nguy hiểm các đoạn đường quanh điểm này */}
                         <span className={styles.muted}>Sẽ hiển thị khi kết nối backend</span>
                     </span>
                 </li>

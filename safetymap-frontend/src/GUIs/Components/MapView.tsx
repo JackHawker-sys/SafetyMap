@@ -80,6 +80,8 @@ export default function MapView({ selected, from, to, savedPlaces, insets, onMap
         return () => { cancelled = true; };
     }, []);
 
+    // File style MapLibre (đã ẩn nhãn TQ, thêm nhãn Hoàng Sa, Trường Sa tiếng Việt): Đặt tại public/map/openfreemap_liberty_vn.json
+    // Hai công cụ cùng nghe click bản đồ -> chỉ bật 1 cái (CoordPicker hoặc MapClickHandler)
     return (
         <MapContainer
             center={DEFAULT_CENTER}
@@ -93,12 +95,9 @@ export default function MapView({ selected, from, to, savedPlaces, insets, onMap
             style={{ height: "100%", width: "100%" }}
         >
             <MapResizeWatcher />
-            {/* File style MapLibre (đã ẩn nhãn TQ, thêm nhãn Hoàng Sa, Trường Sa tiếng Việt)
-                Đặt tại public/map/openfreemap_liberty_vn.json */}
             <MapLibreLayer style={ENV.mapStyleUrl} attribution={MAP_ATTRIBUTION} />
             <MapOverlay />
 
-            {/* Hai công cụ cùng nghe click bản đồ -> chỉ bật 1 cái */}
             {ENV.enableCoordPicker ? <CoordPicker /> : <MapClickHandler onClick={onMapClick} />}
 
             <DangerLayer data={data} />

@@ -32,9 +32,10 @@ export default function MapOverlay() {
         }
     }, []);
 
+    // Góc dưới phải: Nút Zoom & Legend
+    // Góc dưới trái: Nút Thông tin nguồn dữ liệu / Bản quyền
     return (
         <>
-            {/* Góc dưới phải: Nút Zoom & Legend */}
             <div className="leaflet-bottom leaflet-right" style={{ pointerEvents: "none" }}>
                 <div ref={rightRef} className={styles.bottomRightStack}>
                     <div className={styles.zoomGroup}>
@@ -79,7 +80,6 @@ export default function MapOverlay() {
                 </div>
             </div>
 
-            {/* Góc dưới trái: Nút Thông tin nguồn dữ liệu / Bản quyền */}
             <div className="leaflet-bottom leaflet-left" style={{ pointerEvents: "none" }}>
                 <div ref={leftRef} className={styles.bottomLeftStack}>
                     <button
