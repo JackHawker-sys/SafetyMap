@@ -162,6 +162,10 @@ export default function Home() {
                 onSignup={auth.signup}
                 onGoogleLogin={auth.loginWithGoogle}
                 onLogout={auth.logout}
+                onToggleRole={auth.toggleRole}
+                onNavigate={(page) => {
+                    window.location.hash = `#${page}`;
+                }}
             />
         </div>
     );

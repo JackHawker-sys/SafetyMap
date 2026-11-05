@@ -225,12 +225,12 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    padding: 8px 0;
+    padding: 4px 0 0;
 }
 
 .avatarCircle {
-    width: 60px;
-    height: 60px;
+    width: 58px;
+    height: 58px;
     border-radius: 50%;
     background: linear-gradient(135deg, #1a73e8, #4285f4);
     color: #fff;
@@ -238,43 +238,169 @@
     font-weight: 600;
     display: grid;
     place-items: center;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
 }
 
 .userName {
     margin: 0;
-    font-size: 18px;
+    font-size: 17px;
     font-weight: 600;
     color: #202124;
 }
 
 .userEmail {
-    margin: 2px 0 10px;
-    font-size: 13px;
+    margin: 2px 0 8px;
+    font-size: 12.5px;
     color: #5f6368;
 }
 
-.badge {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 12px;
-    background: rgba(52, 168, 83, 0.12);
-    color: #137333;
-    font-size: 11.5px;
+/* Huy hiệu quyền */
+.roleBadgeRow {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.roleBadge {
+    font-size: 11px;
     font-weight: 600;
-    margin-bottom: 20px;
+    padding: 2px 8px;
+    border-radius: 6px;
+    letter-spacing: 0.3px;
+}
+
+.badgeUser {
+    background: rgba(32, 33, 36, 0.08);
+    color: #3c4043;
+}
+
+.badgeMod {
+    background: rgba(24, 128, 56, 0.12);
+    color: #137333;
+}
+
+.badgeAdmin {
+    background: rgba(26, 115, 232, 0.12);
+    color: #1a73e8;
+}
+
+/* Các nút điều hướng Dashboard theo quyền */
+.navActions {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 14px;
+}
+
+.moderatorBtn {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(24, 128, 56, 0.08);
+    border: 1px solid rgba(24, 128, 56, 0.25);
+    border-radius: 10px;
+    color: #0d652d;
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.moderatorBtn:hover {
+    background: rgba(24, 128, 56, 0.15);
+    border-color: #137333;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(24, 128, 56, 0.15);
+}
+
+.adminBtn {
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: rgba(26, 115, 232, 0.08);
+    border: 1px solid rgba(26, 115, 232, 0.25);
+    border-radius: 10px;
+    color: #1a73e8;
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.adminBtn:hover {
+    background: rgba(26, 115, 232, 0.15);
+    border-color: #1765cc;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 10px rgba(26, 115, 232, 0.15);
+}
+
+/* Hộp chuyển role để test nhanh ở frontend */
+.roleTester {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.03);
+    border: 1px dashed rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    padding: 8px 10px;
+    box-sizing: border-box;
+    margin-bottom: 12px;
+}
+
+.roleTesterTitle {
+    font-size: 11px;
+    color: #70757a;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    font-weight: 600;
+}
+
+.roleChips {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+}
+
+.chip {
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    background: #ffffff;
+    border-radius: 6px;
+    padding: 3px 8px;
+    font: inherit;
+    font-size: 11.5px;
+    font-weight: 500;
+    color: #5f6368;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.chipActive {
+    background: #1a73e8;
+    border-color: #1a73e8;
+    color: #ffffff;
+    font-weight: 600;
 }
 
 .logoutBtn {
     width: 100%;
-    height: 38px;
+    height: 36px;
     border: 1px solid rgba(217, 48, 37, 0.3);
     border-radius: 10px;
     background: rgba(217, 48, 37, 0.05);
     color: #d93025;
     font: inherit;
-    font-size: 13.5px;
+    font-size: 13px;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.15s;

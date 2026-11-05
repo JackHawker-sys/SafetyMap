@@ -1,0 +1,800 @@
+/* Giao diện Bàn Kiểm duyệt (Moderator Hub) */
+.page {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background: #f4f6f8;
+    color: #202124;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    overflow: hidden;
+}
+
+/* Header Frosted Glass */
+.header {
+    height: 56px;
+    padding: 0 20px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 10;
+}
+
+.headerLeft {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.backBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    background: #ffffff;
+    color: #3c4043;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.backBtn:hover {
+    background: #f1f3f4;
+    border-color: #c2e0ff;
+    color: #1a73e8;
+}
+
+.titleArea {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.title {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 600;
+    color: #202124;
+}
+
+.roleBadge {
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: rgba(24, 128, 56, 0.12);
+    color: #137333;
+    font-size: 11.5px;
+    font-weight: 600;
+}
+
+/* Tab điều hướng phía trên */
+.tabNav {
+    display: flex;
+    gap: 6px;
+    background: rgba(0, 0, 0, 0.04);
+    padding: 4px;
+    border-radius: 10px;
+}
+
+.tabBtn {
+    border: none;
+    background: transparent;
+    padding: 6px 14px;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    color: #5f6368;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.tabActive {
+    background: #ffffff;
+    color: #137333;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Nội dung chính */
+.content {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+/* Cột trái: Hàng đợi danh sách báo cáo */
+.queuePanel {
+    width: 360px;
+    background: #ffffff;
+    border-right: 1px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.queueHeader {
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.queueTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: #3c4043;
+}
+
+.queueCount {
+    background: #e8f0fe;
+    color: #1a73e8;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.queueList {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.reportCard {
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: #ffffff;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.reportCard:hover {
+    border-color: #137333;
+    background: #f9fbf9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.reportCardActive {
+    border-color: #137333;
+    background: rgba(24, 128, 56, 0.04);
+    box-shadow: 0 0 0 1px #137333;
+}
+
+.cardTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.typeBadge {
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: #fce8e6;
+    color: #c5221f;
+}
+
+.timeText {
+    font-size: 11.5px;
+    color: #70757a;
+}
+
+.cardStreet {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #202124;
+    margin-bottom: 4px;
+}
+
+.cardSnippet {
+    font-size: 12px;
+    color: #5f6368;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.aiVerdictChip {
+    margin-top: 8px;
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.chipUnsure {
+    background: #fef7e0;
+    color: #b06000;
+}
+
+.chipMismatch {
+    background: #fce8e6;
+    color: #c5221f;
+}
+
+.chipMatch {
+    background: #e6f4ea;
+    color: #137333;
+}
+
+/* Cột phải: Màn hình chi tiết duyệt */
+.detailPanel {
+    flex: 1;
+    overflow-y: auto;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.detailCard {
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.detailHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 16px;
+}
+
+.detailTitle {
+    margin: 0 0 4px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.detailAddress {
+    font-size: 13.5px;
+    color: #5f6368;
+}
+
+/* Khối thông tin Người báo cáo */
+.reporterBox {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 16px;
+}
+
+.reporterInfo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.reporterAvatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: #1a73e8;
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.reporterName {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #202124;
+}
+
+.reporterStats {
+    font-size: 12px;
+    color: #5f6368;
+    margin-top: 2px;
+}
+
+.manageUserBtn {
+    height: 32px;
+    padding: 0 10px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    background: #fff;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    color: #3c4043;
+    cursor: pointer;
+    transition: all 0.12s;
+}
+
+.manageUserBtn:hover {
+    background: #f1f3f4;
+    color: #1a73e8;
+}
+
+/* Ảnh hiện trường */
+.photoContainer {
+    width: 100%;
+    max-height: 260px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.photoImg {
+    max-width: 100%;
+    max-height: 260px;
+    object-fit: cover;
+}
+
+/* Box phân tích AI */
+.aiBox {
+    background: #fefcf3;
+    border: 1px solid rgba(249, 171, 0, 0.4);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 16px;
+}
+
+.aiHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.aiTitle {
+    font-size: 13px;
+    font-weight: 600;
+    color: #b06000;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.aiScore {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #3c4043;
+}
+
+.aiReason {
+    margin: 0;
+    font-size: 13px;
+    color: #49454f;
+    line-height: 1.45;
+}
+
+/* Thanh nút duyệt */
+.actionRow {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.approveBtn {
+    flex: 1;
+    height: 42px;
+    border: none;
+    border-radius: 10px;
+    background: #188038;
+    color: #fff;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+    box-shadow: 0 4px 10px rgba(24, 128, 56, 0.2);
+}
+
+.approveBtn:hover {
+    background: #137333;
+    box-shadow: 0 6px 14px rgba(24, 128, 56, 0.3);
+}
+
+.rejectBtn {
+    flex: 1;
+    height: 42px;
+    border: 1px solid #d93025;
+    border-radius: 10px;
+    background: #fff;
+    color: #d93025;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.rejectBtn:hover {
+    background: #fce8e6;
+}
+
+.mergeBtn {
+    height: 42px;
+    padding: 0 16px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+    background: #fff;
+    color: #3c4043;
+    font: inherit;
+    font-size: 13.5px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.mergeBtn:hover {
+    background: #f1f3f4;
+}
+
+/* Tab Quản lý Users của Moderator */
+.userListSection {
+    flex: 1;
+    padding: 24px;
+    overflow-y: auto;
+}
+
+.tableCard {
+    background: #ffffff;
+    border-radius: 14px;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.tableHeaderBar {
+    padding: 16px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.tableNotice {
+    font-size: 12.5px;
+    color: #70757a;
+}
+
+.userTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+}
+
+.userTable th {
+    text-align: left;
+    padding: 12px 18px;
+    background: #f8f9fa;
+    color: #5f6368;
+    font-weight: 600;
+    font-size: 12.5px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.userTable td {
+    padding: 14px 18px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    color: #202124;
+}
+
+.userTable tr:hover {
+    background: #f8fafd;
+}
+
+.statusActive {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: #e6f4ea;
+    color: #137333;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.statusBanned {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: #fce8e6;
+    color: #c5221f;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.btnWarn {
+    height: 30px;
+    padding: 0 10px;
+    border: 1px solid #f9ab00;
+    background: #fef7e0;
+    color: #b06000;
+    border-radius: 6px;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-right: 6px;
+}
+
+.btnBan {
+    height: 30px;
+    padding: 0 10px;
+    border: 1px solid rgba(217, 48, 37, 0.4);
+    background: #fff;
+    color: #d93025;
+    border-radius: 6px;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btnBan:hover {
+    background: #fce8e6;
+}
+
+.btnUnban {
+    height: 30px;
+    padding: 0 10px;
+    border: 1px solid #137333;
+    background: #e6f4ea;
+    color: #137333;
+    border-radius: 6px;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+/* Modal nhập lý do từ chối */
+.rejectModalOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px);
+    display: grid;
+    place-items: center;
+    z-index: 2100;
+}
+
+.rejectModal {
+    width: 400px;
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+.rejectModalTitle {
+    margin: 0 0 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #c5221f;
+}
+
+.warnModalTitle {
+    margin: 0 0 10px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #b06000;
+}
+
+.reasonSelect {
+    width: 100%;
+    height: 38px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    padding: 0 10px;
+    font: inherit;
+    font-size: 13.5px;
+    margin-bottom: 12px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.rejectSelect:focus {
+    border-color: #d93025;
+    box-shadow: 0 0 0 2px rgba(217, 48, 37, 0.15);
+}
+
+.warnSelect:focus {
+    border-color: #f9ab00;
+    box-shadow: 0 0 0 2px rgba(249, 171, 0, 0.15);
+}
+
+.customReasonInput {
+    width: 100%;
+    height: 60px;
+    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font: inherit;
+    font-size: 13px;
+    box-sizing: border-box;
+    margin-bottom: 14px;
+    resize: none;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.rejectReasonInput {
+    width: 100%;
+    height: 60px;
+    border: 1px solid rgba(217, 48, 37, 0.4);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font: inherit;
+    font-size: 13px;
+    box-sizing: border-box;
+    margin-bottom: 14px;
+    resize: none;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.rejectReasonInput:focus {
+    border-color: #d93025;
+    box-shadow: 0 0 0 2px rgba(217, 48, 37, 0.2);
+}
+
+.warnReasonInput {
+    width: 100%;
+    height: 60px;
+    border: 1px solid rgba(249, 171, 0, 0.4);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font: inherit;
+    font-size: 13px;
+    box-sizing: border-box;
+    margin-bottom: 14px;
+    resize: none;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.warnReasonInput:focus {
+    border-color: #f9ab00;
+    box-shadow: 0 0 0 2px rgba(249, 171, 0, 0.2);
+}
+
+/* Modal Gộp sự cố gần đó */
+.mergeModal {
+    width: 620px;
+    max-width: 92vw;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    max-height: 85vh;
+}
+
+.mergeModalTitle {
+    margin: 0 0 6px;
+    font-size: 17px;
+    font-weight: 600;
+    color: #202124;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.mergeSubtitle {
+    margin: 0 0 14px;
+    font-size: 12.5px;
+    color: #5f6368;
+    line-height: 1.45;
+}
+
+.currentReportBox {
+    background: #f8f9fa;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+    font-size: 13px;
+    color: #3c4043;
+}
+
+.candidateList {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 16px;
+    padding-right: 4px;
+}
+
+.candidateCard {
+    border: 1.5px solid rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    padding: 12px 14px;
+    background: #ffffff;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.candidateCard:hover {
+    border-color: #1a73e8;
+    background: #f8fafd;
+    box-shadow: 0 2px 8px rgba(26, 115, 232, 0.08);
+}
+
+.candidateCardActive {
+    border-color: #1a73e8;
+    background: rgba(26, 115, 232, 0.05);
+    box-shadow: 0 0 0 1px #1a73e8;
+}
+
+.candidateRadio {
+    margin-top: 3px;
+}
+
+.candidateBody {
+    flex: 1;
+}
+
+.candidateTop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.candidateCode {
+    font-size: 13.5px;
+    font-weight: 600;
+    color: #1a73e8;
+}
+
+.candidateDistance {
+    font-size: 11.5px;
+    font-weight: 600;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: #e6f4ea;
+    color: #137333;
+}
+
+.candidateTitle {
+    font-size: 13px;
+    font-weight: 600;
+    color: #202124;
+    margin-bottom: 4px;
+}
+
+.candidateMeta {
+    font-size: 12px;
+    color: #5f6368;
+    line-height: 1.4;
+}
