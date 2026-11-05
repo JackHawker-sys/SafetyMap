@@ -1,6 +1,7 @@
 package vn.safetymap.geography.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +17,7 @@ import java.time.Instant;
 public class Street {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
     private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -34,5 +36,6 @@ public class Street {
     private StreetType streetType = StreetType.ROAD;
 
     @Column(name = "created_at", insertable = false, updatable = false)
+    @Setter(AccessLevel.NONE)
     private Instant createdAt;
 }

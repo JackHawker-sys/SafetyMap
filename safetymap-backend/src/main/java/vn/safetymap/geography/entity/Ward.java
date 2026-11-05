@@ -1,6 +1,7 @@
 package vn.safetymap.geography.entity;
 
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -17,6 +18,7 @@ public class Ward {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter(AccessLevel.NONE)
     private Integer id;
 
     @Column(nullable = false, unique = true, length = 10)
@@ -37,6 +39,7 @@ public class Ward {
     private MultiPolygon boundary;
 
     @Column(name = "created_at", insertable = false, updatable = false)
+    @Setter(AccessLevel.NONE)
     private Instant createdAt;
 
 }
