@@ -11,7 +11,6 @@ import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import vn.safetymap.common.config.GeometryConfig;
 
 import org.locationtech.jts.geom.Polygon;
@@ -20,14 +19,12 @@ import java.time.Instant;
 @Entity
 @Table(name = "map_imports")
 @Getter
-@Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class MapImport {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Setter(AccessLevel.NONE)
-    private Integer Id;
+    private Integer id;
 
     @Column(name = "area_name", nullable = false, length = 150)
     private String areaName;
@@ -41,28 +38,26 @@ public class MapImport {
     @Column(name = "area_shape", nullable = false)
     private Polygon areaShape;
 
-    @Setter(AccessLevel.NONE)
     @Column(name = "segment_count", nullable = false)
-    private Integer segmentCount;
+    private Integer segmentCount = 0;
 
-    @Setter(AccessLevel.NONE)
     @Column(name = "block_count", nullable = false)
-    private Integer blockCount;
+    private Integer blockCount = 0;
 
-    @Setter(AccessLevel.NONE)
-    @Column(name = "imported_at", insertable = false, nullable = false)
+    @Column(name = "imported_at", insertable = false, updatable = false)
     private Instant importedAt;
 
-    public MapImport(String areaName, String sourceName, Instant osmDataAt, Polygon areaShape) {
+    public static MapImport start(String areaName, String sourceName, Instant osmDataAt, Polygon areaShape) {
         MapImport mi = new MapImport();
         mi.areaName = areaName;
         mi.sourceName = sourceName;
         mi.osmDataAt = osmDataAt;
         mi.areaShape = areaShape;
+        return mi;
     }
 
     public void recordResult(Integer segmentCount, Integer blockCount) {
-        if (segmentCount <= 0 || blockCount < 0) {
+        if (segmentCount < 0 || blockCount < 0) {
             throw new IllegalArgumentException("count must be 0 or more!!!");
         }
         this.segmentCount = segmentCount;
@@ -71,7 +66,7 @@ public class MapImport {
 
     @PrePersist
     @PreUpdate
-    public void checkAreaShape() {
+    void checkAreaShape() {
         if (areaShape == null) {
             throw new IllegalStateException("area shape is required");
         }
