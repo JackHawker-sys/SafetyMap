@@ -23,7 +23,7 @@ import vn.safetymap.common.config.GeometryConfig;
 @Entity 
 @Table(name ="blocks")
 @Getter 
-@NoArgsConstructor(access = AccessLevel.NONE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 
 public class Block {
 
