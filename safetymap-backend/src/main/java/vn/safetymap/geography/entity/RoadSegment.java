@@ -13,7 +13,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -109,6 +108,8 @@ public class RoadSegment {
         this.ward = ward;
     }
 
+    /* startNodeId == endNodeId is allowed on purpose: a closed roundabout
+    connected at a single node starts and ends at the same OSM node. */
     @PrePersist
     @PreUpdate
     void checkInvariants() {

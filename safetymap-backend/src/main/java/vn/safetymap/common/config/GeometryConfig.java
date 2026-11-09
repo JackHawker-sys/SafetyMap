@@ -16,5 +16,5 @@ public class GeometryConfig {
 
     public static GeometryFactory wgs84Factory() {
     return new GeometryFactory(new PrecisionModel(), WGS84_SRID);
-}
+    }
 }
