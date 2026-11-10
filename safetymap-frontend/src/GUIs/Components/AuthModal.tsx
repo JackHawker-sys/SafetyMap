@@ -1,7 +1,9 @@
-import { useState, type FormEvent } from "react";
+import { useRef, useState } from "react";
 import type { User } from "../Hooks/useAuth";
+import ReCAPTCHA from "react-google-recaptcha";
 import { CloseIcon, GoogleIcon, UserIcon } from "./Icons";
 import styles from "../../../public/assets/AuthModal.module.css";
+import { Controller, useForm, type FieldErrors } from "react-hook-form";
 
 interface Props {
     isOpen: boolean;
@@ -10,41 +12,89 @@ interface Props {
     error: string | null;
     onClearError: () => void;
     onLogin: (email: string, pass: string) => boolean;
-    onSignup: (name: string, email: string, pass: string) => boolean;
+    onSignup: (name: string, email: string, pass: string, captchaToken: string) => boolean;
     onGoogleLogin: () => void;
     onLogout: () => void;
-}
+};
+
+type LoginFormValues = {
+    email: string;
+    password: string;
+};
+
+type SignupFormValues = {
+    name: string;
+    email: string;
+    password: string;
+    confirmPassword: string;
+    captchaToken: string;
+};
+
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Site key lấy từ file .env (Vite): VITE_RECAPTCHA_SITE_KEY=...
+const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string;
+
+// Lấy thông báo lỗi đầu tiên của form (để hiển thị trong errorBox có sẵn)
+function firstErrorMessage<T extends Record<string, unknown>>(errors: FieldErrors<T>): string | null {
+    for (const key of Object.keys(errors)) {
+        const msg = errors[key as keyof T]?.message;
+        if (typeof msg === "string" && msg) return msg;
+    }
+    return null;
+};
 
 export default function AuthModal({
     isOpen, onClose, user, error, onClearError, onLogin, onSignup, onGoogleLogin, onLogout,
 }: Props) {
     const [tab, setTab] = useState<"LOGIN" | "SIGNUP">("LOGIN");
 
-    // Quản lý dữ liệu form
-    const [loginEmail, setLoginEmail] = useState("");
-    const [loginPass, setLoginPass] = useState("");
-    const [signupName, setSignupName] = useState("");
-    const [signupEmail, setSignupEmail] = useState("");
-    const [signupPass, setSignupPass] = useState("");
+    const loginForm = useForm<LoginFormValues>({
+        defaultValues: { email: "", password: "" },
+    });
+
+    const signupForm = useForm<SignupFormValues>({
+        defaultValues: { name: "", email: "", password: "", confirmPassword: "", captchaToken: "" },
+    });
+
+    // Ref tới widget captcha để reset sau mỗi lần submit (token chỉ dùng được 1 lần)
+    const recaptchaRef = useRef<ReCAPTCHA>(null);
 
     if (!isOpen) return null;
 
-    function handleLoginSubmit(e: FormEvent) {
-        e.preventDefault();
-        const success = onLogin(loginEmail, loginPass);
-        if (success) onClose();
-    }
+    const onLoginValid = (data: LoginFormValues) => {
+        const success = onLogin(data.email, data.password);
+        if (success) {
+            loginForm.reset();
+            onClose();
+        }
+    };
 
-    function handleSignupSubmit(e: FormEvent) {
-        e.preventDefault();
-        const success = onSignup(signupName, signupEmail, signupPass);
-        if (success) onClose();
-    }
+    const onSignupValid = (data: SignupFormValues) => {
+        // confirmPassword chỉ dùng để kiểm tra phía client, không gửi đi
+        const success = onSignup(data.name, data.email, data.password, data.captchaToken);
+
+        // Token reCAPTCHA chỉ verify được 1 lần → luôn reset, dù thành công hay thất bại
+        recaptchaRef.current?.reset();
+        signupForm.setValue("captchaToken", "");
+
+        if (success) {
+            signupForm.reset();
+            onClose();
+        }
+    };
 
     function handleGoogleClick() {
         onGoogleLogin();
         onClose();
     }
+
+    // Lỗi từ server (prop `error`) ưu tiên, sau đó tới lỗi validate của tab hiện tại
+    const validationError =
+        tab === "LOGIN"
+            ? firstErrorMessage(loginForm.formState.errors)
+            : firstErrorMessage(signupForm.formState.errors);
+    const displayError = error ?? validationError;
 
     return (
         <div className={styles.backdrop} onClick={onClose} role="dialog" aria-modal="true">
@@ -104,19 +154,30 @@ export default function AuthModal({
                             </button>
                         </div>
 
-                        {error && <div className={styles.errorBox}>{error}</div>}
+                        {displayError && <div className={styles.errorBox}>{displayError}</div>}
 
                         {tab === "LOGIN" ? (
-                            <form className={styles.form} onSubmit={handleLoginSubmit}>
+                            <form
+                                className={styles.form}
+                                onSubmit={loginForm.handleSubmit(onLoginValid)}
+                                noValidate
+                            >
                                 <label className={styles.label}>
                                     <span>Email</span>
                                     <input
                                         type="email"
                                         className={styles.input}
                                         placeholder="vidu@safetymap.vn"
-                                        value={loginEmail}
-                                        onChange={(e) => setLoginEmail(e.target.value)}
-                                        required
+                                        autoComplete="email"
+                                        {...loginForm.register("email", {
+                                            required: "Vui lòng nhập email",
+                                            pattern: {
+                                                value: EMAIL_PATTERN,
+                                                message: "Email không hợp lệ"
+                                            },
+                                            setValueAs: (v: string) => v.trim(),
+                                        })}
+
                                     />
                                 </label>
                                 <label className={styles.label}>
@@ -125,26 +186,36 @@ export default function AuthModal({
                                         type="password"
                                         className={styles.input}
                                         placeholder="••••••••"
-                                        value={loginPass}
-                                        onChange={(e) => setLoginPass(e.target.value)}
-                                        required
+                                        autoComplete="current-password"
+                                        {...loginForm.register("password", {
+                                            required: "Vui lòng nhập mật khẩu",
+                                        })}
                                     />
                                 </label>
-                                <button type="submit" className={styles.primaryBtn}>
+                                <button
+                                    type="submit"
+                                    className={styles.primaryBtn}
+                                    disabled={loginForm.formState.isSubmitting}
+                                >
                                     Đăng nhập
                                 </button>
                             </form>
                         ) : (
-                            <form className={styles.form} onSubmit={handleSignupSubmit}>
+                            <form className={styles.form}
+                                onSubmit={signupForm.handleSubmit(onSignupValid)}
+                                noValidate
+                            >
                                 <label className={styles.label}>
                                     <span>Họ và tên</span>
                                     <input
                                         type="text"
                                         className={styles.input}
-                                        placeholder="Biện Tấn Phúc"
-                                        value={signupName}
-                                        onChange={(e) => setSignupName(e.target.value)}
-                                        required
+                                        placeholder="Full name"
+                                        autoComplete="name"
+                                        {...signupForm.register("name", {
+                                            required: "Vui lòng nhập Họ và Tên",
+                                            setValueAs: (v: string) => v.trim(),
+                                        })}
                                     />
                                 </label>
                                 <label className={styles.label}>
@@ -153,9 +224,15 @@ export default function AuthModal({
                                         type="email"
                                         className={styles.input}
                                         placeholder="vidu@safetymap.vn"
-                                        value={signupEmail}
-                                        onChange={(e) => setSignupEmail(e.target.value)}
-                                        required
+                                        autoComplete="email"
+                                        {...signupForm.register("email", {
+                                            required: "Vui lòng nhập email",
+                                            pattern: {
+                                                value: EMAIL_PATTERN,
+                                                message: "Email không hợp lệ",
+                                            },
+                                            setValueAs: (v: string) => v.trim(),
+                                        })}
                                     />
                                 </label>
                                 <label className={styles.label}>
@@ -164,12 +241,52 @@ export default function AuthModal({
                                         type="password"
                                         className={styles.input}
                                         placeholder="••••••••"
-                                        value={signupPass}
-                                        onChange={(e) => setSignupPass(e.target.value)}
-                                        required
+                                        autoComplete="new-password"
+                                        {...signupForm.register("password", {
+                                            required: "Vui lòng nhập mật khẩu",
+                                            minLength: {
+                                                value: 6,
+                                                message: "Mật khẩu tối thiểu 6 ký tự",
+                                            },
+                                            // Khi password đổi, validate lại confirmPassword
+                                            deps: "confirmPassword",
+                                        })}
                                     />
                                 </label>
-                                <button type="submit" className={styles.primaryBtn}>
+                                <label className={styles.label}>
+                                    <span>Nhập lại mật khẩu</span>
+                                    <input
+                                        type="password"
+                                        className={styles.input}
+                                        placeholder="••••••••"
+                                        autoComplete="new-password"
+                                        {...signupForm.register("confirmPassword", {
+                                            required: "Vui lòng nhập lại mật khẩu",
+                                            validate: (value, formValues) =>
+                                                value === formValues.password || "Mật khẩu nhập lại không khớp",
+                                        })}
+                                    />
+                                </label>
+                                <Controller
+                                    name="captchaToken"
+                                    control={signupForm.control}
+                                    rules={{ required: "Bạn không phải là robot" }}
+                                    shouldUnregister
+                                    render={({ field }) => (
+                                        <ReCAPTCHA
+                                            ref={recaptchaRef}
+                                            sitekey={RECAPTCHA_SITE_KEY}
+                                            onChange={(token) => field.onChange(token ?? "")}
+                                            onExpired={() => field.onChange("")}
+                                            onError={() => field.onChange("")}
+                                        />
+                                    )}
+                                />
+                                <button
+                                    type="submit"
+                                    className={styles.primaryBtn}
+                                    disabled={signupForm.formState.isSubmitting}
+                                >
                                     Tạo tài khoản
                                 </button>
                             </form>
