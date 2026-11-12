@@ -34,3 +34,6 @@ build/
 
 ### Environment ###
 .env
+
+# Local OSM snapshots (hundreds of MB); see README for how to download
+/data/
