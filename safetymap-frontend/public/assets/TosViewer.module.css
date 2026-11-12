@@ -120,42 +120,25 @@
   color: #202124;
 }
 
-/* Thanh mục lục nhảy nhanh */
-.tocBar {
-  display: flex;
-  gap: 8px;
-  padding: 10px 24px;
-  background: #f8f9fa;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  overflow-x: auto;
-  white-space: nowrap;
-}
-
-.tocChip {
-  border: 1px solid #dadce0;
-  background: #ffffff;
-  color: #3c4043;
-  padding: 4px 12px;
-  border-radius: 14px;
-  font-size: 12px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-decoration: none;
-}
-
-.tocChip:hover {
-  background: #e8f0fe;
-  color: #1a73e8;
-  border-color: #aecbfa;
-}
-
 /* Nội dung cuộn chính */
 .contentBody {
   flex: 1;
   overflow-y: auto;
   padding: 24px;
   line-height: 1.6;
+}
+
+.contentBody::-webkit-scrollbar {
+  width: 6px;
+}
+
+.contentBody::-webkit-scrollbar-thumb {
+  background: #dadce0;
+  border-radius: 4px;
+}
+
+.contentBody::-webkit-scrollbar-thumb:hover {
+  background: #bdc1c6;
 }
 
 .introBox {

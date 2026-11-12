@@ -13,12 +13,12 @@ interface AdminUserRecord {
 
 // Danh sách tài khoản mẫu để Admin quản lý (gồm cả User, Mod, Admin)
 const INITIAL_USERS: AdminUserRecord[] = [
-    { id: 1, name: "ADMIN1", email: "admin1@safetymap.vn", roles: ["USER", "MODERATOR", "ADMIN"], status: "ACTIVE", createdAt: "15/10/2026" },
-    { id: 2, name: "MODERATOR1", email: "mod1@safetymap.vn", roles: ["USER", "MODERATOR"], status: "ACTIVE", createdAt: "18/10/2026" },
-    { id: 3, name: "MODERATOR2", email: "mod2@safetymap.vn", roles: ["USER", "MODERATOR"], status: "ACTIVE", createdAt: "20/10/2026" },
-    { id: 4, name: "USER1", email: "user1@safetymap.vn", roles: ["USER"], status: "ACTIVE", createdAt: "24/10/2026" },
-    { id: 5, name: "USER2", email: "user2@safetymap.vn", roles: ["USER"], status: "ACTIVE", createdAt: "25/10/2026" },
-    { id: 6, name: "USER3", email: "user3@safetymap.vn", roles: ["USER"], status: "BANNED", createdAt: "28/10/2026" },
+    { id: 1, name: "ADMIN1", email: "admin1@safermap.vn", roles: ["USER", "MODERATOR", "ADMIN"], status: "ACTIVE", createdAt: "15/10/2026" },
+    { id: 2, name: "MODERATOR1", email: "mod1@safermap.vn", roles: ["USER", "MODERATOR"], status: "ACTIVE", createdAt: "18/10/2026" },
+    { id: 3, name: "MODERATOR2", email: "mod2@safermap.vn", roles: ["USER", "MODERATOR"], status: "ACTIVE", createdAt: "20/10/2026" },
+    { id: 4, name: "USER1", email: "user1@safermap.vn", roles: ["USER"], status: "ACTIVE", createdAt: "24/10/2026" },
+    { id: 5, name: "USER2", email: "user2@safermap.vn", roles: ["USER"], status: "ACTIVE", createdAt: "25/10/2026" },
+    { id: 6, name: "USER3", email: "user3@safermap.vn", roles: ["USER"], status: "BANNED", createdAt: "28/10/2026" },
 ];
 
 interface NewsSource {

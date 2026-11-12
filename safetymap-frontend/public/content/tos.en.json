@@ -1,8 +1,8 @@
 {
-  "title": "SafetyMap Terms of Service",
+  "title": "S.A.F.E.R Terms of Service",
   "lastUpdated": "11/11/2026",
   "version": "1.0",
-  "introduction": "Welcome to SafetyMap. By creating an account, submitting an incident report, or using the route navigation features, you acknowledge that you have read, understood, and agreed to be bound by all the terms below.",
+  "introduction": "Welcome to S.A.F.E.R (Safety-Aware Filtered Evaluative Routing). By creating an account, submitting an incident report, or using the route navigation features, you acknowledge that you have read, understood, and agreed to be bound by all the terms below.",
   "sections": [
     {
       "id": "safety-disclaimer",
@@ -10,12 +10,12 @@
       "title": "Safety & Route Disclaimer",
       "badge": "Important",
       "paragraphs": [
-        "Road danger scores, safe zone coloring, and route recommendations on SafetyMap are strictly for ADVISORY and INFORMATIONAL purposes, computed from community contributions and recorded news articles.",
-        "SafetyMap does not guarantee 100% absolute safety on any route. You must always observe real-world traffic conditions, comply with road traffic regulations, and assume full personal responsibility for your travel choices. SafetyMap is completely exempt from civil liability and damages resulting from incidents, accidents, or losses sustained while in transit."
+        "Road danger scores, safe zone coloring, and route recommendations on S.A.F.E.R are strictly for ADVISORY and INFORMATIONAL purposes, computed from community contributions and recorded news articles.",
+        "S.A.F.E.R does not guarantee 100% absolute safety on any route. You must always observe real-world traffic conditions, comply with road traffic regulations, and assume full personal responsibility for your travel choices. S.A.F.E.R is completely exempt from civil liability and damages resulting from incidents, accidents, or losses sustained while in transit."
       ],
       "bullets": [
-        "SafetyMap IS NOT an emergency dispatch or 911/113/114/115 service. In situations involving immediate danger to life or property, contact local emergency hotlines without delay.",
-        "Operating, browsing the map, or submitting incident reports while directly driving a moving vehicle is strictly prohibited."
+        "S.A.F.E.R IS NOT an emergency dispatch or 911/113/114/115 service. In situations involving immediate danger to life or property, contact local emergency hotlines without delay.",
+        "Operating, browsing the map, or submitting incident reports while directly driving a moving vehicle is not advised."
       ]
     },
     {
@@ -23,8 +23,8 @@
       "number": "2",
       "title": "Incident Reports, Photo Rights & EXIF Data",
       "paragraphs": [
-        "When submitting photos or descriptions regarding accidents, flooding, theft, or congestion, you grant SafetyMap a perpetual, worldwide, royalty-free, irrevocable license to store, publicly display on the community map, and process via AI computer vision models.",
-        "You authorize SafetyMap to read and inspect GPS coordinates and timestamp metadata embedded inside photo files (EXIF data) to verify incident location accuracy."
+        "When submitting photos or descriptions regarding accidents, flooding, theft, or congestion, you grant S.A.F.E.R a perpetual, worldwide, royalty-free, irrevocable license to store, publicly display on the community map, and process via AI computer vision models.",
+        "You authorize S.A.F.E.R to read and inspect GPS coordinates and timestamp metadata embedded inside photo files (EXIF data) to verify incident location accuracy."
       ],
       "bullets": [
         "Reporters bear full legal liability for all submitted content and imagery. Fabricating or staging false incidents is strictly punishable by law.",
@@ -37,7 +37,7 @@
       "title": "AI & Human Moderator Authority",
       "paragraphs": [
         "All community submissions undergo a hybrid verification workflow: an AI model computes initial confidence scores, and uncertain reports are escalated to the Moderator Hub for verification.",
-        "SafetyMap reserves the unilateral right to perform any of the following actions on any report without prior notice or consent:"
+        "S.A.F.E.R reserves the unilateral right to perform any of the following actions on any report without prior notice or consent:"
       ],
       "bullets": [
         "Reject publication of a report, with the official rejection reason recorded in the system audit trail.",
@@ -64,11 +64,11 @@
       "number": "5",
       "title": "Third-Party Data & Map Attribution",
       "paragraphs": [
-        "SafetyMap complies with international open data standards and acknowledges third-party intellectual property:"
+        "S.A.F.E.R complies with international open data standards and acknowledges third-party intellectual property:"
       ],
       "bullets": [
         "Base map data is provided by OpenStreetMap contributors under the Open Database License (ODbL), rendered via Leaflet, OpenFreeMap, and OpenMapTiles.",
-        "Traffic and hazard news excerpts belong to respective press agencies (VnExpress, Tuoi Tre, Giao Thong...). SafetyMap provides transparent attribution and reference links."
+        "Traffic and hazard news excerpts belong to respective press agencies (VnExpress, Tuoi Tre, Giao Thong...). S.A.F.E.R provides transparent attribution and reference links."
       ]
     },
     {
@@ -77,7 +77,7 @@
       "title": "Governing Law & Contact",
       "paragraphs": [
         "These Terms of Service are governed by and construed in accordance with the laws of the Socialist Republic of Vietnam (including the Law on Cybersecurity and Personal Data Protection decrees).",
-        "For copyright concerns, questions, or inquiries regarding these terms, contact our support team at: hotro@safetymap.vn."
+        "For copyright concerns, questions, or inquiries regarding these terms, contact our support team at: hotro@safermap.vn."
       ]
     }
   ]

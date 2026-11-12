@@ -106,10 +106,10 @@ interface NormalUser {
 
 // Danh sách người dùng thường mẫu để Moderator quản lý và chế tài
 const INITIAL_NORMAL_USERS: NormalUser[] = [
-    { id: 201, name: "USER1", email: "user1@safetymap.vn", totalReports: 16, approvedReports: 14, rejectedReports: 2, status: "ACTIVE" },
-    { id: 202, name: "USER2", email: "user2@safetymap.vn", totalReports: 6, approvedReports: 5, rejectedReports: 1, status: "ACTIVE" },
-    { id: 203, name: "USER3", email: "user3@safetymap.vn", totalReports: 24, approvedReports: 22, rejectedReports: 2, status: "ACTIVE" },
-    { id: 204, name: "USER4 (Spam)", email: "user4@safetymap.vn", totalReports: 8, approvedReports: 1, rejectedReports: 7, status: "BANNED" },
+    { id: 201, name: "USER1", email: "user1@safermap.vn", totalReports: 16, approvedReports: 14, rejectedReports: 2, status: "ACTIVE" },
+    { id: 202, name: "USER2", email: "user2@safermap.vn", totalReports: 6, approvedReports: 5, rejectedReports: 1, status: "ACTIVE" },
+    { id: 203, name: "USER3", email: "user3@safermap.vn", totalReports: 24, approvedReports: 22, rejectedReports: 2, status: "ACTIVE" },
+    { id: 204, name: "USER4 (Spam)", email: "user4@safermap.vn", totalReports: 8, approvedReports: 1, rejectedReports: 7, status: "BANNED" },
 ];
 
 // Định dạng thông tin sự cố có sẵn trên bản đồ để đối chiếu và gộp

@@ -115,7 +115,7 @@ export default function MapOverlay() {
                                 </ul>
                                 <div style={{ marginTop: 10, paddingTop: 8, borderTop: "1px solid #ebebeb" }}>
                                     <a href="#tos" style={{ color: "#1a73e8", fontWeight: 600, fontSize: 13, textDecoration: "none" }}>
-                                        📜 Điều khoản Dịch vụ (Terms of Service)
+                                        📜 Điều khoản Dịch vụ S.A.F.E.R (Terms of Service)
                                     </a>
                                 </div>
                             </div>

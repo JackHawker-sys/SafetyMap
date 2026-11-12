@@ -79,7 +79,7 @@ export function useAuth() {
         setError(null);
         const googleUser: User = {
             name: "TEST",
-            email: "test@safetymap.vn",
+            email: "test@safermap.vn",
             isGoogle: true,
             roles: ["USER", "MODERATOR", "ADMIN"],
         };

@@ -1,8 +1,8 @@
 {
-  "title": "Điều khoản Dịch vụ SafetyMap",
+  "title": "Điều khoản Dịch vụ S.A.F.E.R",
   "lastUpdated": "11/11/2026",
   "version": "1.0",
-  "introduction": "Chào mừng bạn đến với SafetyMap. Bằng việc đăng ký tài khoản, gửi báo cáo hoặc sử dụng tính năng tra cứu lộ trình trên hệ thống, bạn xác nhận đã đọc, hiểu và đồng ý tuân thủ toàn bộ các điều khoản dưới đây.",
+  "introduction": "Chào mừng bạn đến với S.A.F.E.R (Safety-Aware Filtered Evaluative Routing). Bằng việc đăng ký tài khoản, gửi báo cáo hoặc sử dụng tính năng tra cứu lộ trình trên hệ thống, bạn xác nhận đã đọc, hiểu và đồng ý tuân thủ toàn bộ các điều khoản dưới đây.",
   "sections": [
     {
       "id": "safety-disclaimer",
@@ -10,12 +10,12 @@
       "title": "Miễn trừ trách nhiệm về an toàn & lộ trình",
       "badge": "Quan trọng",
       "paragraphs": [
-        "Điểm nguy hiểm đoạn đường (danger score), màu sắc phân vùng an toàn và các gợi ý lộ trình trên SafetyMap chỉ mang tính chất THAM KHẢO, được tính toán từ dữ liệu phản ánh của cộng đồng và các nguồn tin tức ghi nhận.",
-        "SafetyMap không bảo đảm an toàn tuyệt đối 100% trên bất kỳ cung đường nào. Bạn luôn phải tự quan sát tình hình thực tế, tuân thủ Luật Giao thông đường bộ và hoàn toàn tự chịu trách nhiệm đối với quyết định di chuyển của mình. SafetyMap được miễn trừ toàn bộ trách nhiệm dân sự và bồi thường thiệt hại đối với các sự cố, tai nạn hoặc tổn thất phát sinh trong quá trình bạn lưu thông."
+        "Điểm nguy hiểm đoạn đường (danger score), màu sắc phân vùng an toàn và các gợi ý lộ trình trên S.A.F.E.R chỉ mang tính chất THAM KHẢO, được tính toán từ dữ liệu phản ánh của cộng đồng và các nguồn tin tức ghi nhận.",
+        "S.A.F.E.R không bảo đảm an toàn tuyệt đối 100% trên bất kỳ cung đường nào. Bạn luôn phải tự quan sát tình hình thực tế, tuân thủ Luật Giao thông đường bộ và hoàn toàn tự chịu trách nhiệm đối với quyết định di chuyển của mình. S.A.F.E.R được miễn trừ toàn bộ trách nhiệm dân sự và bồi thường thiệt hại đối với các sự cố, tai nạn hoặc tổn thất phát sinh trong quá trình bạn lưu thông."
       ],
       "bullets": [
-        "SafetyMap KHÔNG PHẢI là dịch vụ cứu nạn khẩn cấp. Trong trường hợp nguy hiểm trực tiếp đến tính mạng hoặc tài sản, bạn phải liên hệ ngay các cơ quan chức năng qua số khẩn cấp (113, 114, 115).",
-        "Nghiêm cấm người dùng thao tác bấm màn hình, tra cứu bản đồ hoặc gửi báo cáo khi đang trực tiếp lái xe hoặc vận hành phương tiện cơ giới."
+        "S.A.F.E.R KHÔNG PHẢI là dịch vụ cứu nạn khẩn cấp. Trong trường hợp nguy hiểm trực tiếp đến tính mạng hoặc tài sản, bạn phải liên hệ ngay các cơ quan chức năng qua số khẩn cấp (113, 114, 115).",
+        "Người dùng không nên thao tác màn hình, tra cứu bản đồ hoặc gửi báo cáo khi đang trực tiếp lái xe hoặc vận hành phương tiện cơ giới."
       ]
     },
     {
@@ -23,8 +23,8 @@
       "number": "2",
       "title": "Báo cáo sự cố, Bản quyền hình ảnh & Dữ liệu EXIF",
       "paragraphs": [
-        "Khi tải lên hình ảnh hoặc viết mô tả về các sự cố (tai nạn, ngập lụt, cướp giật, điểm ùn tắc), bạn cấp cho SafetyMap quyền sử dụng miễn phí, vĩnh viễn, không hủy ngang trên phạm vi toàn cầu để lưu trữ, hiển thị công khai trên bản đồ cộng đồng và nạp vào mô hình AI phân tích thị giác máy tính.",
-        "Bạn đồng ý cho phép SafetyMap đọc và xử lý tọa độ GPS cùng thời gian chụp được lưu trong dữ liệu ẩn của tệp ảnh (EXIF metadata) nhằm đối chiếu và xác thực vị trí hiện trường."
+        "Khi tải lên hình ảnh hoặc viết mô tả về các sự cố (tai nạn, ngập lụt, cướp giật, điểm ùn tắc), bạn cấp cho S.A.F.E.R quyền sử dụng miễn phí, vĩnh viễn, không hủy ngang trên phạm vi toàn cầu để lưu trữ, hiển thị công khai trên bản đồ cộng đồng và nạp vào mô hình AI phân tích thị giác máy tính.",
+        "Bạn đồng ý cho phép S.A.F.E.R đọc và xử lý tọa độ GPS cùng thời gian chụp được lưu trong dữ liệu ẩn của tệp ảnh (EXIF metadata) nhằm đối chiếu và xác thực vị trí hiện trường."
       ],
       "bullets": [
         "Người gửi báo cáo phải chịu hoàn toàn trách nhiệm pháp lý đối với nội dung và hình ảnh cung cấp. Mọi hành vi cố tình dàn dựng hoặc vu khống sẽ bị xử lý nghiêm khắc.",
@@ -37,7 +37,7 @@
       "title": "Quyền hạn của AI & Đội ngũ Kiểm duyệt viên (Moderator)",
       "paragraphs": [
         "Tất cả các báo cáo gửi lên đều trải qua quy trình đánh giá kết hợp: mô hình AI chấm điểm độ tin cậy ban đầu và chuyển tiếp đến Bàn kiểm duyệt (Moderator Hub) để kiểm chứng thực tế.",
-        "SafetyMap bảo lưu toàn quyền thực hiện các thao tác sau đối với mọi báo cáo cộng đồng mà không cần sự đồng ý trước của người gửi:"
+        "S.A.F.E.R bảo lưu toàn quyền thực hiện các thao tác sau đối với mọi báo cáo cộng đồng mà không cần sự đồng ý trước của người gửi:"
       ],
       "bullets": [
         "Từ chối xuất bản báo cáo kèm theo lý do cụ thể được ghi nhận trên hệ thống.",
@@ -64,11 +64,11 @@
       "number": "5",
       "title": "Dữ liệu bên thứ ba & Bản quyền bản đồ",
       "paragraphs": [
-        "SafetyMap tích hợp và dẫn chiếu các nguồn dữ liệu uy tín theo đúng chuẩn mực sở hữu trí tuệ:"
+        "S.A.F.E.R tích hợp và dẫn chiếu các nguồn dữ liệu uy tín theo đúng chuẩn mực sở hữu trí tuệ:"
       ],
       "bullets": [
         "Bản đồ nền sử dụng dữ liệu từ OpenStreetMap contributors theo giấy phép Open Database License (ODbL), hiển thị thông qua thư viện Leaflet, OpenFreeMap và OpenMapTiles.",
-        "Các tin tức cảnh báo giao thông được trích xuất từ các cơ quan báo chí chính thống (VnExpress, Tuổi Trẻ, Báo Giao Thông...). Bản quyền các bài viết thuộc về tòa soạn gốc và SafetyMap luôn dẫn link nguồn minh bạch."
+        "Các tin tức cảnh báo giao thông được trích xuất từ các cơ quan báo chí chính thống (VnExpress, Tuổi Trẻ, Báo Giao Thông...). Bản quyền các bài viết thuộc về tòa soạn gốc và S.A.F.E.R luôn dẫn link nguồn minh bạch."
       ]
     },
     {
@@ -77,7 +77,7 @@
       "title": "Luật điều chỉnh & Kênh liên hệ",
       "paragraphs": [
         "Điều khoản dịch vụ này được điều chỉnh và giải thích theo quy định của pháp luật nước Cộng hòa Xã hội Chủ nghĩa Việt Nam (bao gồm Luật An ninh mạng và các nghị định liên quan đến an toàn dữ liệu).",
-        "Nếu bạn phát hiện nội dung vi phạm bản quyền hoặc cần giải đáp thắc mắc về điều khoản, vui lòng liên hệ đội ngũ quản trị qua email: hotro@safetymap.vn."
+        "Nếu bạn phát hiện nội dung vi phạm bản quyền hoặc cần giải đáp thắc mắc về điều khoản, vui lòng liên hệ đội ngũ quản trị qua email: hotro@S.A.F.E.R.vn."
       ]
     }
   ]

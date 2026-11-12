@@ -18,14 +18,6 @@ export default function TosViewer({
     const { lang, setLang, document, loading, error } = useTosContent();
     const contentRef = useRef<HTMLDivElement>(null);
 
-    // Cuộn mượt đến điều khoản được chọn từ thanh mục lục
-    const scrollToSection = (sectionId: string) => {
-        const el = window.document.getElementById(`tos-sec-${sectionId}`);
-        if (el) {
-            el.scrollIntoView({ behavior: "smooth", block: "start" });
-        }
-    };
-
     // Nút chuyển đổi ngôn ngữ Việt / Anh
     const languageSwitcher = (
         <div className={styles.langSwitch} role="group" aria-label="Language selection">
@@ -63,7 +55,7 @@ export default function TosViewer({
                 <div className={styles.iconShield}>🛡️</div>
                 <div>
                     <h2 className={styles.headerTitle}>
-                        {document ? document.title : (lang === "vi" ? "Điều khoản Dịch vụ" : "Terms of Service")}
+                        {document ? document.title : (lang === "vi" ? "Điều khoản Dịch vụ S.A.F.E.R" : "S.A.F.E.R Terms of Service")}
                     </h2>
                     {document && (
                         <div className={styles.metaRow}>
@@ -90,22 +82,6 @@ export default function TosViewer({
                     </button>
                 )}
             </div>
-        </div>
-    );
-
-    // Thanh mục lục các điều khoản hỗ trợ bấm nhảy nhanh
-    const tableOfContents = document && document.sections.length > 0 && (
-        <div className={styles.tocBar}>
-            {document.sections.map((sec) => (
-                <button
-                    key={sec.id}
-                    type="button"
-                    className={styles.tocChip}
-                    onClick={() => scrollToSection(sec.id)}
-                >
-                    {sec.number}. {sec.title}
-                </button>
-            ))}
         </div>
     );
 
@@ -181,7 +157,6 @@ export default function TosViewer({
     return (
         <div className={styles.container}>
             {headerBar}
-            {tableOfContents}
             {contentBody}
             {footerBar}
         </div>

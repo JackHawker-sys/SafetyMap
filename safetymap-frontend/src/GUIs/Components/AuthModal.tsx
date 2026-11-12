@@ -162,7 +162,7 @@ export default function AuthModal({
                 <div className={styles.iconCircle}>
                     <UserIcon size={24} />
                 </div>
-                <h2 className={styles.title}>Tài khoản SafetyMap</h2>
+                <h2 className={styles.title}>Tài khoản S.A.F.E.R</h2>
                 <p className={styles.subtitle}>Đăng nhập để có thể trải nghiệm đầy đủ các tính năng</p>
             </div>
 
@@ -207,7 +207,7 @@ export default function AuthModal({
                         <input
                             type="email"
                             className={styles.input}
-                            placeholder="vidu@safetymap.vn"
+                            placeholder="vidu@safermap.vn"
                             value={loginEmail}
                             onChange={(e) => setLoginEmail(e.target.value)}
                             required
@@ -246,7 +246,7 @@ export default function AuthModal({
                         <input
                             type="email"
                             className={styles.input}
-                            placeholder="vidu@safetymap.vn"
+                            placeholder="vidu@safermap.vn"
                             value={signupEmail}
                             onChange={(e) => setSignupEmail(e.target.value)}
                             required
