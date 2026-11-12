@@ -113,6 +113,11 @@ export default function MapOverlay() {
                                     <li><a href="https://www.openmaptiles.org" target="_blank" rel="noreferrer">© OpenMapTiles</a></li>
                                     <li><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap contributors</a></li>
                                 </ul>
+                                <div style={{ marginTop: 10, paddingTop: 8, borderTop: "1px solid #ebebeb" }}>
+                                    <a href="#tos" style={{ color: "#1a73e8", fontWeight: 600, fontSize: 13, textDecoration: "none" }}>
+                                        📜 Điều khoản Dịch vụ (Terms of Service)
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     )}

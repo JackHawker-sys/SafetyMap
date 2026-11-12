@@ -1,0 +1,84 @@
+{
+  "title": "SafetyMap Terms of Service",
+  "lastUpdated": "11/11/2026",
+  "version": "1.0",
+  "introduction": "Welcome to SafetyMap. By creating an account, submitting an incident report, or using the route navigation features, you acknowledge that you have read, understood, and agreed to be bound by all the terms below.",
+  "sections": [
+    {
+      "id": "safety-disclaimer",
+      "number": "1",
+      "title": "Safety & Route Disclaimer",
+      "badge": "Important",
+      "paragraphs": [
+        "Road danger scores, safe zone coloring, and route recommendations on SafetyMap are strictly for ADVISORY and INFORMATIONAL purposes, computed from community contributions and recorded news articles.",
+        "SafetyMap does not guarantee 100% absolute safety on any route. You must always observe real-world traffic conditions, comply with road traffic regulations, and assume full personal responsibility for your travel choices. SafetyMap is completely exempt from civil liability and damages resulting from incidents, accidents, or losses sustained while in transit."
+      ],
+      "bullets": [
+        "SafetyMap IS NOT an emergency dispatch or 911/113/114/115 service. In situations involving immediate danger to life or property, contact local emergency hotlines without delay.",
+        "Operating, browsing the map, or submitting incident reports while directly driving a moving vehicle is strictly prohibited."
+      ]
+    },
+    {
+      "id": "ugc-photos",
+      "number": "2",
+      "title": "Incident Reports, Photo Rights & EXIF Data",
+      "paragraphs": [
+        "When submitting photos or descriptions regarding accidents, flooding, theft, or congestion, you grant SafetyMap a perpetual, worldwide, royalty-free, irrevocable license to store, publicly display on the community map, and process via AI computer vision models.",
+        "You authorize SafetyMap to read and inspect GPS coordinates and timestamp metadata embedded inside photo files (EXIF data) to verify incident location accuracy."
+      ],
+      "bullets": [
+        "Reporters bear full legal liability for all submitted content and imagery. Fabricating or staging false incidents is strictly punishable by law.",
+        "Reporter identity is displayed as an anonymized identifier (e.g. USER1, USER2) on public feeds to preserve personal privacy."
+      ]
+    },
+    {
+      "id": "moderation-authority",
+      "number": "3",
+      "title": "AI & Human Moderator Authority",
+      "paragraphs": [
+        "All community submissions undergo a hybrid verification workflow: an AI model computes initial confidence scores, and uncertain reports are escalated to the Moderator Hub for verification.",
+        "SafetyMap reserves the unilateral right to perform any of the following actions on any report without prior notice or consent:"
+      ],
+      "bullets": [
+        "Reject publication of a report, with the official rejection reason recorded in the system audit trail.",
+        "Merge your report into an existing nearby incident within 300 meters to prevent duplicate map clutter.",
+        "Moderator and AI decisions are final and implemented in the interest of community safety."
+      ]
+    },
+    {
+      "id": "banned-behavior",
+      "number": "4",
+      "title": "Account Rules & Prohibited Behavior",
+      "paragraphs": [
+        "To maintain a respectful, reliable, and trustworthy mapping platform, users must use the application for its intended purpose. The following actions are strictly prohibited:"
+      ],
+      "bullets": [
+        "Spam: Submitting repetitive junk reports or uploading images unrelated to road safety, traffic, or flooding.",
+        "On-purpose fake reports: Fabricating incidents, reporting non-existent hazards, or spoofing GPS locations to distort neighborhood safety scores.",
+        "Offensive language: Using defamatory, threatening, vulgar, or obscene words in incident descriptions.",
+        "Sanction progression: System violations are penalized in tiers: Formal Warning -> Temporary report submission suspension -> Permanent account termination."
+      ]
+    },
+    {
+      "id": "third-party",
+      "number": "5",
+      "title": "Third-Party Data & Map Attribution",
+      "paragraphs": [
+        "SafetyMap complies with international open data standards and acknowledges third-party intellectual property:"
+      ],
+      "bullets": [
+        "Base map data is provided by OpenStreetMap contributors under the Open Database License (ODbL), rendered via Leaflet, OpenFreeMap, and OpenMapTiles.",
+        "Traffic and hazard news excerpts belong to respective press agencies (VnExpress, Tuoi Tre, Giao Thong...). SafetyMap provides transparent attribution and reference links."
+      ]
+    },
+    {
+      "id": "contact-law",
+      "number": "6",
+      "title": "Governing Law & Contact",
+      "paragraphs": [
+        "These Terms of Service are governed by and construed in accordance with the laws of the Socialist Republic of Vietnam (including the Law on Cybersecurity and Personal Data Protection decrees).",
+        "For copyright concerns, questions, or inquiries regarding these terms, contact our support team at: hotro@safetymap.vn."
+      ]
+    }
+  ]
+}

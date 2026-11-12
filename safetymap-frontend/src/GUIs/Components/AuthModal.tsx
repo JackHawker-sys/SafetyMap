@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from "react";
 import type { User, UserRole } from "../Hooks/useAuth";
 import { UserIcon, GoogleIcon, CloseIcon } from "./Icons";
+import TosModal from "./TosModal";
 import styles from "../../../public/assets/AuthModal.module.css";
 
 interface Props {
@@ -14,7 +15,7 @@ interface Props {
     onGoogleLogin: () => void;
     onLogout: () => void;
     onToggleRole?: (role: UserRole) => void;
-    onNavigate?: (page: "moderator" | "admin") => void;
+    onNavigate?: (page: "moderator" | "admin" | "tos") => void;
 }
 
 export default function AuthModal({
@@ -29,6 +30,10 @@ export default function AuthModal({
     const [signupEmail, setSignupEmail] = useState("");
     const [signupPass, setSignupPass] = useState("");
 
+    // Trạng thái đồng ý điều khoản dịch vụ và hiển thị popup ToS
+    const [agreedToTos, setAgreedToTos] = useState(false);
+    const [showTosModal, setShowTosModal] = useState(false);
+
     if (!isOpen) return null;
 
     // Xử lý gửi form đăng nhập
@@ -38,9 +43,10 @@ export default function AuthModal({
         if (success) onClose();
     }
 
-    // Xử lý gửi form đăng ký tài khoản mới
+    // Xử lý gửi form đăng ký tài khoản mới (yêu cầu phải đồng ý điều khoản)
     function handleSignupSubmit(e: FormEvent) {
         e.preventDefault();
+        if (!agreedToTos) return;
         const success = onSignup(signupName, signupEmail, signupPass);
         if (success) onClose();
     }
@@ -122,6 +128,30 @@ export default function AuthModal({
                     );
                 })}
             </div>
+        </div>
+    );
+
+    // Checkbox xác nhận đồng ý Điều khoản Dịch vụ trong form đăng ký
+    const tosCheckboxSection = (
+        <div className={styles.tosRow}>
+            <label className={styles.tosLabel}>
+                <input
+                    type="checkbox"
+                    className={styles.tosCheckbox}
+                    checked={agreedToTos}
+                    onChange={(e) => setAgreedToTos(e.target.checked)}
+                />
+                <span className={styles.tosText}>
+                    Tôi đồng ý với{" "}
+                    <button
+                        type="button"
+                        className={styles.tosLinkBtn}
+                        onClick={() => setShowTosModal(true)}
+                    >
+                        Điều khoản Dịch vụ
+                    </button>
+                </span>
+            </label>
         </div>
     );
 
@@ -233,7 +263,12 @@ export default function AuthModal({
                             required
                         />
                     </label>
-                    <button type="submit" className={styles.primaryBtn}>
+                    {tosCheckboxSection}
+                    <button
+                        type="submit"
+                        className={styles.primaryBtn}
+                        disabled={!agreedToTos}
+                    >
                         Tạo tài khoản
                     </button>
                 </form>
@@ -242,37 +277,48 @@ export default function AuthModal({
     );
 
     return (
-        <div className={styles.backdrop} onClick={onClose} role="dialog" aria-modal="true">
-            <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-                <button type="button" className={styles.closeBtn} onClick={onClose} title="Đóng">
-                    <CloseIcon size={20} />
-                </button>
+        <>
+            <div className={styles.backdrop} onClick={onClose} role="dialog" aria-modal="true">
+                <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                    <button type="button" className={styles.closeBtn} onClick={onClose} title="Đóng">
+                        <CloseIcon size={20} />
+                    </button>
 
-                {user ? (
-                    <div className={styles.profileSection}>
-                        <div className={styles.avatarCircle}>
-                            {user.name.charAt(0).toUpperCase()}
+                    {user ? (
+                        <div className={styles.profileSection}>
+                            <div className={styles.avatarCircle}>
+                                {user.name.charAt(0).toUpperCase()}
+                            </div>
+                            <h2 className={styles.userName}>{user.name}</h2>
+                            <p className={styles.userEmail}>{user.email}</p>
+                            {roleBadges}
+                            {navigationButtons}
+                            {roleTester}
+                            <button
+                                type="button"
+                                className={styles.logoutBtn}
+                                onClick={() => {
+                                    onLogout();
+                                    onClose();
+                                }}
+                            >
+                                Đăng xuất
+                            </button>
                         </div>
-                        <h2 className={styles.userName}>{user.name}</h2>
-                        <p className={styles.userEmail}>{user.email}</p>
-                        {roleBadges}
-                        {navigationButtons}
-                        {roleTester}
-                        <button
-                            type="button"
-                            className={styles.logoutBtn}
-                            onClick={() => {
-                                onLogout();
-                                onClose();
-                            }}
-                        >
-                            Đăng xuất
-                        </button>
-                    </div>
-                ) : (
-                    authForm
-                )}
+                    ) : (
+                        authForm
+                    )}
+                </div>
             </div>
-        </div>
+
+            <TosModal
+                isOpen={showTosModal}
+                onClose={() => setShowTosModal(false)}
+                onAgreeAndClose={() => {
+                    setAgreedToTos(true);
+                    setShowTosModal(false);
+                }}
+            />
+        </>
     );
 }

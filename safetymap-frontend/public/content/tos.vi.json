@@ -1,0 +1,84 @@
+{
+  "title": "Điều khoản Dịch vụ SafetyMap",
+  "lastUpdated": "11/11/2026",
+  "version": "1.0",
+  "introduction": "Chào mừng bạn đến với SafetyMap. Bằng việc đăng ký tài khoản, gửi báo cáo hoặc sử dụng tính năng tra cứu lộ trình trên hệ thống, bạn xác nhận đã đọc, hiểu và đồng ý tuân thủ toàn bộ các điều khoản dưới đây.",
+  "sections": [
+    {
+      "id": "safety-disclaimer",
+      "number": "1",
+      "title": "Miễn trừ trách nhiệm về an toàn & lộ trình",
+      "badge": "Quan trọng",
+      "paragraphs": [
+        "Điểm nguy hiểm đoạn đường (danger score), màu sắc phân vùng an toàn và các gợi ý lộ trình trên SafetyMap chỉ mang tính chất THAM KHẢO, được tính toán từ dữ liệu phản ánh của cộng đồng và các nguồn tin tức ghi nhận.",
+        "SafetyMap không bảo đảm an toàn tuyệt đối 100% trên bất kỳ cung đường nào. Bạn luôn phải tự quan sát tình hình thực tế, tuân thủ Luật Giao thông đường bộ và hoàn toàn tự chịu trách nhiệm đối với quyết định di chuyển của mình. SafetyMap được miễn trừ toàn bộ trách nhiệm dân sự và bồi thường thiệt hại đối với các sự cố, tai nạn hoặc tổn thất phát sinh trong quá trình bạn lưu thông."
+      ],
+      "bullets": [
+        "SafetyMap KHÔNG PHẢI là dịch vụ cứu nạn khẩn cấp. Trong trường hợp nguy hiểm trực tiếp đến tính mạng hoặc tài sản, bạn phải liên hệ ngay các cơ quan chức năng qua số khẩn cấp (113, 114, 115).",
+        "Nghiêm cấm người dùng thao tác bấm màn hình, tra cứu bản đồ hoặc gửi báo cáo khi đang trực tiếp lái xe hoặc vận hành phương tiện cơ giới."
+      ]
+    },
+    {
+      "id": "ugc-photos",
+      "number": "2",
+      "title": "Báo cáo sự cố, Bản quyền hình ảnh & Dữ liệu EXIF",
+      "paragraphs": [
+        "Khi tải lên hình ảnh hoặc viết mô tả về các sự cố (tai nạn, ngập lụt, cướp giật, điểm ùn tắc), bạn cấp cho SafetyMap quyền sử dụng miễn phí, vĩnh viễn, không hủy ngang trên phạm vi toàn cầu để lưu trữ, hiển thị công khai trên bản đồ cộng đồng và nạp vào mô hình AI phân tích thị giác máy tính.",
+        "Bạn đồng ý cho phép SafetyMap đọc và xử lý tọa độ GPS cùng thời gian chụp được lưu trong dữ liệu ẩn của tệp ảnh (EXIF metadata) nhằm đối chiếu và xác thực vị trí hiện trường."
+      ],
+      "bullets": [
+        "Người gửi báo cáo phải chịu hoàn toàn trách nhiệm pháp lý đối với nội dung và hình ảnh cung cấp. Mọi hành vi cố tình dàn dựng hoặc vu khống sẽ bị xử lý nghiêm khắc.",
+        "Danh tính người báo cáo được hiển thị dưới dạng mã định danh nặc danh (ví dụ: USER1, USER2) trong danh sách sự cố công khai để bảo vệ quyền riêng tư của bạn."
+      ]
+    },
+    {
+      "id": "moderation-authority",
+      "number": "3",
+      "title": "Quyền hạn của AI & Đội ngũ Kiểm duyệt viên (Moderator)",
+      "paragraphs": [
+        "Tất cả các báo cáo gửi lên đều trải qua quy trình đánh giá kết hợp: mô hình AI chấm điểm độ tin cậy ban đầu và chuyển tiếp đến Bàn kiểm duyệt (Moderator Hub) để kiểm chứng thực tế.",
+        "SafetyMap bảo lưu toàn quyền thực hiện các thao tác sau đối với mọi báo cáo cộng đồng mà không cần sự đồng ý trước của người gửi:"
+      ],
+      "bullets": [
+        "Từ chối xuất bản báo cáo kèm theo lý do cụ thể được ghi nhận trên hệ thống.",
+        "Gộp báo cáo của bạn vào một sự cố tương tự đang có sẵn trong bán kính lân cận (dưới 300 mét) nhằm tránh trùng lặp dữ liệu bản đồ.",
+        "Quyết định kiểm duyệt của AI và Moderator là quyết định cuối cùng phục vụ sự an toàn chung của cộng đồng."
+      ]
+    },
+    {
+      "id": "banned-behavior",
+      "number": "4",
+      "title": "Quy định tài khoản & Các hành vi bị cấm",
+      "paragraphs": [
+        "Để duy trì môi trường bản đồ văn minh và đáng tin cậy, người dùng có nghĩa vụ sử dụng ứng dụng đúng mục đích. Các hành vi sau đây bị nghiêm cấm hoàn toàn:"
+      ],
+      "bullets": [
+        "Spam: Gửi nhiều báo cáo rác lặp đi lặp lại hoặc gửi các hình ảnh không liên quan đến sự cố giao thông và ngập lụt.",
+        "Cố tình báo cáo sai sự thật: Tạo tin giả, báo án không có thật hoặc khai báo vị trí gian lận nhằm làm sai lệch điểm an toàn của khu vực.",
+        "Ngôn từ xúc phạm, thiếu văn hóa: Sử dụng từ ngữ thô tục, bôi nhọ cá nhân/tổ chức, hoặc đe dọa trong phần mô tả sự cố.",
+        "Cấp độ chế tài vi phạm: Hệ thống áp dụng quy trình xử lý theo thứ tự: Nhận cảnh cáo chính thức -> Tạm khóa quyền gửi báo cáo sự cố -> Khóa tài khoản vĩnh viễn."
+      ]
+    },
+    {
+      "id": "third-party",
+      "number": "5",
+      "title": "Dữ liệu bên thứ ba & Bản quyền bản đồ",
+      "paragraphs": [
+        "SafetyMap tích hợp và dẫn chiếu các nguồn dữ liệu uy tín theo đúng chuẩn mực sở hữu trí tuệ:"
+      ],
+      "bullets": [
+        "Bản đồ nền sử dụng dữ liệu từ OpenStreetMap contributors theo giấy phép Open Database License (ODbL), hiển thị thông qua thư viện Leaflet, OpenFreeMap và OpenMapTiles.",
+        "Các tin tức cảnh báo giao thông được trích xuất từ các cơ quan báo chí chính thống (VnExpress, Tuổi Trẻ, Báo Giao Thông...). Bản quyền các bài viết thuộc về tòa soạn gốc và SafetyMap luôn dẫn link nguồn minh bạch."
+      ]
+    },
+    {
+      "id": "contact-law",
+      "number": "6",
+      "title": "Luật điều chỉnh & Kênh liên hệ",
+      "paragraphs": [
+        "Điều khoản dịch vụ này được điều chỉnh và giải thích theo quy định của pháp luật nước Cộng hòa Xã hội Chủ nghĩa Việt Nam (bao gồm Luật An ninh mạng và các nghị định liên quan đến an toàn dữ liệu).",
+        "Nếu bạn phát hiện nội dung vi phạm bản quyền hoặc cần giải đáp thắc mắc về điều khoản, vui lòng liên hệ đội ngũ quản trị qua email: hotro@safetymap.vn."
+      ]
+    }
+  ]
+}

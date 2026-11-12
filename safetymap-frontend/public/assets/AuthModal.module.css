@@ -202,6 +202,13 @@
     box-shadow: 0 6px 16px rgba(26, 115, 232, 0.35);
 }
 
+.primaryBtn:disabled {
+    background: #dadce0;
+    color: #80868b;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
 .divider {
     display: flex;
     align-items: center;
@@ -409,6 +416,53 @@
 .logoutBtn:hover {
     background: #fce8e6;
     border-color: #d93025;
+}
+
+/* Phần checkbox đồng ý Điều khoản Dịch vụ */
+.tosRow {
+    margin: 12px 0 8px;
+    padding: 2px 0;
+}
+
+.tosLabel {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    cursor: pointer;
+    user-select: none;
+    font-size: 12.5px;
+    line-height: 1.45;
+    color: #3c4043;
+}
+
+.tosCheckbox {
+    width: 16px;
+    height: 16px;
+    margin-top: 1px;
+    accent-color: #1a73e8;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.tosText {
+    font-size: 12.5px;
+    color: #3c4043;
+}
+
+.tosLinkBtn {
+    border: none;
+    background: transparent;
+    padding: 0;
+    color: #1a73e8;
+    text-decoration: underline;
+    font-size: 12.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: color 0.15s ease;
+}
+
+.tosLinkBtn:hover {
+    color: #1557b0;
 }
 
 @keyframes fadeIn {
