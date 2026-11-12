@@ -11,12 +11,12 @@ import vn.safetymap.geography.service.StreetService;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/v1/streets")
+@RequestMapping("api/streets")
 @RequiredArgsConstructor
 @Validated
 
 public class StreetController {
-    private StreetService streetService;
+    private final StreetService streetService;
 
     @GetMapping
     public List<StreetResponse> search(
