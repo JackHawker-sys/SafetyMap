@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import type { GeoPlace } from "../../Business/Models/MapModels";
-import type { RouteField } from "../State/mapUiReducer";
-import { getMyLocation } from "../../Business/DAL/GeocodeApi";
-import { DEFAULT_CENTER } from "../../Business/Config/MapConfig";
-import PlaceInput from "./PlaceInput";
-import { BackIcon, CloseIcon, MyLocationIcon, PinIcon, SwapIcon } from "./Icons";
-import styles from "../../../public/assets/SidePanel.module.css";
+import type { GeoPlace } from "../../../Business/Models/MapModels";
+import type { RouteField } from "../../State/mapUiReducer";
+import { getMyLocation } from "../../../Business/DAL/GeocodeApi";
+import { DEFAULT_CENTER } from "../../../Business/Config/MapConfig";
+import PlaceInput from "../Search/PlaceInput";
+import { BackIcon, CloseIcon, MyLocationIcon, PinIcon, SwapIcon } from "../Common/Icons";
+import styles from "../../../../public/assets/SidePanel.module.css";
 
 interface Props {
     from: GeoPlace | null;

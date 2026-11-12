@@ -6,14 +6,15 @@ import { initialMapUiState, mapUiReducer, type RouteField } from "../State/mapUi
 import { useSavedPlaces } from "../Hooks/useSavedPlaces";
 import { useMediaQuery } from "../Hooks/useMediaQuery";
 import { useAuth } from "../Hooks/useAuth";
-import MapView from "../Components/MapView";
-import SearchBar from "../Components/SearchBar";
-import PlacePanel from "../Components/PlacePanel";
-import DirectionsPanel from "../Components/DirectionsPanel";
-import AuthModal from "../Components/AuthModal";
-import { UserIcon } from "../Components/Icons";
-import type { MapInsets } from "../Components/FitToPlaces";
+import MapView from "../Components/Map/MapView";
+import SearchBar from "../Components/Search/SearchBar";
+import PlacePanel from "../Components/Panels/PlacePanel";
+import DirectionsPanel from "../Components/Panels/DirectionsPanel";
+import AuthModal from "../Components/Auth/AuthModal";
+import { UserIcon } from "../Components/Common/Icons";
+import type { MapInsets } from "../Components/Map/FitToPlaces";
 import styles from "../../../public/assets/Home.module.css";
+import { getDisplayName } from "../../Business/Logic/UserLogic";
 
 // Khớp với CSS trong Home.module.css (.panel width / max-height)
 const PANEL_WIDTH_PX = 408;
@@ -24,7 +25,7 @@ export default function Home() {
     const saved = useSavedPlaces();
     const isDesktop = useMediaQuery("(min-width: 769px)");
 
-    // Quản lý xác thực người dùng thuần frontend (localStorage)
+    // Trạng thái đăng nhập lấy từ AuthContext (dùng chung toàn app)
     const auth = useAuth();
     const [authModalOpen, setAuthModalOpen] = useState(false);
 
@@ -129,39 +130,34 @@ export default function Home() {
                 </div>
             )}
 
-            <div className={styles.topRightSlot}>
-                <button
-                    type="button"
-                    className={styles.authTriggerBtn}
-                    onClick={() => setAuthModalOpen(true)}
-                    title={auth.user ? `Tài khoản: ${auth.user.name}` : "Đăng nhập / Đăng ký"}
-                >
-                    {auth.user ? (
-                        <>
-                            <span className={styles.authAvatar}>
-                                {auth.user.name.charAt(0).toUpperCase()}
-                            </span>
-                            <span className={styles.authTriggerText}>{auth.user.name}</span>
-                        </>
-                    ) : (
-                        <>
-                            <UserIcon size={18} />
-                            <span className={styles.authTriggerText}>Đăng nhập</span>
-                        </>
-                    )}
-                </button>
-            </div>
+            {!auth.initializing && (
+                <div className={styles.topRightSlot}>
+                    <button
+                        type="button"
+                        className={styles.authTriggerBtn}
+                        onClick={() => setAuthModalOpen(true)}
+                        title={auth.user ? `Tài khoản: ${getDisplayName(auth.user)}` : "Đăng nhập / Đăng ký"}
+                    >
+                        {auth.user ? (
+                            <>
+                                <span className={styles.authAvatar}>
+                                    {getDisplayName(auth.user).charAt(0).toUpperCase()}
+                                </span>
+                                <span className={styles.authTriggerText}>{getDisplayName(auth.user)}</span>
+                            </>
+                        ) : (
+                            <>
+                                <UserIcon size={18} />
+                                <span className={styles.authTriggerText}>Đăng nhập</span>
+                            </>
+                        )}
+                    </button>
+                </div>
+            )}
 
             <AuthModal
                 isOpen={authModalOpen}
                 onClose={() => setAuthModalOpen(false)}
-                user={auth.user}
-                error={auth.error}
-                onClearError={auth.clearError}
-                onLogin={auth.login}
-                onSignup={auth.signup}
-                onGoogleLogin={auth.loginWithGoogle}
-                onLogout={auth.logout}
             />
         </div>
     );

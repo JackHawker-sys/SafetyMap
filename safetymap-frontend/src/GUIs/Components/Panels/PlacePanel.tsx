@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import type { GeoPlace } from "../../Business/Models/MapModels";
-import { formatCoords } from "../../Business/Logic/PlaceLogic";
-import { BookmarkFilledIcon, BookmarkIcon, CloseIcon, CopyIcon, DirectionsIcon, PinIcon, ShieldIcon } from "./Icons";
-import styles from "../../../public/assets/SidePanel.module.css";
+import type { GeoPlace } from "../../../Business/Models/MapModels";
+import { formatCoords } from "../../../Business/Logic/PlaceLogic";
+import { BookmarkFilledIcon, BookmarkIcon, CloseIcon, CopyIcon, DirectionsIcon, PinIcon, ShieldIcon } from "../Common/Icons";
+import styles from "../../../../public/assets/SidePanel.module.css";
 
 interface Props {
     place: GeoPlace;

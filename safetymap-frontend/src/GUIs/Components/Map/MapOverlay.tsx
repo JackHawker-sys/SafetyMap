@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from "react";
 import { useMap } from "react-leaflet";
 import leaflet from "leaflet";
-import type { IncidentSeverity } from "../../Business/Models/MapModels";
-import { DANGER_LEVELS } from "../../Business/Logic/DangerLevel";
-import { SEVERITY_COLOR, SEVERITY_LABEL } from "../../Business/Logic/MapLogic";
-import styles from "../../../public/assets/MapOverlay.module.css";
+import type { IncidentSeverity } from "../../../Business/Models/MapModels";
+import { DANGER_LEVELS } from "../../../Business/Logic/DangerLevel";
+import { SEVERITY_COLOR, SEVERITY_LABEL } from "../../../Business/Logic/MapLogic";
+import styles from "../../../../public/assets/MapOverlay.module.css";
 
 const SEVERITIES: IncidentSeverity[] = ["LOW", "MEDIUM", "HIGH", "CRITICAL"];
 

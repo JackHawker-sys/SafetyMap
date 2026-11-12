@@ -1,9 +1,9 @@
 import { useEffect, useId, useState, type ChangeEvent } from "react";
-import type { GeoPlace, SavedPlace } from "../../Business/Models/MapModels";
-import { usePlaceSuggestions } from "../Hooks/usePlaceSuggestions";
-import { useListNavigation } from "../Hooks/useListNavigation";
-import { BookmarkFilledIcon, CloseIcon, DirectionsIcon, PinIcon, SearchIcon } from "./Icons";
-import styles from "../../../public/assets/SearchBar.module.css";
+import type { GeoPlace, SavedPlace } from "../../../Business/Models/MapModels";
+import { usePlaceSuggestions } from "../../Hooks/usePlaceSuggestions";
+import { useListNavigation } from "../../Hooks/useListNavigation";
+import { BookmarkFilledIcon, CloseIcon, DirectionsIcon, PinIcon, SearchIcon } from "../Common/Icons";
+import styles from "../../../../public/assets/SearchBar.module.css";
 
 interface Props {
     value: GeoPlace | null;                 // điểm đang mở trên sidebar (để hiện chữ trong ô)

@@ -1,20 +1,14 @@
 import { useRef, useState } from "react";
-import type { User } from "../Hooks/useAuth";
 import ReCAPTCHA from "react-google-recaptcha";
-import { CloseIcon, GoogleIcon, UserIcon } from "./Icons";
-import styles from "../../../public/assets/AuthModal.module.css";
+import { CloseIcon, GoogleIcon, UserIcon } from "../Common/Icons";
+import "../../../../public/assets/AuthModal.css";
 import { Controller, useForm, type FieldErrors } from "react-hook-form";
+import { useAuth } from "../../Hooks/useAuth";
+import { canAccessAdmin, getDisplayName, getRoleLabel } from "../../../Business/Logic/UserLogic";
 
 interface Props {
     isOpen: boolean;
     onClose: () => void;
-    user: User | null;
-    error: string | null;
-    onClearError: () => void;
-    onLogin: (email: string, pass: string) => boolean;
-    onSignup: (name: string, email: string, pass: string, captchaToken: string) => boolean;
-    onGoogleLogin: () => void;
-    onLogout: () => void;
 };
 
 type LoginFormValues = {
@@ -44,9 +38,9 @@ function firstErrorMessage<T extends Record<string, unknown>>(errors: FieldError
     return null;
 };
 
-export default function AuthModal({
-    isOpen, onClose, user, error, onClearError, onLogin, onSignup, onGoogleLogin, onLogout,
-}: Props) {
+export default function AuthModal({ isOpen, onClose }: Props) {
+    // Hook phải gọi TRƯỚC "if (!isOpen) return null"
+    const { user, roles, error, clearError, login, signup, logout } = useAuth();
     const [tab, setTab] = useState<"LOGIN" | "SIGNUP">("LOGIN");
 
     const loginForm = useForm<LoginFormValues>({
@@ -62,19 +56,31 @@ export default function AuthModal({
 
     if (!isOpen) return null;
 
-    const onLoginValid = (data: LoginFormValues) => {
-        const success = onLogin(data.email, data.password);
+    // Đóng modal thì xoá lỗi cũ, lần mở sau không còn hiện
+    const handleClose = () => {
+        clearError();
+        onClose();
+    };
+
+    // Handler async -> react-hook-form tự bật isSubmitting, nút bị khoá trong lúc chờ
+    const onLoginValid = async (data: LoginFormValues) => {
+        const success = await login({ email: data.email, password: data.password });
         if (success) {
             loginForm.reset();
             onClose();
         }
     };
 
-    const onSignupValid = (data: SignupFormValues) => {
+    const onSignupValid = async (data: SignupFormValues) => {
         // confirmPassword chỉ dùng để kiểm tra phía client, không gửi đi
-        const success = onSignup(data.name, data.email, data.password, data.captchaToken);
+        const success = await signup({
+            displayName: data.name,
+            email: data.email,
+            password: data.password,
+            captchaToken: data.captchaToken,
+        });
 
-        // Token reCAPTCHA chỉ verify được 1 lần → luôn reset, dù thành công hay thất bại
+        // Token reCAPTCHA chỉ verify được 1 lần -> luôn reset, dù thành công hay thất bại
         recaptchaRef.current?.reset();
         signupForm.setValue("captchaToken", "");
 
@@ -84,12 +90,12 @@ export default function AuthModal({
         }
     };
 
-    function handleGoogleClick() {
-        onGoogleLogin();
+    const handleLogout = async () => {
+        await logout();
         onClose();
-    }
+    };
 
-    // Lỗi từ server (prop `error`) ưu tiên, sau đó tới lỗi validate của tab hiện tại
+    // Lỗi từ server ưu tiên, sau đó tới lỗi validate của tab hiện tại
     const validationError =
         tab === "LOGIN"
             ? firstErrorMessage(loginForm.formState.errors)
@@ -97,76 +103,87 @@ export default function AuthModal({
     const displayError = error ?? validationError;
 
     return (
-        <div className={styles.backdrop} onClick={onClose} role="dialog" aria-modal="true">
-            <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-                <button type="button" className={styles.closeBtn} onClick={onClose} title="Đóng">
+        <div className="auth-backdrop" onClick={handleClose} role="dialog" aria-modal="true">
+            <div className="auth-modal" onClick={(e) => e.stopPropagation()}>
+                <button type="button" className={"auth-close-btn"} onClick={handleClose} title="Đóng">
                     <CloseIcon size={20} />
                 </button>
 
                 {user ? (
-                    <div className={styles.profileSection}>
-                        <div className={styles.avatarCircle}>
-                            {user.name.charAt(0).toUpperCase()}
+                    <div className="auth-profile-section">
+                        <div className="auth-avatar-circle">
+                            {getDisplayName(user).charAt(0).toUpperCase()}
                         </div>
-                        <h2 className={styles.userName}>{user.name}</h2>
-                        <p className={styles.userEmail}>{user.email}</p>
-                        <div className={styles.badge}>
-                            {user.isGoogle ? "Đã liên kết Google" : "Thành viên SafetyMap"}
-                        </div>
+                        <h2 className="auth-user-name">{getDisplayName(user)}</h2>
+                        <p className="auth-user-email">{user.email}</p>
+                        <div className="auth-badge">{getRoleLabel(roles)}</div>
 
-                        <button type="button" className={styles.logoutBtn} onClick={() => { onLogout(); onClose(); }}>
+                        {/* Chưa có router: tạm dùng thẻ <a>, khi dựng router đổi sang <Link to="/admin"> */}
+                        {canAccessAdmin(roles) && (
+                            <a href="/admin" className="auth-admin-btn">
+                                Trang quản trị
+                            </a>
+                        )}
+
+                        <button type="button" className={"auth-logout-btn"} onClick={handleLogout}>
                             Đăng xuất
                         </button>
                     </div>
                 ) : (
                     <>
-                        <div className={styles.header}>
-                            <div className={styles.iconCircle}>
+                        <div className="auth-header">
+                            <div className="auth-iconCircle">
                                 <UserIcon size={24} />
                             </div>
-                            <h2 className={styles.title}>Tài khoản SafetyMap</h2>
-                            <p className={styles.subtitle}>Đăng nhập để có thể trải nghiệm đầy đủ các tính năng</p>
+                            <h2 className="auth-title">Tài khoản SafetyMap</h2>
+                            <p className="auth-subtitle">Đăng nhập để có thể trải nghiệm đầy đủ các tính năng</p>
                         </div>
 
-                        <button type="button" className={styles.googleBtn} onClick={handleGoogleClick}>
+                        {/* Chưa có FR và cột DB cho tài khoản Google -> tạm vô hiệu hoá */}
+                        <button
+                            type="button"
+                            className="auth-google-btn"
+                            disabled
+                            title="Tính năng đang phát triển"
+                        >
                             <GoogleIcon size={18} />
-                            <span>Đăng nhập bằng Google</span>
+                            <span>Đăng nhập bằng Google (sắp ra mắt)</span>
                         </button>
 
-                        <div className={styles.divider}>
+                        <div className="auth-divider">
                             <span>hoặc tài khoản email</span>
                         </div>
 
-                        <div className={styles.tabRow}>
+                        <div className="auth-tabRow">
                             <button
                                 type="button"
-                                className={`${styles.tabBtn} ${tab === "LOGIN" ? styles.tabActive : ""}`}
-                                onClick={() => { setTab("LOGIN"); onClearError(); }}
+                                className={`auth-tab-btn ${tab === "LOGIN" ? "auth-tabActive" : ""}`}
+                                onClick={() => { setTab("LOGIN"); clearError(); }}
                             >
                                 Đăng nhập
                             </button>
                             <button
                                 type="button"
-                                className={`${styles.tabBtn} ${tab === "SIGNUP" ? styles.tabActive : ""}`}
-                                onClick={() => { setTab("SIGNUP"); onClearError(); }}
+                                className={`auth-tab-btn ${tab === "SIGNUP" ? "auth-tabActive" : ""}`}
+                                onClick={() => { setTab("SIGNUP"); clearError(); }}
                             >
                                 Đăng ký
                             </button>
                         </div>
 
-                        {displayError && <div className={styles.errorBox}>{displayError}</div>}
+                        {displayError && <div className="auth-errorBox">{displayError}</div>}
 
                         {tab === "LOGIN" ? (
                             <form
-                                className={styles.form}
+                                className="auth-form"
                                 onSubmit={loginForm.handleSubmit(onLoginValid)}
                                 noValidate
                             >
-                                <label className={styles.label}>
+                                <label className="auth-label">
                                     <span>Email</span>
                                     <input
                                         type="email"
-                                        className={styles.input}
+                                        className="auth-input"
                                         placeholder="vidu@safetymap.vn"
                                         autoComplete="email"
                                         {...loginForm.register("email", {
@@ -177,14 +194,13 @@ export default function AuthModal({
                                             },
                                             setValueAs: (v: string) => v.trim(),
                                         })}
-
                                     />
                                 </label>
-                                <label className={styles.label}>
+                                <label className="auth-label">
                                     <span>Mật khẩu</span>
                                     <input
                                         type="password"
-                                        className={styles.input}
+                                        className="auth-input"
                                         placeholder="••••••••"
                                         autoComplete="current-password"
                                         {...loginForm.register("password", {
@@ -194,35 +210,37 @@ export default function AuthModal({
                                 </label>
                                 <button
                                     type="submit"
-                                    className={styles.primaryBtn}
+                                    className="auth-primary-btn"
                                     disabled={loginForm.formState.isSubmitting}
                                 >
-                                    Đăng nhập
+                                    {loginForm.formState.isSubmitting ? "Đang đăng nhập..." : "Đăng nhập"}
                                 </button>
                             </form>
                         ) : (
-                            <form className={styles.form}
+                            <form className="auth-form"
                                 onSubmit={signupForm.handleSubmit(onSignupValid)}
                                 noValidate
                             >
-                                <label className={styles.label}>
+                                <label className="auth-label">
                                     <span>Họ và tên</span>
                                     <input
                                         type="text"
-                                        className={styles.input}
+                                        className="auth-input"
                                         placeholder="Full name"
                                         autoComplete="name"
                                         {...signupForm.register("name", {
                                             required: "Vui lòng nhập Họ và Tên",
+                                            // users.display_name là VARCHAR(100)
+                                            maxLength: { value: 100, message: "Họ và tên tối đa 100 ký tự" },
                                             setValueAs: (v: string) => v.trim(),
                                         })}
                                     />
                                 </label>
-                                <label className={styles.label}>
+                                <label className="auth-label">
                                     <span>Email</span>
                                     <input
                                         type="email"
-                                        className={styles.input}
+                                        className="auth-input"
                                         placeholder="vidu@safetymap.vn"
                                         autoComplete="email"
                                         {...signupForm.register("email", {
@@ -235,11 +253,11 @@ export default function AuthModal({
                                         })}
                                     />
                                 </label>
-                                <label className={styles.label}>
+                                <label className="auth-label">
                                     <span>Mật khẩu</span>
                                     <input
                                         type="password"
-                                        className={styles.input}
+                                        className="auth-input"
                                         placeholder="••••••••"
                                         autoComplete="new-password"
                                         {...signupForm.register("password", {
@@ -253,11 +271,11 @@ export default function AuthModal({
                                         })}
                                     />
                                 </label>
-                                <label className={styles.label}>
+                                <label className="auth-label">
                                     <span>Nhập lại mật khẩu</span>
                                     <input
                                         type="password"
-                                        className={styles.input}
+                                        className="auth-input"
                                         placeholder="••••••••"
                                         autoComplete="new-password"
                                         {...signupForm.register("confirmPassword", {
@@ -284,10 +302,10 @@ export default function AuthModal({
                                 />
                                 <button
                                     type="submit"
-                                    className={styles.primaryBtn}
+                                    className="auth-primary-btn"
                                     disabled={signupForm.formState.isSubmitting}
                                 >
-                                    Tạo tài khoản
+                                    {signupForm.formState.isSubmitting ? "Đang tạo tài khoản..." : "Tạo tài khoản"}
                                 </button>
                             </form>
                         )}

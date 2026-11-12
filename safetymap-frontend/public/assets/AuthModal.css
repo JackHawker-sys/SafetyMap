@@ -1,5 +1,5 @@
 /* Khung nền mờ phủ toàn màn hình */
-.backdrop {
+.auth-backdrop {
     position: fixed;
     inset: 0;
     z-index: 2000;
@@ -12,7 +12,7 @@
 }
 
 /* Hộp thoại Frosted Glass bo góc hiện đại */
-.modal {
+.auth-modal {
     position: relative;
     width: 100%;
     max-width: 380px;
@@ -27,7 +27,7 @@
     animation: popUp 0.18s ease-out;
 }
 
-.closeBtn {
+.auth-close-btn {
     position: absolute;
     top: 14px;
     right: 14px;
@@ -43,17 +43,17 @@
     transition: background 0.15s, color 0.15s;
 }
 
-.closeBtn:hover {
+.auth-close-btn:hover {
     background: rgba(0, 0, 0, 0.08);
     color: #202124;
 }
 
-.header {
+.auth-header {
     text-align: center;
     margin-bottom: 16px;
 }
 
-.iconCircle {
+.auth-icon-circle {
     display: inline-grid;
     place-items: center;
     width: 44px;
@@ -64,21 +64,21 @@
     margin-bottom: 8px;
 }
 
-.title {
+.auth-title {
     margin: 0;
     font-size: 18px;
     font-weight: 600;
     color: #202124;
 }
 
-.subtitle {
+.auth-subtitle {
     margin: 4px 0 0;
-    font-size: 12.5px;
+    font-size: 13px;
     color: #70757a;
 }
 
 /* Nút Đăng nhập Google */
-.googleBtn {
+.auth-google-btn {
     width: 100%;
     height: 42px;
     display: flex;
@@ -97,18 +97,18 @@
     transition: all 0.15s ease;
 }
 
-.googleBtn:hover {
+.auth-google-btn:hover {
     background: #f8fafd;
     border-color: #c2e0ff;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
 
-.googleBtn:active {
+.auth-google-btn:active {
     background: #f1f3f4;
 }
 
 /* Thanh chuyển tab */
-.tabRow {
+.auth-tab-row {
     display: flex;
     background: rgba(0, 0, 0, 0.04);
     border-radius: 10px;
@@ -117,28 +117,28 @@
     margin-bottom: 16px;
 }
 
-.tabBtn {
+.auth-tab-btn {
     flex: 1;
     border: none;
     background: transparent;
     padding: 8px;
     border-radius: 8px;
     font: inherit;
-    font-size: 13.5px;
+    font-size: 15px;
     font-weight: 500;
     color: #5f6368;
     cursor: pointer;
     transition: all 0.15s ease;
 }
 
-.tabActive {
+.auth-tab-active {
     background: #ffffff;
     color: #1a73e8;
     font-weight: 600;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
 
-.errorBox {
+.auth-errorBox {
     background: #fce8e6;
     color: #c5221f;
     padding: 8px 12px;
@@ -148,22 +148,22 @@
     border: 1px solid rgba(197, 34, 31, 0.2);
 }
 
-.form {
+.auth-form {
     display: flex;
     flex-direction: column;
     gap: 12px;
 }
 
-.label {
+.auth-label {
     display: flex;
     flex-direction: column;
     gap: 4px;
-    font-size: 12.5px;
+    font-size: 15px;
     font-weight: 500;
     color: #3c4043;
 }
 
-.input {
+.auth-input {
     height: 40px;
     padding: 0 12px;
     border: 1px solid rgba(0, 0, 0, 0.12);
@@ -175,14 +175,14 @@
     transition: all 0.15s;
 }
 
-.input:focus {
+.auth-input:focus {
     outline: none;
     border-color: #1a73e8;
     background: #ffffff;
     box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.15);
 }
 
-.primaryBtn {
+.auth-primary-btn {
     height: 40px;
     margin-top: 4px;
     border: none;
@@ -190,29 +190,29 @@
     background: #1a73e8;
     color: #fff;
     font: inherit;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 600;
     cursor: pointer;
     box-shadow: 0 4px 12px rgba(26, 115, 232, 0.25);
     transition: all 0.15s ease;
 }
 
-.primaryBtn:hover {
+.auth-primary-btn:hover {
     background: #1765cc;
     box-shadow: 0 6px 16px rgba(26, 115, 232, 0.35);
 }
 
-.divider {
+.auth-divider {
     display: flex;
     align-items: center;
     gap: 8px;
     color: #9aa0a6;
-    font-size: 11.5px;
+    font-size: 13px;
     margin: 14px 0 12px;
 }
 
-.divider::before,
-.divider::after {
+.auth-divider::before,
+.auth-divider::after {
     content: "";
     flex: 1;
     height: 1px;
@@ -220,7 +220,7 @@
 }
 
 /* Phần hiển thị hồ sơ khi đã đăng nhập */
-.profileSection {
+.auth-profile-section {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -228,7 +228,7 @@
     padding: 8px 0;
 }
 
-.avatarCircle {
+.auth-avatar-circle {
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -242,20 +242,20 @@
     box-shadow: 0 4px 12px rgba(26, 115, 232, 0.3);
 }
 
-.userName {
+.auth-user-name {
     margin: 0;
     font-size: 18px;
     font-weight: 600;
     color: #202124;
 }
 
-.userEmail {
+.auth-user-email {
     margin: 2px 0 10px;
     font-size: 13px;
     color: #5f6368;
 }
 
-.badge {
+.auth-badge {
     display: inline-block;
     padding: 3px 10px;
     border-radius: 12px;
@@ -266,7 +266,7 @@
     margin-bottom: 20px;
 }
 
-.logoutBtn {
+.auth-logout-btn {
     width: 100%;
     height: 38px;
     border: 1px solid rgba(217, 48, 37, 0.3);
@@ -280,14 +280,52 @@
     transition: all 0.15s;
 }
 
-.logoutBtn:hover {
+.auth-logout-btn:hover {
     background: #fce8e6;
     border-color: #d93025;
 }
 
+/* Nút Google tạm vô hiệu hoá */
+.auth-google-btn:disabled,
+.auth-google-btn:disabled:hover {
+    opacity: 0.55;
+    cursor: not-allowed;
+    background: #ffffff;
+    border-color: #dadce0;
+    box-shadow: none;
+}
+
+/* Nút vào trang quản trị (ADMIN / MODERATOR) */
+.auth-admin-btn {
+    width: 100%;
+    height: 38px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(26, 115, 232, 0.35);
+    border-radius: 10px;
+    background: rgba(26, 115, 232, 0.06);
+    color: #1a73e8;
+    font-size: 13.5px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.15s;
+}
+
+.auth-admin-btn:hover {
+    background: #e8f0fe;
+    border-color: #1a73e8;
+}
+
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes popUp {
@@ -295,6 +333,7 @@
         opacity: 0;
         transform: translateY(10px) scale(0.97);
     }
+
     to {
         opacity: 1;
         transform: translateY(0) scale(1);
