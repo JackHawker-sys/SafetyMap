@@ -28,6 +28,10 @@
     </scm>
     <properties>
         <java.version>25</java.version>
+         <!-- OSM PBF reader (Maven Central, LGPL-3.0); chosen over osm4j to avoid a third-party Maven repo -->
+        <osmpbf.version>1.6.1</osmpbf.version>
+        <!-- Primitive collections for the 3-pass PBF read (long keys without boxing) -->
+        <fastutil.version>8.5.18</fastutil.version>
     </properties>
     <dependencies>
         <dependency>
@@ -62,6 +66,17 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.openstreetmap.pbf</groupId>
+            <artifactId>osmpbf</artifactId>
+            <version>${osmpbf.version}</version>
+        </dependency>
+        <dependency>
+            <!-- core = int/long/double types only (~6 MB instead of ~23 MB for full fastutil) -->
+            <groupId>it.unimi.dsi</groupId>
+            <artifactId>fastutil-core</artifactId>
+            <version>${fastutil.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
