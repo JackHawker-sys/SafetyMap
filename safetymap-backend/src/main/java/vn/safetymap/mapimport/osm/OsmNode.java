@@ -73,11 +73,11 @@ public record OsmNode(long id, int latE7, int lonE7) {
         return new Coordinate(lon(), lat());
     }
 
-    static int toE7(double degrees){
-        if(!Double.isFinite(degrees)){
-            throw new IllegalArgumentException("Coordinate must be finite: "+ degrees);
-        }
-        return Math.toIntExact(Math.round(degrees));
+    /** Degrees -> E7, rounding to the nearest unit; overflow throws instead of wrapping around. */
+static int toE7(double degrees) {
+    if (!Double.isFinite(degrees)) {
+        throw new IllegalArgumentException("Coordinate must be finite: " + degrees);
     }
-
+    return Math.toIntExact(Math.round(degrees * E7));
+}
 }
