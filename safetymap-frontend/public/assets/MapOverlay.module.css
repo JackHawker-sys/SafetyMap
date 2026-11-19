@@ -64,7 +64,8 @@
     border: 1px solid rgba(255, 255, 255, 0.8);
     font-size: 12.5px;
     line-height: 1.6;
-    min-width: 175px;
+    width: 220px;
+    box-sizing: border-box;
 }
 
 .legendTitle {

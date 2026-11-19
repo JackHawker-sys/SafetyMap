@@ -32,6 +32,9 @@
 .backBtn {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
+    min-width: 155px;
+    box-sizing: border-box;
     gap: 6px;
     height: 36px;
     padding: 0 12px;
@@ -87,6 +90,9 @@
     border: none;
     background: transparent;
     padding: 6px 14px;
+    min-width: 195px;
+    text-align: center;
+    box-sizing: border-box;
     border-radius: 8px;
     font: inherit;
     font-size: 13px;
