@@ -5,10 +5,13 @@ import { DEFAULT_CENTER } from "../../Business/Config/MapConfig";
 import { initialMapUiState, mapUiReducer, type RouteField } from "../State/mapUiReducer";
 import { useSavedPlaces } from "../Hooks/useSavedPlaces";
 import { useMediaQuery } from "../Hooks/useMediaQuery";
+import { useAuth } from "../Hooks/useAuth";
 import MapView from "../Components/MapView";
 import SearchBar from "../Components/SearchBar";
 import PlacePanel from "../Components/PlacePanel";
 import DirectionsPanel from "../Components/DirectionsPanel";
+import AuthModal from "../Components/AuthModal";
+import { UserIcon } from "../Components/Icons";
 import type { MapInsets } from "../Components/FitToPlaces";
 import styles from "../../../public/assets/Home.module.css";
 
@@ -20,6 +23,10 @@ export default function Home() {
     const [ui, dispatch] = useReducer(mapUiReducer, initialMapUiState);
     const saved = useSavedPlaces();
     const isDesktop = useMediaQuery("(min-width: 769px)");
+
+    // Quản lý xác thực người dùng thuần frontend (localStorage)
+    const auth = useAuth();
+    const [authModalOpen, setAuthModalOpen] = useState(false);
 
     // Lần bấm "Tìm đường" gần nhất. Lưu theo id 2 điểm -> đổi điểm là thông báo cũ tự hết hiệu lực,
     // không cần effect dọn dẹp (và sau này kết quả API cũ về trễ cũng không hiện nhầm)
@@ -60,6 +67,10 @@ export default function Home() {
         routeRequest && from?.id === routeRequest.fromId && to?.id === routeRequest.toId
             ? "Chưa có API tìm đường. Sẽ vẽ tuyến khi kết nối backend."
             : null;
+
+    // Giống Google: đang chỉ đường thì ẩn thanh tìm kiếm, 2 ô điểm đi/đến thay thế nó
+    const showSearchBar = ui.mode !== "directions";
+    // Nút Đăng nhập / Tài khoản nổi ở góc trên phải: mở modal đăng nhập / thông tin tài khoản
 
     return (
         <div className={styles.page}>
@@ -105,8 +116,7 @@ export default function Home() {
                 </aside>
             )}
 
-            {/* Giống Google: đang chỉ đường thì ẩn thanh tìm kiếm, 2 ô điểm đi/đến thay thế nó */}
-            {ui.mode !== "directions" && (
+            {showSearchBar && (
                 <div className={styles.searchSlot}>
                     <SearchBar
                         value={selected}
@@ -118,6 +128,41 @@ export default function Home() {
                     />
                 </div>
             )}
+
+            <div className={styles.topRightSlot}>
+                <button
+                    type="button"
+                    className={styles.authTriggerBtn}
+                    onClick={() => setAuthModalOpen(true)}
+                    title={auth.user ? `Tài khoản: ${auth.user.name}` : "Đăng nhập / Đăng ký"}
+                >
+                    {auth.user ? (
+                        <>
+                            <span className={styles.authAvatar}>
+                                {auth.user.name.charAt(0).toUpperCase()}
+                            </span>
+                            <span className={styles.authTriggerText}>{auth.user.name}</span>
+                        </>
+                    ) : (
+                        <>
+                            <UserIcon size={18} />
+                            <span className={styles.authTriggerText}>Đăng nhập</span>
+                        </>
+                    )}
+                </button>
+            </div>
+
+            <AuthModal
+                isOpen={authModalOpen}
+                onClose={() => setAuthModalOpen(false)}
+                user={auth.user}
+                error={auth.error}
+                onClearError={auth.clearError}
+                onLogin={auth.login}
+                onSignup={auth.signup}
+                onGoogleLogin={auth.loginWithGoogle}
+                onLogout={auth.logout}
+            />
         </div>
     );
 }

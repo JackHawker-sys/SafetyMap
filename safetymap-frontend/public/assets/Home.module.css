@@ -22,6 +22,54 @@
     z-index: 1200;
 }
 
+/* Góc trên phải: Nút Đăng nhập / Tài khoản nổi */
+.topRightSlot {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 1200;
+}
+
+.authTriggerBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    height: 48px;
+    padding: 0 16px;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    border-radius: 14px;
+    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+    color: #202124;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.authTriggerBtn:hover {
+    background: rgba(255, 255, 255, 0.95);
+    color: #1a73e8;
+    box-shadow: 0 10px 28px -4px rgba(0, 0, 0, 0.16);
+    transform: translateY(-1px);
+}
+
+.authAvatar {
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #1a73e8, #4285f4);
+    color: #ffffff;
+    font-size: 12.5px;
+    font-weight: 600;
+}
+
+/* Frosted glass sidebar */
 .panel {
     position: absolute;
     top: 0;
@@ -30,8 +78,11 @@
     width: 408px;
     /* khớp PANEL_WIDTH_PX trong Home.tsx */
     z-index: 1100;
-    background: #fff;
+    background: rgba(255, 255, 255, 0.72);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
     box-shadow: 0 0 16px rgba(0, 0, 0, 0.18);
+    border-right: 1px solid rgba(255, 255, 255, 0.8);
     overflow-y: auto;
     box-sizing: border-box;
     animation: slideIn 0.18s ease-out;
@@ -58,8 +109,25 @@
 @media (max-width: 768px) {
     .searchSlot {
         left: 12px;
-        right: 12px;
+        right: 68px; /* chừa chỗ cho nút đăng nhập góc phải */
         width: auto;
+    }
+
+    .topRightSlot {
+        top: 12px;
+        right: 12px;
+    }
+
+    .authTriggerText {
+        display: none;
+    }
+
+    .authTriggerBtn {
+        width: 48px;
+        height: 48px;
+        padding: 0;
+        justify-content: center;
+        border-radius: 14px;
     }
 
     .panel {
@@ -69,6 +137,7 @@
         max-height: 50dvh;
         /* khớp SHEET_RATIO trong Home.tsx */
         border-radius: 16px 16px 0 0;
+        border-right: none;
         animation-name: slideUp;
     }
 

@@ -11,11 +11,10 @@ export function usePlaceSuggestions(query: string, nearLat?: number, nearLng?: n
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    const isQueryValid = debouncedQuery.trim().length >= 3;
+
     useEffect(() => {
-        if (debouncedQuery.trim().length < 3) {
-            setResult([]);
-            setLoading(false);
-            setError(null);
+        if (!isQueryValid) {
             return;
         }
 
@@ -36,13 +35,15 @@ export function usePlaceSuggestions(query: string, nearLat?: number, nearLng?: n
             })
             .finally(() => {
                 if (!controller.signal.aborted)
-                    setLoading(false)
+                    setLoading(false);
             });
 
         return () => controller.abort();
+    }, [debouncedQuery, isQueryValid, nearLat, nearLng]);
 
-    }, [debouncedQuery, nearLat, nearLng]);
-
-    return { results, loading, error }
-
+    return {
+        results: isQueryValid ? results : [],
+        loading: isQueryValid ? loading : false,
+        error: isQueryValid ? error : null,
+    };
 }
