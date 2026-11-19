@@ -1,4 +1,4 @@
-import type { UserRole } from "../Models/User";
+import type { UserRole } from "../../Models/User";
 
 type JwtPayload = {
     sub?: string;

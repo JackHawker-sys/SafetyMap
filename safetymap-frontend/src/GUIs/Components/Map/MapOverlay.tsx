@@ -1,11 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { useMap } from "react-leaflet";
 import leaflet from "leaflet";
-import type { IncidentSeverity } from "../../Business/Models/MapModels";
-import { DANGER_LEVELS } from "../../Business/Logic/DangerLevel";
-import { SEVERITY_COLOR } from "../../Business/Logic/MapLogic";
-import { useLanguage } from "../Context/LanguageContext";
-import styles from "../../../public/assets/MapOverlay.module.css";
+import { Link } from "react-router-dom";
+import type { IncidentSeverity } from "../../../Business/Models/MapModels";
+import { DANGER_LEVELS } from "../../../Business/Logic/DangerLevel";
+import { SEVERITY_COLOR } from "../../../Business/Logic/MapLogic";
+import { useLanguage } from "../../Context/LanguageContext";
+import styles from "../../../../public/assets/MapOverlay.module.css";
 
 const SEVERITIES: IncidentSeverity[] = ["LOW", "MEDIUM", "HIGH", "CRITICAL"];
 
@@ -116,9 +117,9 @@ export default function MapOverlay() {
                                     <li><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap contributors</a></li>
                                 </ul>
                                 <div style={{ marginTop: 10, paddingTop: 8, borderTop: "1px solid #ebebeb" }}>
-                                    <a href="#tos" style={{ color: "#1a73e8", fontWeight: 600, fontSize: 13, textDecoration: "none" }}>
+                                    <Link to="/tos" style={{ color: "#1a73e8", fontWeight: 600, fontSize: 13, textDecoration: "none" }}>
                                         {t("map.tosLink")}
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
                         </div>

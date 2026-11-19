@@ -1,10 +1,8 @@
 import { useCallback } from "react";
 import { loginApi, logoutApi, registerApi } from "../../Business/DAL/AuthApi";
-import { useAuthContext } from "../../Business/Logic/AuthContext";
-import { endSession, startSession } from "../../Business/Logic/AuthSession";
+import { useAuthContext } from "../../Business/Logic/Auth/AuthContext";
+import { endSession, startSession } from "../../Business/Logic/Auth/AuthSession";
 import type { LoginRequest, SignupRequest, UserRole } from "../../Business/Models/User";
-
-// AdminPage đang import UserRole từ file này -> giữ export để không phải sửa trang của Son
 export type { UserRole } from "../../Business/Models/User";
 
 export function useAuth() {
@@ -29,7 +27,6 @@ export function useAuth() {
         startSession(result.data, dispatch);
         return true;
     }, [dispatch]);
-
     const logout = useCallback(async (): Promise<void> => {
         await logoutApi();
         endSession(dispatch);

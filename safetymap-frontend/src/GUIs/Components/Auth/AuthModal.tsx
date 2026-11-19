@@ -2,14 +2,14 @@ import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { Controller, useForm, type FieldErrors } from "react-hook-form";
-import { useAuth } from "../Hooks/useAuth";
-import { useLanguage } from "../Context/LanguageContext";
-import { getDisplayName, getHighestRole } from "../../Business/Logic/UserLogic";
-import type { ApiError } from "../../Business/DAL/AuthApi";
-import type { UserRole } from "../../Business/Models/User";
-import { UserIcon, GoogleIcon, CloseIcon } from "./Icons";
-import TosModal from "./TosModal";
-import styles from "../../../public/assets/AuthModal.module.css";
+import { useAuth } from "../../Hooks/useAuth";
+import { useLanguage } from "../../Context/LanguageContext";
+import { getDisplayName, getHighestRole } from "../../../Business/Logic/Auth/UserLogic";
+import type { ApiError } from "../../../Business/DAL/AuthApi";
+import type { UserRole } from "../../../Business/Models/User";
+import { CloseIcon, GoogleIcon, UserIcon } from "../Common/Icons";
+import TosModal from "../TosModal";
+import "../../../../public/assets/AuthModal.css";
 
 interface Props {
     isOpen: boolean;
@@ -34,11 +34,11 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // Site key lấy từ file .env (Vite): VITE_RECAPTCHA_SITE_KEY=...
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string;
 
-// Badge theo role cao nhất: khoá dịch + class màu (CSS của Son)
+// Badge theo role cao nhất: khoá dịch + class màu
 const ROLE_BADGE: Record<UserRole, { labelKey: string; className: string }> = {
-    ADMIN: { labelKey: "auth.roleAdmin", className: styles.badgeAdmin },
-    MODERATOR: { labelKey: "auth.roleModerator", className: styles.badgeMod },
-    USER: { labelKey: "auth.roleUser", className: styles.badgeUser },
+    ADMIN: { labelKey: "auth.roleAdmin", className: "auth-badge-admin" },
+    MODERATOR: { labelKey: "auth.roleModerator", className: "auth-badge-mod" },
+    USER: { labelKey: "auth.roleUser", className: "auth-badge-user" },
 };
 
 // Lấy thông báo lỗi đầu tiên của form để hiển thị trong errorBox
@@ -145,34 +145,34 @@ export default function AuthModal({ isOpen, onClose }: Props) {
 
     // ===== Hồ sơ khi đã đăng nhập =====
     const profileSection = user && (
-        <div className={styles.profileSection}>
-            <div className={styles.avatarCircle}>
+        <div className="auth-profile-section">
+            <div className="auth-avatar-circle">
                 {getDisplayName(user).charAt(0).toUpperCase()}
             </div>
-            <h2 className={styles.userName}>{getDisplayName(user)}</h2>
-            <p className={styles.userEmail}>{user.email}</p>
+            <h2 className="auth-user-name">{getDisplayName(user)}</h2>
+            <p className="auth-user-email">{user.email}</p>
 
-            <div className={styles.roleBadgeRow}>
-                <span className={`${styles.roleBadge} ${badge.className}`}>{t(badge.labelKey)}</span>
+            <div className="auth-role-badge-row">
+                <span className={`auth-role-badge ${badge.className}`}>{t(badge.labelKey)}</span>
             </div>
 
             {/* Chỉ ẩn/hiện nút; backend vẫn kiểm tra quyền ở mọi API */}
             {(hasMod || hasAdmin) && (
-                <div className={styles.navActions}>
+                <div className="auth-nav-actions">
                     {hasMod && (
-                        <button type="button" className={styles.moderatorBtn} onClick={() => goTo("/moderator")}>
+                        <button type="button" className="auth-moderator-btn" onClick={() => goTo("/moderator")}>
                             {t("auth.modBtn")}
                         </button>
                     )}
                     {hasAdmin && (
-                        <button type="button" className={styles.adminBtn} onClick={() => goTo("/admin")}>
+                        <button type="button" className="auth-admin-btn" onClick={() => goTo("/admin")}>
                             {t("auth.adminBtn")}
                         </button>
                     )}
                 </div>
             )}
 
-            <button type="button" className={styles.logoutBtn} onClick={handleLogout}>
+            <button type="button" className="auth-logout-btn" onClick={handleLogout}>
                 {t("common.logout")}
             </button>
         </div>
@@ -181,18 +181,18 @@ export default function AuthModal({ isOpen, onClose }: Props) {
     // ===== Form đăng nhập / đăng ký =====
     const authForm = (
         <>
-            <div className={styles.header}>
-                <div className={styles.iconCircle}>
+            <div className="auth-header">
+                <div className="auth-icon-circle">
                     <UserIcon size={24} />
                 </div>
-                <h2 className={styles.title}>{t("auth.accountTitle")}</h2>
-                <p className={styles.subtitle}>{t("auth.subtitle")}</p>
+                <h2 className="auth-title">{t("auth.accountTitle")}</h2>
+                <p className="auth-subtitle">{t("auth.subtitle")}</p>
             </div>
 
             {/* Backend chưa hỗ trợ Google -> tạm vô hiệu hoá */}
             <button
                 type="button"
-                className={styles.googleBtn}
+                className="auth-google-btn"
                 disabled
                 title={t("auth.featureInDevelopment")}
             >
@@ -200,36 +200,36 @@ export default function AuthModal({ isOpen, onClose }: Props) {
                 <span>{t("auth.googleSoon")}</span>
             </button>
 
-            <div className={styles.divider}>
+            <div className="auth-divider">
                 <span>{t("auth.orEmail")}</span>
             </div>
 
-            <div className={styles.tabRow}>
+            <div className="auth-tab-row">
                 <button
                     type="button"
-                    className={`${styles.tabBtn} ${tab === "LOGIN" ? styles.tabActive : ""}`}
+                    className={`auth-tab-btn ${tab === "LOGIN" ? "auth-tab-active" : ""}`}
                     onClick={() => switchTab("LOGIN")}
                 >
                     {t("auth.loginTab")}
                 </button>
                 <button
                     type="button"
-                    className={`${styles.tabBtn} ${tab === "SIGNUP" ? styles.tabActive : ""}`}
+                    className={`auth-tab-btn ${tab === "SIGNUP" ? "auth-tab-active" : ""}`}
                     onClick={() => switchTab("SIGNUP")}
                 >
                     {t("auth.signupTab")}
                 </button>
             </div>
 
-            {displayError && <div className={styles.errorBox}>{displayError}</div>}
+            {displayError && <div className="auth-errorBox">{displayError}</div>}
 
             {tab === "LOGIN" ? (
-                <form className={styles.form} onSubmit={loginForm.handleSubmit(onLoginValid)} noValidate>
-                    <label className={styles.label}>
+                <form className="auth-form" onSubmit={loginForm.handleSubmit(onLoginValid)} noValidate>
+                    <label className="auth-label">
                         <span>{t("auth.email")}</span>
                         <input
                             type="email"
-                            className={styles.input}
+                            className="auth-input"
                             placeholder="usermail@safer.com"
                             autoComplete="email"
                             {...loginForm.register("email", {
@@ -239,11 +239,11 @@ export default function AuthModal({ isOpen, onClose }: Props) {
                             })}
                         />
                     </label>
-                    <label className={styles.label}>
+                    <label className="auth-label">
                         <span>{t("auth.password")}</span>
                         <input
                             type="password"
-                            className={styles.input}
+                            className="auth-input"
                             placeholder="••••••••"
                             autoComplete="current-password"
                             {...loginForm.register("password", {
@@ -253,19 +253,19 @@ export default function AuthModal({ isOpen, onClose }: Props) {
                     </label>
                     <button
                         type="submit"
-                        className={styles.primaryBtn}
+                        className="auth-primary-btn"
                         disabled={loginForm.formState.isSubmitting}
                     >
                         {loginForm.formState.isSubmitting ? t("auth.loggingIn") : t("auth.loginTab")}
                     </button>
                 </form>
             ) : (
-                <form className={styles.form} onSubmit={signupForm.handleSubmit(onSignupValid)} noValidate>
-                    <label className={styles.label}>
+                <form className="auth-form" onSubmit={signupForm.handleSubmit(onSignupValid)} noValidate>
+                    <label className="auth-label">
                         <span>{t("auth.fullName")}</span>
                         <input
                             type="text"
-                            className={styles.input}
+                            className="auth-input"
                             placeholder={t("auth.fullName")}
                             autoComplete="name"
                             {...signupForm.register("name", {
@@ -275,11 +275,11 @@ export default function AuthModal({ isOpen, onClose }: Props) {
                             })}
                         />
                     </label>
-                    <label className={styles.label}>
+                    <label className="auth-label">
                         <span>{t("auth.email")}</span>
                         <input
                             type="email"
-                            className={styles.input}
+                            className="auth-input"
                             placeholder="usermail@safer.com"
                             autoComplete="email"
                             {...signupForm.register("email", {
@@ -289,11 +289,11 @@ export default function AuthModal({ isOpen, onClose }: Props) {
                             })}
                         />
                     </label>
-                    <label className={styles.label}>
+                    <label className="auth-label">
                         <span>{t("auth.password")}</span>
                         <input
                             type="password"
-                            className={styles.input}
+                            className="auth-input"
                             placeholder="••••••••"
                             autoComplete="new-password"
                             {...signupForm.register("password", {
@@ -303,11 +303,11 @@ export default function AuthModal({ isOpen, onClose }: Props) {
                             })}
                         />
                     </label>
-                    <label className={styles.label}>
+                    <label className="auth-label">
                         <span>{t("auth.confirmPassword")}</span>
                         <input
                             type="password"
-                            className={styles.input}
+                            className="auth-input"
                             placeholder="••••••••"
                             autoComplete="new-password"
                             {...signupForm.register("confirmPassword", {
@@ -334,19 +334,19 @@ export default function AuthModal({ isOpen, onClose }: Props) {
                         )}
                     />
 
-                    <div className={styles.tosRow}>
-                        <label className={styles.tosLabel}>
+                    <div className="auth-tos-row">
+                        <label className="auth-tos-label">
                             <input
                                 type="checkbox"
-                                className={styles.tosCheckbox}
+                                className="auth-tos-checkbox"
                                 checked={agreedToTos}
                                 onChange={(e) => setAgreedToTos(e.target.checked)}
                             />
-                            <span className={styles.tosText}>
+                            <span className="auth-tos-text">
                                 {t("auth.agreeTo")}{" "}
                                 <button
                                     type="button"
-                                    className={styles.tosLinkBtn}
+                                    className="auth-tos-link-btn"
                                     onClick={() => setShowTosModal(true)}
                                 >
                                     {t("auth.tosLink")}
@@ -357,7 +357,7 @@ export default function AuthModal({ isOpen, onClose }: Props) {
 
                     <button
                         type="submit"
-                        className={styles.primaryBtn}
+                        className="auth-primary-btn"
                         disabled={!agreedToTos || signupForm.formState.isSubmitting}
                     >
                         {signupForm.formState.isSubmitting ? t("auth.creatingAccount") : t("auth.createAccount")}
@@ -369,9 +369,9 @@ export default function AuthModal({ isOpen, onClose }: Props) {
 
     return (
         <>
-            <div className={styles.backdrop} onClick={handleClose} role="dialog" aria-modal="true">
-                <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-                    <button type="button" className={styles.closeBtn} onClick={handleClose} title={t("common.close")}>
+            <div className="auth-backdrop" onClick={handleClose} role="dialog" aria-modal="true">
+                <div className="auth-modal" onClick={(e) => e.stopPropagation()}>
+                    <button type="button" className="auth-close-btn" onClick={handleClose} title={t("common.close")}>
                         <CloseIcon size={20} />
                     </button>
 

@@ -6,17 +6,17 @@ import { initialMapUiState, mapUiReducer, type RouteField } from "../State/mapUi
 import { useSavedPlaces } from "../Hooks/useSavedPlaces";
 import { useMediaQuery } from "../Hooks/useMediaQuery";
 import { useAuth } from "../Hooks/useAuth";
-import MapView from "../Components/MapView";
-import SearchBar from "../Components/SearchBar";
-import PlacePanel from "../Components/PlacePanel";
-import DirectionsPanel from "../Components/DirectionsPanel";
-import AuthModal from "../Components/AuthModal";
+import MapView from "../Components/Map/MapView";
+import SearchBar from "../Components/Search/SearchBar";
+import PlacePanel from "../Components/Panels/PlacePanel";
+import DirectionsPanel from "../Components/Panels/DirectionsPanel";
+import AuthModal from "../Components/Auth/AuthModal";
 import LanguageSwitcher from "../Components/LanguageSwitcher";
 import { useLanguage } from "../Context/LanguageContext";
-import { UserIcon } from "../Components/Icons";
-import type { MapInsets } from "../Components/FitToPlaces";
+import { UserIcon } from "../Components/Common/Icons";
+import type { MapInsets } from "../Components/Map/FitToPlaces";
 import styles from "../../../public/assets/Home.module.css";
-import { getDisplayName } from "../../Business/Logic/UserLogic";
+import { getDisplayName } from "../../Business/Logic/Auth/UserLogic";
 
 // Khớp với CSS trong Home.module.css (.panel width / max-height)
 const PANEL_WIDTH_PX = 408;
@@ -28,6 +28,7 @@ export default function Home() {
     const isDesktop = useMediaQuery("(min-width: 769px)");
 
     // Trạng thái đăng nhập dùng chung toàn app (AuthContext)
+
     const auth = useAuth();
     const { t } = useLanguage();
     const [authModalOpen, setAuthModalOpen] = useState(false);
@@ -137,11 +138,14 @@ export default function Home() {
                 <LanguageSwitcher />
                 {/* Đang khôi phục phiên lúc tải trang -> ẩn nút để không nháy "Đăng nhập" */}
                 {!auth.initializing && (
+
                     <button
                         type="button"
                         className={styles.authTriggerBtn}
                         onClick={() => setAuthModalOpen(true)}
+
                         title={auth.user ? `${t("auth.accountTitle")}: ${getDisplayName(auth.user)}` : t("common.login")}
+
                     >
                         {auth.user ? (
                             <>
@@ -153,12 +157,14 @@ export default function Home() {
                         ) : (
                             <>
                                 <UserIcon size={18} />
+
                                 <span className={styles.authTriggerText}>{t("common.login")}</span>
                             </>
                         )}
                     </button>
                 )}
             </div>
+
 
             <AuthModal
                 isOpen={authModalOpen}

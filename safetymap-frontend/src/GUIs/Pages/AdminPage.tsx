@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useLanguage } from "../Context/LanguageContext";
 import LanguageSwitcher from "../Components/LanguageSwitcher";
@@ -72,11 +73,10 @@ const INITIAL_LOGS: AuditLog[] = [
     { id: 104, actor: "ADMIN1", role: "ADMIN", action: "Bật crawler nguồn tin", target: "Báo Giao Thông (baogiaothong.vn)", time: "11:00 - 04/11/2026" },
 ];
 
-interface Props {
-    onBack: () => void;
-}
 
-export default function AdminPage({ onBack }: Props) {
+
+export default function AdminPage() {
+    const navigate = useNavigate();
     const { t } = useLanguage();
     const [currentTab, setCurrentTab] = useState<"ACCOUNTS" | "SOURCES" | "MAP" | "LOGS">("ACCOUNTS");
     const [users, setUsers] = useState<AdminUserRecord[]>(INITIAL_USERS);
@@ -185,7 +185,7 @@ export default function AdminPage({ onBack }: Props) {
     const headerElement = (
         <header className={styles.header}>
             <div className={styles.headerLeft}>
-                <button type="button" className={styles.backBtn} onClick={onBack}>
+                <button type="button" className={styles.backBtn} onClick={() => navigate("/")}>
                     <span>← {t("common.backToMap")}</span>
                 </button>
                 <div className={styles.titleArea}>
@@ -292,13 +292,12 @@ export default function AdminPage({ onBack }: Props) {
                                         {u.roles.map((r) => (
                                             <span
                                                 key={r}
-                                                className={`${styles.pillRole} ${
-                                                    r === "ADMIN"
-                                                        ? styles.pillAdmin
-                                                        : r === "MODERATOR"
+                                                className={`${styles.pillRole} ${r === "ADMIN"
+                                                    ? styles.pillAdmin
+                                                    : r === "MODERATOR"
                                                         ? styles.pillMod
                                                         : styles.pillUser
-                                                }`}
+                                                    }`}
                                             >
                                                 {r}
                                             </span>
@@ -415,9 +414,8 @@ export default function AdminPage({ onBack }: Props) {
                             <td>
                                 <button
                                     type="button"
-                                    className={`${styles.btnToggleCrawler} ${
-                                        s.isActive ? styles.crawlerActive : styles.crawlerInactive
-                                    }`}
+                                    className={`${styles.btnToggleCrawler} ${s.isActive ? styles.crawlerActive : styles.crawlerInactive
+                                        }`}
                                     onClick={() => handleToggleSource(s.id)}
                                 >
                                     {s.isActive ? t("admin.btnPause") : t("admin.btnResume")}
@@ -508,9 +506,8 @@ export default function AdminPage({ onBack }: Props) {
                             <td><strong>{log.actor}</strong></td>
                             <td>
                                 <span
-                                    className={`${styles.pillRole} ${
-                                        log.role === "ADMIN" ? styles.pillAdmin : styles.pillMod
-                                    }`}
+                                    className={`${styles.pillRole} ${log.role === "ADMIN" ? styles.pillAdmin : styles.pillMod
+                                        }`}
                                 >
                                     {log.role}
                                 </span>

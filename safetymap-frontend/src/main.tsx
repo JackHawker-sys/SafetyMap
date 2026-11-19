@@ -5,14 +5,14 @@ import "./leafletIconFix";
 import "./index.css";
 import App from "./App.tsx";
 import { LanguageProvider } from "./GUIs/Context/LanguageContext";
-import { AuthProvider } from "./Business/Logic/AuthContext";
+import { AuthProvider } from "./Business/Logic/Auth/AuthContext";
 
 createRoot(document.getElementById("root")!).render(
-    <StrictMode>
-        <LanguageProvider>
-            <AuthProvider>
-                <App />
-            </AuthProvider>
-        </LanguageProvider>
-    </StrictMode>,
+  <StrictMode>
+    <LanguageProvider>
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    </LanguageProvider>
+  </StrictMode>,
 );

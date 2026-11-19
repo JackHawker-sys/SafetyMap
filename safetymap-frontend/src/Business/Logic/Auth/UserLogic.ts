@@ -1,4 +1,4 @@
-import type { User, UserRole } from "../Models/User";
+import type { User, UserRole } from "../../Models/User";
 
 // displayName có thể null -> dùng phần trước @ của email
 export function getDisplayName(user: User): string {

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import { useMap } from "react-leaflet";
 import leaflet from "leaflet";
-import type { GeoPlace } from "../../Business/Models/MapModels";
+import type { GeoPlace } from "../../../Business/Models/MapModels";
 
 // Phần bản đồ đang bị sidebar che (px) -> điểm được đưa vào giữa phần CÒN NHÌN THẤY
 export interface MapInsets {
