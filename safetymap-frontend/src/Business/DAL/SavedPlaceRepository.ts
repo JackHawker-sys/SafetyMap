@@ -9,7 +9,7 @@ export interface SavedPlaceRepository {
     remove(key: string): Promise<void>;
 }
 
-const STORAGE_KEY = "safetymap.savedPlaces.v1";
+const STORAGE_KEY = "safetymap.savedPlaces";
 export const SAVED_PLACES_STORAGE_KEY = STORAGE_KEY;
 
 // Bản lưu tạm trên trình duyệt, dùng tới khi backend có API (vd: GET/POST/DELETE /api/me/saved-places)

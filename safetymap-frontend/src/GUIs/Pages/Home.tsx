@@ -11,9 +11,12 @@ import SearchBar from "../Components/SearchBar";
 import PlacePanel from "../Components/PlacePanel";
 import DirectionsPanel from "../Components/DirectionsPanel";
 import AuthModal from "../Components/AuthModal";
+import LanguageSwitcher from "../Components/LanguageSwitcher";
+import { useLanguage } from "../Context/LanguageContext";
 import { UserIcon } from "../Components/Icons";
 import type { MapInsets } from "../Components/FitToPlaces";
 import styles from "../../../public/assets/Home.module.css";
+import { getDisplayName } from "../../Business/Logic/UserLogic";
 
 // Khớp với CSS trong Home.module.css (.panel width / max-height)
 const PANEL_WIDTH_PX = 408;
@@ -24,8 +27,9 @@ export default function Home() {
     const saved = useSavedPlaces();
     const isDesktop = useMediaQuery("(min-width: 769px)");
 
-    // Quản lý xác thực người dùng thuần frontend (localStorage)
+    // Trạng thái đăng nhập dùng chung toàn app (AuthContext)
     const auth = useAuth();
+    const { t } = useLanguage();
     const [authModalOpen, setAuthModalOpen] = useState(false);
 
     // Lần bấm "Tìm đường" gần nhất. Lưu theo id 2 điểm -> đổi điểm là thông báo cũ tự hết hiệu lực,
@@ -130,38 +134,35 @@ export default function Home() {
             )}
 
             <div className={styles.topRightSlot}>
-                <button
-                    type="button"
-                    className={styles.authTriggerBtn}
-                    onClick={() => setAuthModalOpen(true)}
-                    title={auth.user ? `Tài khoản: ${auth.user.name}` : "Đăng nhập / Đăng ký"}
-                >
-                    {auth.user ? (
-                        <>
-                            <span className={styles.authAvatar}>
-                                {auth.user.name.charAt(0).toUpperCase()}
-                            </span>
-                            <span className={styles.authTriggerText}>{auth.user.name}</span>
-                        </>
-                    ) : (
-                        <>
-                            <UserIcon size={18} />
-                            <span className={styles.authTriggerText}>Đăng nhập</span>
-                        </>
-                    )}
-                </button>
+                <LanguageSwitcher />
+                {/* Đang khôi phục phiên lúc tải trang -> ẩn nút để không nháy "Đăng nhập" */}
+                {!auth.initializing && (
+                    <button
+                        type="button"
+                        className={styles.authTriggerBtn}
+                        onClick={() => setAuthModalOpen(true)}
+                        title={auth.user ? `${t("auth.accountTitle")}: ${getDisplayName(auth.user)}` : t("common.login")}
+                    >
+                        {auth.user ? (
+                            <>
+                                <span className={styles.authAvatar}>
+                                    {getDisplayName(auth.user).charAt(0).toUpperCase()}
+                                </span>
+                                <span className={styles.authTriggerText}>{getDisplayName(auth.user)}</span>
+                            </>
+                        ) : (
+                            <>
+                                <UserIcon size={18} />
+                                <span className={styles.authTriggerText}>{t("common.login")}</span>
+                            </>
+                        )}
+                    </button>
+                )}
             </div>
 
             <AuthModal
                 isOpen={authModalOpen}
                 onClose={() => setAuthModalOpen(false)}
-                user={auth.user}
-                error={auth.error}
-                onClearError={auth.clearError}
-                onLogin={auth.login}
-                onSignup={auth.signup}
-                onGoogleLogin={auth.loginWithGoogle}
-                onLogout={auth.logout}
             />
         </div>
     );

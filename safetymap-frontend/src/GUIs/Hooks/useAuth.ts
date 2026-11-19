@@ -1,90 +1,56 @@
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
+import { loginApi, logoutApi, registerApi } from "../../Business/DAL/AuthApi";
+import { useAuthContext } from "../../Business/Logic/AuthContext";
+import { endSession, startSession } from "../../Business/Logic/AuthSession";
+import type { LoginRequest, SignupRequest, UserRole } from "../../Business/Models/User";
 
-// Dữ liệu người dùng lưu tạm phía frontend (localStorage)
-export interface User {
-    name: string;
-    email: string;
-    isGoogle?: boolean;
-}
-
-const STORAGE_KEY = "safetymap_user_v1";
-
-// Đọc user từ localStorage lúc khởi động
-function getStoredUser(): User | null {
-    try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        return raw ? (JSON.parse(raw) as User) : null;
-    } catch {
-        return null;
-    }
-}
+// AdminPage đang import UserRole từ file này -> giữ export để không phải sửa trang của Son
+export type { UserRole } from "../../Business/Models/User";
 
 export function useAuth() {
-    const [user, setUser] = useState<User | null>(getStoredUser);
-    const [error, setError] = useState<string | null>(null);
+    const { user, roles, initializing, loading, error, dispatch } = useAuthContext();
 
-    // Đăng nhập email/mật khẩu giả lập phía frontend
-    const login = useCallback((email: string, pass: string): boolean => {
-        setError(null);
-        if (!email.trim() || !pass.trim()) {
-            setError("Vui lòng điền đầy đủ email và mật khẩu");
-            return false;
+    const login = useCallback(async (req: LoginRequest): Promise<boolean> => {
+        dispatch({ type: "authenticate" });
+        const result = await loginApi(req);
+        if (!result.success) {
+            dispatch({ type: "authenticateFailed", error: result.error }); return false;
         }
-        if (pass.length < 4) {
-            setError("Mật khẩu phải có ít nhất 4 ký tự");
-            return false;
-        }
-        const name = email.split("@")[0].toUpperCase();
-        const newUser: User = { name, email };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(newUser));
-        setUser(newUser);
+        startSession(result.data, dispatch);
         return true;
-    }, []);
+    }, [dispatch]);
 
-    // Đăng ký tài khoản mới phía frontend
-    const signup = useCallback((name: string, email: string, pass: string): boolean => {
-        setError(null);
-        if (!name.trim() || !email.trim() || !pass.trim()) {
-            setError("Vui lòng điền đầy đủ các trường thông tin");
-            return false;
+    const signup = useCallback(async (req: SignupRequest): Promise<boolean> => {
+        dispatch({ type: "authenticate" });
+        const result = await registerApi(req);
+        if (!result.success) {
+            dispatch({ type: "authenticateFailed", error: result.error }); return false;
         }
-        if (pass.length < 4) {
-            setError("Mật khẩu phải có ít nhất 4 ký tự");
-            return false;
-        }
-        const newUser: User = { name: name.trim(), email: email.trim() };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(newUser));
-        setUser(newUser);
+        startSession(result.data, dispatch);
         return true;
-    }, []);
+    }, [dispatch]);
 
-    // Đăng nhập bằng Google (giả lập phía frontend)
-    const loginWithGoogle = useCallback(() => {
-        setError(null);
-        const googleUser: User = {
-            name: "Nguyễn",
-            email: "safety@gmail.com",
-            isGoogle: true,
-        };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(googleUser));
-        setUser(googleUser);
-    }, []);
+    const logout = useCallback(async (): Promise<void> => {
+        await logoutApi();
+        endSession(dispatch);
+    }, [dispatch]);
 
-    // Đăng xuất và dọn dẹp localStorage
-    const logout = useCallback(() => {
-        localStorage.removeItem(STORAGE_KEY);
-        setUser(null);
-        setError(null);
-    }, []);
+    const clearError = useCallback(() => dispatch({ type: "clearError" }), [dispatch]);
+
+    // Chỉ để ẩn/hiện giao diện; backend mới kiểm tra quyền thật
+    const hasRole = useCallback((role: UserRole) => roles.includes(role), [roles]);
 
     return {
         user,
-        isLoggedIn: user !== null,
+        roles,
+        isLoggedIn: user !== undefined,
+        initializing,
+        loading,
         error,
-        clearError: () => setError(null),
+        clearError,
         login,
         signup,
-        loginWithGoogle,
         logout,
+        hasRole,
     };
 }

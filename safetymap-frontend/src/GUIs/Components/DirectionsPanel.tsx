@@ -4,6 +4,7 @@ import type { RouteField } from "../State/mapUiReducer";
 import { getMyLocation } from "../../Business/DAL/GeocodeApi";
 import { DEFAULT_CENTER } from "../../Business/Config/MapConfig";
 import PlaceInput from "./PlaceInput";
+import { useLanguage } from "../Context/LanguageContext";
 import { BackIcon, CloseIcon, MyLocationIcon, PinIcon, SwapIcon } from "./Icons";
 import styles from "../../../public/assets/SidePanel.module.css";
 
@@ -23,6 +24,7 @@ interface Props {
 export default function DirectionsPanel({
     from, to, activeField, routeNotice, onFieldChange, onFieldFocus, onSwap, onSearch, onBack, onClose,
 }: Props) {
+    const { t } = useLanguage();
     const [locating, setLocating] = useState(false);
     const [gpsError, setGpsError] = useState<string | null>(null);
 
@@ -63,13 +65,13 @@ export default function DirectionsPanel({
     const near = to?.position ?? from?.position ?? DEFAULT_CENTER;
 
     return (
-        <section className={styles.panel} aria-label="Tìm đường">
+        <section className={styles.panel} aria-label={t("directions.findRoute")}>
             <div className={styles.directionsTop}>
-                <button type="button" className={styles.closeButton} onClick={onBack} title="Quay lại">
+                <button type="button" className={styles.closeButton} onClick={onBack} title={t("common.backToMap")}>
                     <BackIcon />
                 </button>
-                <h1 className={styles.directionsTitle}>Tìm đường an toàn</h1>
-                <button type="button" className={styles.closeButton} onClick={onClose} title="Đóng">
+                <h1 className={styles.directionsTitle}>{t("directions.title")}</h1>
+                <button type="button" className={styles.closeButton} onClick={onClose} title={t("common.close")}>
                     <CloseIcon />
                 </button>
             </div>
@@ -77,8 +79,8 @@ export default function DirectionsPanel({
             <div className={styles.routeFields}>
                 <div className={styles.routeInputs}>
                     <PlaceInput
-                        label="Điểm đi"
-                        placeholder="Chọn điểm đi hoặc bấm lên bản đồ"
+                        label={t("directions.from")}
+                        placeholder={t("directions.fromPlaceholder")}
                         value={from}
                         onChange={handleFromChange}
                         onFocus={() => onFieldFocus("from")}
@@ -88,15 +90,15 @@ export default function DirectionsPanel({
                         leading={<span className={styles.fromDot} />}
                         extraAction={
                             <button type="button" className={styles.inlineIconButton} onClick={handleMyLocation}
-                                disabled={locating} title="Dùng vị trí hiện tại">
+                                disabled={locating} title={t("directions.useMyLocation")}>
                                 <MyLocationIcon size={18} className={locating ? styles.spin : undefined} />
                             </button>
                         }
                     />
                     <span className={styles.routeConnector} aria-hidden="true" />
                     <PlaceInput
-                        label="Điểm đến"
-                        placeholder="Chọn điểm đến hoặc bấm lên bản đồ"
+                        label={t("directions.to")}
+                        placeholder={t("directions.toPlaceholder")}
                         value={to}
                         onChange={(p) => onFieldChange("to", p)}
                         onFocus={() => onFieldFocus("to")}
@@ -108,7 +110,7 @@ export default function DirectionsPanel({
                     />
                 </div>
                 <button type="button" className={styles.swapButton} onClick={onSwap}
-                    disabled={from === null && to === null} title="Đảo điểm đi và điểm đến">
+                    disabled={from === null && to === null} title={t("directions.swap")}>
                     <SwapIcon />
                 </button>
             </div>
@@ -116,12 +118,12 @@ export default function DirectionsPanel({
             {gpsError && <p className={styles.errorText}>{gpsError}</p>}
 
             <p className={styles.mapHint}>
-                Bấm lên bản đồ để {(activeField === "from" ? from : to) ? "đổi" : "chọn"}{" "}
-                <b>{activeField === "from" ? "điểm đi" : "điểm đến"}</b>
+                {(activeField === "from" ? from : to) ? t("directions.mapHintChange") : t("directions.mapHintChoose")}{" "}
+                <b>{activeField === "from" ? t("directions.from") : t("directions.to")}</b>
             </p>
 
             <button type="button" className={styles.searchButton} onClick={onSearch} disabled={!bothChosen}>
-                Tìm đường
+                {t("directions.findRoute")}
             </button>
 
             {routeNotice && <p className={styles.notice}>{routeNotice}</p>}

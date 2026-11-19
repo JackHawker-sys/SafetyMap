@@ -3,7 +3,8 @@ import { useMap } from "react-leaflet";
 import leaflet from "leaflet";
 import type { IncidentSeverity } from "../../Business/Models/MapModels";
 import { DANGER_LEVELS } from "../../Business/Logic/DangerLevel";
-import { SEVERITY_COLOR, SEVERITY_LABEL } from "../../Business/Logic/MapLogic";
+import { SEVERITY_COLOR } from "../../Business/Logic/MapLogic";
+import { useLanguage } from "../Context/LanguageContext";
 import styles from "../../../public/assets/MapOverlay.module.css";
 
 const SEVERITIES: IncidentSeverity[] = ["LOW", "MEDIUM", "HIGH", "CRITICAL"];
@@ -16,6 +17,7 @@ function rangeText(index: number): string {
 }
 
 export default function MapOverlay() {
+    const { t } = useLanguage();
     const map = useMap();
     const rightRef = useRef<HTMLDivElement>(null);
     const leftRef = useRef<HTMLDivElement>(null);
@@ -43,8 +45,8 @@ export default function MapOverlay() {
                             type="button"
                             className={styles.zoomBtn}
                             onClick={() => map.zoomIn()}
-                            title="Phóng to"
-                            aria-label="Zoom in"
+                            title={t("map.zoomIn")}
+                            aria-label={t("map.zoomIn")}
                         >
                             +
                         </button>
@@ -53,27 +55,27 @@ export default function MapOverlay() {
                             type="button"
                             className={styles.zoomBtn}
                             onClick={() => map.zoomOut()}
-                            title="Thu nhỏ"
-                            aria-label="Zoom out"
+                            title={t("map.zoomOut")}
+                            aria-label={t("map.zoomOut")}
                         >
                             −
                         </button>
                     </div>
 
                     <div className={styles.legendCard}>
-                        <div className={styles.legendTitle}>Mức nguy hiểm đoạn đường</div>
+                        <div className={styles.legendTitle}>{t("map.legendDangerTitle")}</div>
                         {DANGER_LEVELS.map((lv, i) => (
                             <div key={lv.level} className={styles.legendRow}>
                                 <span className={styles.lineSwatch} style={{ background: lv.color }} />
-                                {lv.label} ({rangeText(i)})
+                                {t(`map.danger_${lv.level}`)} ({rangeText(i)})
                             </div>
                         ))}
 
-                        <div className={styles.legendTitle} style={{ marginTop: 8 }}>Sự cố</div>
+                        <div className={styles.legendTitle} style={{ marginTop: 8 }}>{t("map.legendIncidentTitle")}</div>
                         {SEVERITIES.map((s) => (
                             <div key={s} className={styles.legendRow}>
                                 <span className={styles.dotSwatch} style={{ background: SEVERITY_COLOR[s] }} />
-                                {SEVERITY_LABEL[s]}
+                                {t(`map.severity_${s}`)}
                             </div>
                         ))}
                     </div>
@@ -86,8 +88,8 @@ export default function MapOverlay() {
                         type="button"
                         className={styles.infoBtn}
                         onClick={() => setInfoOpen(!infoOpen)}
-                        title="Nguồn dữ liệu & Bản quyền"
-                        aria-label="About map data"
+                        title={t("map.sourcesTitle")}
+                        aria-label={t("map.sourcesTitle")}
                     >
                         ℹ
                     </button>
@@ -95,24 +97,29 @@ export default function MapOverlay() {
                     {infoOpen && (
                         <div className={styles.infoModal}>
                             <div className={styles.modalHeader}>
-                                <span>Nguồn dữ liệu & Bản quyền</span>
+                                <span>{t("map.sourcesTitle")}</span>
                                 <button
                                     type="button"
                                     className={styles.closeBtn}
                                     onClick={() => setInfoOpen(false)}
-                                    aria-label="Close"
+                                    aria-label={t("common.close")}
                                 >
                                     ×
                                 </button>
                             </div>
                             <div className={styles.modalBody}>
-                                <p>Bản đồ sử dụng dữ liệu từ:</p>
+                                <p>{t("map.sourcesIntro")}</p>
                                 <ul>
                                     <li><a href="https://leafletjs.com" target="_blank" rel="noreferrer">Leaflet</a></li>
                                     <li><a href="https://openfreemap.org" target="_blank" rel="noreferrer">OpenFreeMap</a></li>
                                     <li><a href="https://www.openmaptiles.org" target="_blank" rel="noreferrer">© OpenMapTiles</a></li>
                                     <li><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap contributors</a></li>
                                 </ul>
+                                <div style={{ marginTop: 10, paddingTop: 8, borderTop: "1px solid #ebebeb" }}>
+                                    <a href="#tos" style={{ color: "#1a73e8", fontWeight: 600, fontSize: 13, textDecoration: "none" }}>
+                                        {t("map.tosLink")}
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     )}

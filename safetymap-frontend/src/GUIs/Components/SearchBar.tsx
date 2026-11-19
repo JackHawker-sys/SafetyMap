@@ -3,6 +3,7 @@ import type { GeoPlace, SavedPlace } from "../../Business/Models/MapModels";
 import { usePlaceSuggestions } from "../Hooks/usePlaceSuggestions";
 import { useListNavigation } from "../Hooks/useListNavigation";
 import { BookmarkFilledIcon, CloseIcon, DirectionsIcon, PinIcon, SearchIcon } from "./Icons";
+import { useLanguage } from "../Context/LanguageContext";
 import styles from "../../../public/assets/SearchBar.module.css";
 
 interface Props {
@@ -20,6 +21,7 @@ const MAX_SAVED_SHOWN = 5;
 export default function SearchBar({
     value, savedPlaces, near, onSelect, onClear, onOpenDirections,
 }: Props) {
+    const { t } = useLanguage();
     const inputId = useId();
     const listId = `${inputId}-list`;
 
@@ -66,17 +68,17 @@ export default function SearchBar({
     return (
         <div className={`${styles.wrapper} ${showList ? styles.wrapperOpen : ""}`}>
             <div className={styles.bar}>
-                <label htmlFor={inputId} className={styles.leadingLabel} aria-label="Tìm kiếm" title="Tìm kiếm">
+                <label htmlFor={inputId} className={styles.leadingLabel} aria-label={t("search.searchLabel")} title={t("search.searchLabel")}>
                     <SearchIcon className={styles.leadingIcon} />
                 </label>
                 <input
                     id={inputId}
                     className={styles.input}
                     value={text}
-                    placeholder="Tìm kiếm địa điểm hoặc tuyến đường..."
+                    placeholder={t("search.placeholder")}
                     autoComplete="off"
                     role="combobox"
-                    aria-label="Tìm kiếm địa điểm"
+                    aria-label={t("search.searchLabel")}
                     aria-expanded={showList}
                     aria-controls={listId}
                     aria-activedescendant={nav.activeIndex >= 0 ? `${listId}-${nav.activeIndex}` : undefined}
@@ -86,21 +88,21 @@ export default function SearchBar({
                     onBlur={() => setOpen(false)}
                 />
                 {text !== "" && (
-                    <button type="button" className={styles.iconButton} onClick={handleClear} title="Xóa tìm kiếm">
+                    <button type="button" className={styles.iconButton} onClick={handleClear} title={t("search.clear")}>
                         <CloseIcon />
                     </button>
                 )}
                 <span className={styles.divider} />
                 <button type="button" className={`${styles.iconButton} ${styles.directionsButton}`}
-                    onClick={onOpenDirections} title="Tìm đường">
+                    onClick={onOpenDirections} title={t("search.directions")}>
                     <DirectionsIcon size={22} />
                 </button>
             </div>
 
             {showList && (
                 <ul id={listId} role="listbox" className={styles.list}>
-                    {showingSaved && <li className={styles.sectionTitle}>Đã lưu</li>}
-                    {isTyping && loading && <li className={styles.hint}>Đang tìm...</li>}
+                    {showingSaved && <li className={styles.sectionTitle}>{t("place.saved")}</li>}
+                    {isTyping && loading && <li className={styles.hint}>{t("search.searching")}</li>}
                     {isTyping && error && <li className={styles.error}>{error}</li>}
                     {items.map((place, i) => (
                         <li

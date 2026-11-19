@@ -61,11 +61,13 @@ export async function searchPlaces(query: string,
     const q = query.trim();
     if (q.length < MIN_QUERY_LENGTH) return [];
 
+    const currentLang = typeof localStorage !== "undefined" && localStorage.getItem("safetymap_lang") === "en" ? "en" : "default";
+
     const params = new URLSearchParams({
         q,
         limit: String(FETCH_LIMIT),
         bbox: VN_BBOX,
-        lang: "default",
+        lang: currentLang,
         dedupe: "0", // tắt gộp trùng của Photon (gộp sai vì đường VN không có postcode)
     });
     if (nearLat !== undefined && nearLng !== undefined) {

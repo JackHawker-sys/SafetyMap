@@ -1,10 +1,6 @@
-import { lazy, Suspense } from "react";
-const Home = lazy(() => import("./GUIs/Pages/Home"));
+import { RouterProvider } from "react-router-dom";
+import router from "./Routes";
 
 export default function App() {
-    return (
-        <Suspense fallback={<div style={{ padding: 16 }}>Đang tải bản đồ...</div>}>
-            <Home />
-        </Suspense>
-    );
+    return <RouterProvider router={router} />;
 }

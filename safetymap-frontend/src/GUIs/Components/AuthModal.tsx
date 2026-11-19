@@ -1,21 +1,20 @@
 import { useRef, useState } from "react";
-import type { User } from "../Hooks/useAuth";
+import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
-import { CloseIcon, GoogleIcon, UserIcon } from "./Icons";
-import styles from "../../../public/assets/AuthModal.module.css";
 import { Controller, useForm, type FieldErrors } from "react-hook-form";
+import { useAuth } from "../Hooks/useAuth";
+import { useLanguage } from "../Context/LanguageContext";
+import { getDisplayName, getHighestRole } from "../../Business/Logic/UserLogic";
+import type { ApiError } from "../../Business/DAL/AuthApi";
+import type { UserRole } from "../../Business/Models/User";
+import { UserIcon, GoogleIcon, CloseIcon } from "./Icons";
+import TosModal from "./TosModal";
+import styles from "../../../public/assets/AuthModal.module.css";
 
 interface Props {
     isOpen: boolean;
     onClose: () => void;
-    user: User | null;
-    error: string | null;
-    onClearError: () => void;
-    onLogin: (email: string, pass: string) => boolean;
-    onSignup: (name: string, email: string, pass: string, captchaToken: string) => boolean;
-    onGoogleLogin: () => void;
-    onLogout: () => void;
-};
+}
 
 type LoginFormValues = {
     email: string;
@@ -35,19 +34,32 @@ const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 // Site key lấy từ file .env (Vite): VITE_RECAPTCHA_SITE_KEY=...
 const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY as string;
 
-// Lấy thông báo lỗi đầu tiên của form (để hiển thị trong errorBox có sẵn)
+// Badge theo role cao nhất: khoá dịch + class màu (CSS của Son)
+const ROLE_BADGE: Record<UserRole, { labelKey: string; className: string }> = {
+    ADMIN: { labelKey: "auth.roleAdmin", className: styles.badgeAdmin },
+    MODERATOR: { labelKey: "auth.roleModerator", className: styles.badgeMod },
+    USER: { labelKey: "auth.roleUser", className: styles.badgeUser },
+};
+
+// Lấy thông báo lỗi đầu tiên của form để hiển thị trong errorBox
 function firstErrorMessage<T extends Record<string, unknown>>(errors: FieldErrors<T>): string | null {
     for (const key of Object.keys(errors)) {
         const msg = errors[key as keyof T]?.message;
         if (typeof msg === "string" && msg) return msg;
     }
     return null;
-};
+}
 
-export default function AuthModal({
-    isOpen, onClose, user, error, onClearError, onLogin, onSignup, onGoogleLogin, onLogout,
-}: Props) {
+export default function AuthModal({ isOpen, onClose }: Props) {
+    // Mọi hook phải gọi TRƯỚC "if (!isOpen) return null"
+    const { user, roles, error, clearError, login, signup, logout } = useAuth();
+    const { t } = useLanguage();
+    const navigate = useNavigate();
     const [tab, setTab] = useState<"LOGIN" | "SIGNUP">("LOGIN");
+
+    // Đồng ý điều khoản dịch vụ + popup ToS
+    const [agreedToTos, setAgreedToTos] = useState(false);
+    const [showTosModal, setShowTosModal] = useState(false);
 
     const loginForm = useForm<LoginFormValues>({
         defaultValues: { email: "", password: "" },
@@ -57,243 +69,324 @@ export default function AuthModal({
         defaultValues: { name: "", email: "", password: "", confirmPassword: "", captchaToken: "" },
     });
 
-    // Ref tới widget captcha để reset sau mỗi lần submit (token chỉ dùng được 1 lần)
+    // Token reCAPTCHA chỉ dùng được 1 lần -> reset sau mỗi lần submit
     const recaptchaRef = useRef<ReCAPTCHA>(null);
 
     if (!isOpen) return null;
 
-    const onLoginValid = (data: LoginFormValues) => {
-        const success = onLogin(data.email, data.password);
+    // Dịch lỗi backend theo mã; không có bản dịch thì dùng message gốc
+    const translateError = (err: ApiError): string => {
+        const key = `errors.${err.code}`;
+        const text = t(key);
+        return text === key ? err.message : text;
+    };
+
+    const handleClose = () => {
+        clearError();
+        onClose();
+    };
+
+    const switchTab = (next: "LOGIN" | "SIGNUP") => {
+        setTab(next);
+        clearError();
+    };
+
+    const goTo = (path: string) => {
+        onClose();
+        navigate(path);
+    };
+
+    // Handler async -> react-hook-form tự bật isSubmitting, nút bị khoá trong lúc chờ
+    const onLoginValid = async (data: LoginFormValues) => {
+        const success = await login({ email: data.email, password: data.password });
         if (success) {
             loginForm.reset();
             onClose();
         }
     };
 
-    const onSignupValid = (data: SignupFormValues) => {
-        // confirmPassword chỉ dùng để kiểm tra phía client, không gửi đi
-        const success = onSignup(data.name, data.email, data.password, data.captchaToken);
+    const onSignupValid = async (data: SignupFormValues) => {
+        if (!agreedToTos) return;
 
-        // Token reCAPTCHA chỉ verify được 1 lần → luôn reset, dù thành công hay thất bại
+        // confirmPassword chỉ kiểm tra ở client, không gửi đi
+        const success = await signup({
+            displayName: data.name,
+            email: data.email,
+            password: data.password,
+            captchaToken: data.captchaToken,
+        });
+
+        // Luôn reset captcha, dù thành công hay thất bại
         recaptchaRef.current?.reset();
         signupForm.setValue("captchaToken", "");
 
         if (success) {
             signupForm.reset();
+            setAgreedToTos(false);
             onClose();
         }
     };
 
-    function handleGoogleClick() {
-        onGoogleLogin();
+    const handleLogout = async () => {
+        await logout();
         onClose();
-    }
+    };
 
-    // Lỗi từ server (prop `error`) ưu tiên, sau đó tới lỗi validate của tab hiện tại
+    // Lỗi server ưu tiên, sau đó tới lỗi validate của tab hiện tại
     const validationError =
         tab === "LOGIN"
             ? firstErrorMessage(loginForm.formState.errors)
             : firstErrorMessage(signupForm.formState.errors);
-    const displayError = error ?? validationError;
+    const displayError = error ? translateError(error) : validationError;
+
+    const badge = ROLE_BADGE[getHighestRole(roles)];
+    const hasMod = roles.includes("MODERATOR");
+    const hasAdmin = roles.includes("ADMIN");
+
+    // ===== Hồ sơ khi đã đăng nhập =====
+    const profileSection = user && (
+        <div className={styles.profileSection}>
+            <div className={styles.avatarCircle}>
+                {getDisplayName(user).charAt(0).toUpperCase()}
+            </div>
+            <h2 className={styles.userName}>{getDisplayName(user)}</h2>
+            <p className={styles.userEmail}>{user.email}</p>
+
+            <div className={styles.roleBadgeRow}>
+                <span className={`${styles.roleBadge} ${badge.className}`}>{t(badge.labelKey)}</span>
+            </div>
+
+            {/* Chỉ ẩn/hiện nút; backend vẫn kiểm tra quyền ở mọi API */}
+            {(hasMod || hasAdmin) && (
+                <div className={styles.navActions}>
+                    {hasMod && (
+                        <button type="button" className={styles.moderatorBtn} onClick={() => goTo("/moderator")}>
+                            {t("auth.modBtn")}
+                        </button>
+                    )}
+                    {hasAdmin && (
+                        <button type="button" className={styles.adminBtn} onClick={() => goTo("/admin")}>
+                            {t("auth.adminBtn")}
+                        </button>
+                    )}
+                </div>
+            )}
+
+            <button type="button" className={styles.logoutBtn} onClick={handleLogout}>
+                {t("common.logout")}
+            </button>
+        </div>
+    );
+
+    // ===== Form đăng nhập / đăng ký =====
+    const authForm = (
+        <>
+            <div className={styles.header}>
+                <div className={styles.iconCircle}>
+                    <UserIcon size={24} />
+                </div>
+                <h2 className={styles.title}>{t("auth.accountTitle")}</h2>
+                <p className={styles.subtitle}>{t("auth.subtitle")}</p>
+            </div>
+
+            {/* Backend chưa hỗ trợ Google -> tạm vô hiệu hoá */}
+            <button
+                type="button"
+                className={styles.googleBtn}
+                disabled
+                title={t("auth.featureInDevelopment")}
+            >
+                <GoogleIcon size={18} />
+                <span>{t("auth.googleSoon")}</span>
+            </button>
+
+            <div className={styles.divider}>
+                <span>{t("auth.orEmail")}</span>
+            </div>
+
+            <div className={styles.tabRow}>
+                <button
+                    type="button"
+                    className={`${styles.tabBtn} ${tab === "LOGIN" ? styles.tabActive : ""}`}
+                    onClick={() => switchTab("LOGIN")}
+                >
+                    {t("auth.loginTab")}
+                </button>
+                <button
+                    type="button"
+                    className={`${styles.tabBtn} ${tab === "SIGNUP" ? styles.tabActive : ""}`}
+                    onClick={() => switchTab("SIGNUP")}
+                >
+                    {t("auth.signupTab")}
+                </button>
+            </div>
+
+            {displayError && <div className={styles.errorBox}>{displayError}</div>}
+
+            {tab === "LOGIN" ? (
+                <form className={styles.form} onSubmit={loginForm.handleSubmit(onLoginValid)} noValidate>
+                    <label className={styles.label}>
+                        <span>{t("auth.email")}</span>
+                        <input
+                            type="email"
+                            className={styles.input}
+                            placeholder="usermail@safer.com"
+                            autoComplete="email"
+                            {...loginForm.register("email", {
+                                required: t("auth.emailRequired"),
+                                pattern: { value: EMAIL_PATTERN, message: t("auth.emailInvalid") },
+                                setValueAs: (v: string) => v.trim(),
+                            })}
+                        />
+                    </label>
+                    <label className={styles.label}>
+                        <span>{t("auth.password")}</span>
+                        <input
+                            type="password"
+                            className={styles.input}
+                            placeholder="••••••••"
+                            autoComplete="current-password"
+                            {...loginForm.register("password", {
+                                required: t("auth.passwordRequired"),
+                            })}
+                        />
+                    </label>
+                    <button
+                        type="submit"
+                        className={styles.primaryBtn}
+                        disabled={loginForm.formState.isSubmitting}
+                    >
+                        {loginForm.formState.isSubmitting ? t("auth.loggingIn") : t("auth.loginTab")}
+                    </button>
+                </form>
+            ) : (
+                <form className={styles.form} onSubmit={signupForm.handleSubmit(onSignupValid)} noValidate>
+                    <label className={styles.label}>
+                        <span>{t("auth.fullName")}</span>
+                        <input
+                            type="text"
+                            className={styles.input}
+                            placeholder={t("auth.fullName")}
+                            autoComplete="name"
+                            {...signupForm.register("name", {
+                                required: t("auth.nameRequired"),
+                                maxLength: { value: 100, message: t("auth.nameMax") }, // display_name VARCHAR(100)
+                                setValueAs: (v: string) => v.trim(),
+                            })}
+                        />
+                    </label>
+                    <label className={styles.label}>
+                        <span>{t("auth.email")}</span>
+                        <input
+                            type="email"
+                            className={styles.input}
+                            placeholder="usermail@safer.com"
+                            autoComplete="email"
+                            {...signupForm.register("email", {
+                                required: t("auth.emailRequired"),
+                                pattern: { value: EMAIL_PATTERN, message: t("auth.emailInvalid") },
+                                setValueAs: (v: string) => v.trim(),
+                            })}
+                        />
+                    </label>
+                    <label className={styles.label}>
+                        <span>{t("auth.password")}</span>
+                        <input
+                            type="password"
+                            className={styles.input}
+                            placeholder="••••••••"
+                            autoComplete="new-password"
+                            {...signupForm.register("password", {
+                                required: t("auth.passwordRequired"),
+                                minLength: { value: 6, message: t("auth.passwordMin") },
+                                deps: "confirmPassword", // đổi mật khẩu -> kiểm tra lại ô nhập lại
+                            })}
+                        />
+                    </label>
+                    <label className={styles.label}>
+                        <span>{t("auth.confirmPassword")}</span>
+                        <input
+                            type="password"
+                            className={styles.input}
+                            placeholder="••••••••"
+                            autoComplete="new-password"
+                            {...signupForm.register("confirmPassword", {
+                                required: t("auth.confirmRequired"),
+                                validate: (value, formValues) =>
+                                    value === formValues.password || t("auth.passwordMismatch"),
+                            })}
+                        />
+                    </label>
+
+                    <Controller
+                        name="captchaToken"
+                        control={signupForm.control}
+                        rules={{ required: t("auth.captchaRequired") }}
+                        shouldUnregister
+                        render={({ field }) => (
+                            <ReCAPTCHA
+                                ref={recaptchaRef}
+                                sitekey={RECAPTCHA_SITE_KEY}
+                                onChange={(token) => field.onChange(token ?? "")}
+                                onExpired={() => field.onChange("")}
+                                onError={() => field.onChange("")}
+                            />
+                        )}
+                    />
+
+                    <div className={styles.tosRow}>
+                        <label className={styles.tosLabel}>
+                            <input
+                                type="checkbox"
+                                className={styles.tosCheckbox}
+                                checked={agreedToTos}
+                                onChange={(e) => setAgreedToTos(e.target.checked)}
+                            />
+                            <span className={styles.tosText}>
+                                {t("auth.agreeTo")}{" "}
+                                <button
+                                    type="button"
+                                    className={styles.tosLinkBtn}
+                                    onClick={() => setShowTosModal(true)}
+                                >
+                                    {t("auth.tosLink")}
+                                </button>
+                            </span>
+                        </label>
+                    </div>
+
+                    <button
+                        type="submit"
+                        className={styles.primaryBtn}
+                        disabled={!agreedToTos || signupForm.formState.isSubmitting}
+                    >
+                        {signupForm.formState.isSubmitting ? t("auth.creatingAccount") : t("auth.createAccount")}
+                    </button>
+                </form>
+            )}
+        </>
+    );
 
     return (
-        <div className={styles.backdrop} onClick={onClose} role="dialog" aria-modal="true">
-            <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-                <button type="button" className={styles.closeBtn} onClick={onClose} title="Đóng">
-                    <CloseIcon size={20} />
-                </button>
+        <>
+            <div className={styles.backdrop} onClick={handleClose} role="dialog" aria-modal="true">
+                <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
+                    <button type="button" className={styles.closeBtn} onClick={handleClose} title={t("common.close")}>
+                        <CloseIcon size={20} />
+                    </button>
 
-                {user ? (
-                    <div className={styles.profileSection}>
-                        <div className={styles.avatarCircle}>
-                            {user.name.charAt(0).toUpperCase()}
-                        </div>
-                        <h2 className={styles.userName}>{user.name}</h2>
-                        <p className={styles.userEmail}>{user.email}</p>
-                        <div className={styles.badge}>
-                            {user.isGoogle ? "Đã liên kết Google" : "Thành viên SafetyMap"}
-                        </div>
-
-                        <button type="button" className={styles.logoutBtn} onClick={() => { onLogout(); onClose(); }}>
-                            Đăng xuất
-                        </button>
-                    </div>
-                ) : (
-                    <>
-                        <div className={styles.header}>
-                            <div className={styles.iconCircle}>
-                                <UserIcon size={24} />
-                            </div>
-                            <h2 className={styles.title}>Tài khoản SafetyMap</h2>
-                            <p className={styles.subtitle}>Đăng nhập để có thể trải nghiệm đầy đủ các tính năng</p>
-                        </div>
-
-                        <button type="button" className={styles.googleBtn} onClick={handleGoogleClick}>
-                            <GoogleIcon size={18} />
-                            <span>Đăng nhập bằng Google</span>
-                        </button>
-
-                        <div className={styles.divider}>
-                            <span>hoặc tài khoản email</span>
-                        </div>
-
-                        <div className={styles.tabRow}>
-                            <button
-                                type="button"
-                                className={`${styles.tabBtn} ${tab === "LOGIN" ? styles.tabActive : ""}`}
-                                onClick={() => { setTab("LOGIN"); onClearError(); }}
-                            >
-                                Đăng nhập
-                            </button>
-                            <button
-                                type="button"
-                                className={`${styles.tabBtn} ${tab === "SIGNUP" ? styles.tabActive : ""}`}
-                                onClick={() => { setTab("SIGNUP"); onClearError(); }}
-                            >
-                                Đăng ký
-                            </button>
-                        </div>
-
-                        {displayError && <div className={styles.errorBox}>{displayError}</div>}
-
-                        {tab === "LOGIN" ? (
-                            <form
-                                className={styles.form}
-                                onSubmit={loginForm.handleSubmit(onLoginValid)}
-                                noValidate
-                            >
-                                <label className={styles.label}>
-                                    <span>Email</span>
-                                    <input
-                                        type="email"
-                                        className={styles.input}
-                                        placeholder="vidu@safetymap.vn"
-                                        autoComplete="email"
-                                        {...loginForm.register("email", {
-                                            required: "Vui lòng nhập email",
-                                            pattern: {
-                                                value: EMAIL_PATTERN,
-                                                message: "Email không hợp lệ"
-                                            },
-                                            setValueAs: (v: string) => v.trim(),
-                                        })}
-
-                                    />
-                                </label>
-                                <label className={styles.label}>
-                                    <span>Mật khẩu</span>
-                                    <input
-                                        type="password"
-                                        className={styles.input}
-                                        placeholder="••••••••"
-                                        autoComplete="current-password"
-                                        {...loginForm.register("password", {
-                                            required: "Vui lòng nhập mật khẩu",
-                                        })}
-                                    />
-                                </label>
-                                <button
-                                    type="submit"
-                                    className={styles.primaryBtn}
-                                    disabled={loginForm.formState.isSubmitting}
-                                >
-                                    Đăng nhập
-                                </button>
-                            </form>
-                        ) : (
-                            <form className={styles.form}
-                                onSubmit={signupForm.handleSubmit(onSignupValid)}
-                                noValidate
-                            >
-                                <label className={styles.label}>
-                                    <span>Họ và tên</span>
-                                    <input
-                                        type="text"
-                                        className={styles.input}
-                                        placeholder="Full name"
-                                        autoComplete="name"
-                                        {...signupForm.register("name", {
-                                            required: "Vui lòng nhập Họ và Tên",
-                                            setValueAs: (v: string) => v.trim(),
-                                        })}
-                                    />
-                                </label>
-                                <label className={styles.label}>
-                                    <span>Email</span>
-                                    <input
-                                        type="email"
-                                        className={styles.input}
-                                        placeholder="vidu@safetymap.vn"
-                                        autoComplete="email"
-                                        {...signupForm.register("email", {
-                                            required: "Vui lòng nhập email",
-                                            pattern: {
-                                                value: EMAIL_PATTERN,
-                                                message: "Email không hợp lệ",
-                                            },
-                                            setValueAs: (v: string) => v.trim(),
-                                        })}
-                                    />
-                                </label>
-                                <label className={styles.label}>
-                                    <span>Mật khẩu</span>
-                                    <input
-                                        type="password"
-                                        className={styles.input}
-                                        placeholder="••••••••"
-                                        autoComplete="new-password"
-                                        {...signupForm.register("password", {
-                                            required: "Vui lòng nhập mật khẩu",
-                                            minLength: {
-                                                value: 6,
-                                                message: "Mật khẩu tối thiểu 6 ký tự",
-                                            },
-                                            // Khi password đổi, validate lại confirmPassword
-                                            deps: "confirmPassword",
-                                        })}
-                                    />
-                                </label>
-                                <label className={styles.label}>
-                                    <span>Nhập lại mật khẩu</span>
-                                    <input
-                                        type="password"
-                                        className={styles.input}
-                                        placeholder="••••••••"
-                                        autoComplete="new-password"
-                                        {...signupForm.register("confirmPassword", {
-                                            required: "Vui lòng nhập lại mật khẩu",
-                                            validate: (value, formValues) =>
-                                                value === formValues.password || "Mật khẩu nhập lại không khớp",
-                                        })}
-                                    />
-                                </label>
-                                <Controller
-                                    name="captchaToken"
-                                    control={signupForm.control}
-                                    rules={{ required: "Bạn không phải là robot" }}
-                                    shouldUnregister
-                                    render={({ field }) => (
-                                        <ReCAPTCHA
-                                            ref={recaptchaRef}
-                                            sitekey={RECAPTCHA_SITE_KEY}
-                                            onChange={(token) => field.onChange(token ?? "")}
-                                            onExpired={() => field.onChange("")}
-                                            onError={() => field.onChange("")}
-                                        />
-                                    )}
-                                />
-                                <button
-                                    type="submit"
-                                    className={styles.primaryBtn}
-                                    disabled={signupForm.formState.isSubmitting}
-                                >
-                                    Tạo tài khoản
-                                </button>
-                            </form>
-                        )}
-                    </>
-                )}
+                    {user ? profileSection : authForm}
+                </div>
             </div>
-        </div>
+
+            <TosModal
+                isOpen={showTosModal}
+                onClose={() => setShowTosModal(false)}
+                onAgreeAndClose={() => {
+                    setAgreedToTos(true);
+                    setShowTosModal(false);
+                }}
+            />
+        </>
     );
 }
