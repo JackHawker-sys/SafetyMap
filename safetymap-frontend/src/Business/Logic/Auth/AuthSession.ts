@@ -1,7 +1,7 @@
 import type { Dispatch } from "react";
-import { refreshApi, type ApiResult } from "../DAL/AuthApi";
-import { tokenStorage } from "../DAL/TokenStorage";
-import type { AuthResponse } from "../Models/User";
+import { refreshApi, type ApiResult } from "../../DAL/AuthApi";
+import { tokenStorage } from "../../DAL/TokenStorage";
+import type { AuthResponse } from "../../Models/User";
 import type { AuthAction } from "./AuthContext";
 import { getRolesFromToken } from "./Jwt";
 

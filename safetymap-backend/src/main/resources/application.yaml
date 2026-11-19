@@ -1,6 +1,10 @@
 spring:
   application:
     name: safetymap-backend
+  security:
+    user:
+      name: admin
+      password: 123456
 
   config: 
     import: optional:file:.env[.properties]
@@ -16,3 +20,21 @@ spring:
     hibernate:
       ddl-auto: validate
     open-in-view: false
+
+safetymap: 
+  jwt:
+    secret: ${JWT_SECRET} # base64, at least 32 bytes
+    access-token-ttl: 1h
+    refresh-token-ttl: 30d
+  refresh-cookie:
+    name: refresh_token
+    path: /api/auth
+    secure: ${REFRESH_COOKIE_SECURE:true}
+    same-site: Strict
+
+  cors:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:5173}   # multiple domains separated by commas
+
+  recaptcha:
+    secret: ${RECAPTCHA_SECRET}
+    verify-url: https://www.google.com/recaptcha/api/siteverify

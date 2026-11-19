@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useReducer, type Dispatch, type ReactNode } from "react";
-import type { User, UserRole } from "../Models/User";
+import type { User, UserRole } from "../../Models/User";
 import { refreshSession } from "./AuthSession";
 
 // Refresh trước khi access token hết hạn 1 phút; mất mạng thì 30 giây sau thử lại

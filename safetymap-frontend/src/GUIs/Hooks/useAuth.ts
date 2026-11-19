@@ -1,7 +1,7 @@
 import { useCallback } from "react";
 import { loginApi, logoutApi, registerApi } from "../../Business/DAL/AuthApi";
 import { useAuthContext } from "../../Business/Logic/AuthContext";
-import { endSession, startSession } from "../../Business/Logic/AuthSession";
+import { endSession, startSession } from "../../Business/Logic/Auth/AuthSession";
 import type { LoginRequest, SignupRequest, UserRole } from "../../Business/Models/User";
 
 export function useAuth() {

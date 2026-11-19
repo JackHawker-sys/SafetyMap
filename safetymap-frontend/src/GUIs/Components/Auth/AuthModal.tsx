@@ -157,14 +157,14 @@ export default function AuthModal({ isOpen, onClose }: Props) {
                         <div className="auth-tabRow">
                             <button
                                 type="button"
-                                className={`auth-tab-btn ${tab === "LOGIN" ? "auth-tabActive" : ""}`}
+                                className={`auth-tab-btn ${tab === "LOGIN" ? "auth-tab-active" : ""}`}
                                 onClick={() => { setTab("LOGIN"); clearError(); }}
                             >
                                 Đăng nhập
                             </button>
                             <button
                                 type="button"
-                                className={`auth-tab-btn ${tab === "SIGNUP" ? "auth-tabActive" : ""}`}
+                                className={`auth-tab-btn ${tab === "SIGNUP" ? "auth-tab-active" : ""}`}
                                 onClick={() => { setTab("SIGNUP"); clearError(); }}
                             >
                                 Đăng ký
