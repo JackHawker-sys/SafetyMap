@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import type { User, UserRole } from "../Hooks/useAuth";
+import { useLanguage } from "../Context/LanguageContext";
 import { UserIcon, GoogleIcon, CloseIcon } from "./Icons";
 import TosModal from "./TosModal";
 import styles from "../../../public/assets/AuthModal.module.css";
@@ -21,6 +22,7 @@ interface Props {
 export default function AuthModal({
     isOpen, onClose, user, error, onClearError, onLogin, onSignup, onGoogleLogin, onLogout, onToggleRole, onNavigate,
 }: Props) {
+    const { t } = useLanguage();
     const [tab, setTab] = useState<"LOGIN" | "SIGNUP">("LOGIN");
 
     // Dữ liệu trong các ô nhập của form đăng nhập / đăng ký
@@ -91,7 +93,7 @@ export default function AuthModal({
                         onClose();
                     }}
                 >
-                    🛡️ Bàn Kiểm duyệt (Moderator)
+                    {t("auth.modBtn")}
                 </button>
             )}
             {hasAdmin && (
@@ -103,7 +105,7 @@ export default function AuthModal({
                         onClose();
                     }}
                 >
-                    ⚙️ Bảng Quản trị (Admin)
+                    {t("auth.adminBtn")}
                 </button>
             )}
         </div>
@@ -112,7 +114,7 @@ export default function AuthModal({
     // Hộp công cụ thử nghiệm bật/tắt quyền nhanh ở frontend để kiểm tra phân quyền
     const roleTester = user && (
         <div className={styles.roleTester}>
-            <div className={styles.roleTesterTitle}>Thử nghiệm bật/tắt quyền</div>
+            <div className={styles.roleTesterTitle}>{t("auth.roleTesterTitle")}</div>
             <div className={styles.roleChips}>
                 {(["USER", "MODERATOR", "ADMIN"] as UserRole[]).map((r) => {
                     const active = user.roles.includes(r);
@@ -142,13 +144,13 @@ export default function AuthModal({
                     onChange={(e) => setAgreedToTos(e.target.checked)}
                 />
                 <span className={styles.tosText}>
-                    Tôi đồng ý với{" "}
+                    {t("auth.agreeTo")}{" "}
                     <button
                         type="button"
                         className={styles.tosLinkBtn}
                         onClick={() => setShowTosModal(true)}
                     >
-                        Điều khoản Dịch vụ
+                        {t("auth.tosLink")}
                     </button>
                 </span>
             </label>
@@ -162,17 +164,17 @@ export default function AuthModal({
                 <div className={styles.iconCircle}>
                     <UserIcon size={24} />
                 </div>
-                <h2 className={styles.title}>Tài khoản S.A.F.E.R</h2>
-                <p className={styles.subtitle}>Đăng nhập để có thể trải nghiệm đầy đủ các tính năng</p>
+                <h2 className={styles.title}>{t("auth.accountTitle")}</h2>
+                <p className={styles.subtitle}>{t("auth.subtitle")}</p>
             </div>
 
             <button type="button" className={styles.googleBtn} onClick={handleGoogleClick}>
                 <GoogleIcon size={18} />
-                <span>Đăng nhập bằng Google</span>
+                <span>{t("auth.googleLogin")}</span>
             </button>
 
             <div className={styles.divider}>
-                <span>hoặc tài khoản email</span>
+                <span>{t("auth.orEmail")}</span>
             </div>
 
             <div className={styles.tabRow}>
@@ -184,7 +186,7 @@ export default function AuthModal({
                         onClearError();
                     }}
                 >
-                    Đăng nhập
+                    {t("auth.loginTab")}
                 </button>
                 <button
                     type="button"
@@ -194,7 +196,7 @@ export default function AuthModal({
                         onClearError();
                     }}
                 >
-                    Đăng ký
+                    {t("auth.signupTab")}
                 </button>
             </div>
 
@@ -203,18 +205,18 @@ export default function AuthModal({
             {tab === "LOGIN" ? (
                 <form className={styles.form} onSubmit={handleLoginSubmit}>
                     <label className={styles.label}>
-                        <span>Email</span>
+                        <span>{t("auth.email")}</span>
                         <input
                             type="email"
                             className={styles.input}
-                            placeholder="vidu@safermap.vn"
+                            placeholder="usermail@safer.com"
                             value={loginEmail}
                             onChange={(e) => setLoginEmail(e.target.value)}
                             required
                         />
                     </label>
                     <label className={styles.label}>
-                        <span>Mật khẩu</span>
+                        <span>{t("auth.password")}</span>
                         <input
                             type="password"
                             className={styles.input}
@@ -225,35 +227,35 @@ export default function AuthModal({
                         />
                     </label>
                     <button type="submit" className={styles.primaryBtn}>
-                        Đăng nhập
+                        {t("auth.loginTab")}
                     </button>
                 </form>
             ) : (
                 <form className={styles.form} onSubmit={handleSignupSubmit}>
                     <label className={styles.label}>
-                        <span>Họ và tên</span>
+                        <span>{t("auth.fullName")}</span>
                         <input
                             type="text"
                             className={styles.input}
-                            placeholder="USER1"
+                            placeholder={t("auth.fullName")}
                             value={signupName}
                             onChange={(e) => setSignupName(e.target.value)}
                             required
                         />
                     </label>
                     <label className={styles.label}>
-                        <span>Email</span>
+                        <span>{t("auth.email")}</span>
                         <input
                             type="email"
                             className={styles.input}
-                            placeholder="vidu@safermap.vn"
+                            placeholder="usermail@safer.com"
                             value={signupEmail}
                             onChange={(e) => setSignupEmail(e.target.value)}
                             required
                         />
                     </label>
                     <label className={styles.label}>
-                        <span>Mật khẩu</span>
+                        <span>{t("auth.password")}</span>
                         <input
                             type="password"
                             className={styles.input}
@@ -269,7 +271,7 @@ export default function AuthModal({
                         className={styles.primaryBtn}
                         disabled={!agreedToTos}
                     >
-                        Tạo tài khoản
+                        {t("auth.createAccount")}
                     </button>
                 </form>
             )}
@@ -280,7 +282,7 @@ export default function AuthModal({
         <>
             <div className={styles.backdrop} onClick={onClose} role="dialog" aria-modal="true">
                 <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-                    <button type="button" className={styles.closeBtn} onClick={onClose} title="Đóng">
+                    <button type="button" className={styles.closeBtn} onClick={onClose} title={t("common.close")}>
                         <CloseIcon size={20} />
                     </button>
 
@@ -302,7 +304,7 @@ export default function AuthModal({
                                     onClose();
                                 }}
                             >
-                                Đăng xuất
+                                {t("common.logout")}
                             </button>
                         </div>
                     ) : (

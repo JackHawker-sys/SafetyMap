@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useLanguage, type AppLanguage } from "../Context/LanguageContext";
 
 export interface TosSection {
     id: string;
@@ -17,14 +18,11 @@ export interface TosDocument {
     sections: TosSection[];
 }
 
-export type TosLanguage = "vi" | "en";
+export type TosLanguage = AppLanguage;
 
 // Hook tải dữ liệu Điều khoản Dịch vụ từ file JSON tĩnh trong thư mục public/content
-export function useTosContent(initialLang: TosLanguage = "vi") {
-    const [lang, setLang] = useState<TosLanguage>(() => {
-        const saved = localStorage.getItem("safetymap_lang");
-        return (saved === "en" || saved === "vi") ? saved : initialLang;
-    });
+export function useTosContent() {
+    const { lang, setLang } = useLanguage();
     const [document, setDocument] = useState<TosDocument | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -55,20 +53,9 @@ export function useTosContent(initialLang: TosLanguage = "vi") {
         };
     }, [lang]);
 
-    const changeLang = (nextLang: TosLanguage) => {
-        setLang(nextLang);
-        setLoading(true);
-        setError(null);
-        try {
-            localStorage.setItem("safetymap_lang", nextLang);
-        } catch {
-            // bỏ qua nếu localStorage không khả dụng
-        }
-    };
-
     return {
         lang,
-        setLang: changeLang,
+        setLang,
         document,
         loading,
         error,

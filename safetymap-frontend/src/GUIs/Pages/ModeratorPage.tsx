@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useLanguage } from "../Context/LanguageContext";
+import LanguageSwitcher from "../Components/LanguageSwitcher";
 import styles from "../../../public/assets/ModeratorPage.module.css";
 
 interface ReportItem {
@@ -199,6 +201,7 @@ interface Props {
 }
 
 export default function ModeratorPage({ onBack }: Props) {
+    const { t } = useLanguage();
     const [tab, setTab] = useState<"QUEUE" | "USERS">("QUEUE");
     const [reports, setReports] = useState<ReportItem[]>(INITIAL_REPORTS);
     const [selectedId, setSelectedId] = useState<number>(INITIAL_REPORTS[0]?.id ?? 0);
@@ -206,13 +209,13 @@ export default function ModeratorPage({ onBack }: Props) {
 
     // Quản lý trạng thái hộp thoại từ chối báo cáo
     const [rejectModalOpen, setRejectModalOpen] = useState(false);
-    const [rejectReason, setRejectReason] = useState("Ảnh không trùng khớp hiện trường");
+    const [rejectReason, setRejectReason] = useState("OPT1");
     const [customRejectReason, setCustomRejectReason] = useState("");
 
     // Quản lý trạng thái hộp thoại cảnh cáo người dùng
     const [warnModalOpen, setWarnModalOpen] = useState(false);
     const [warnTargetUser, setWarnTargetUser] = useState<string>("");
-    const [warnReason, setWarnReason] = useState<string>("Gửi ảnh chụp không đúng hoặc che khuất hiện trường");
+    const [warnReason, setWarnReason] = useState<string>("OPT1");
     const [customWarnReason, setCustomWarnReason] = useState("");
 
     // Quản lý trạng thái hộp thoại gộp sự cố gần đó
@@ -244,9 +247,15 @@ export default function ModeratorPage({ onBack }: Props) {
     function handleRejectConfirm() {
         if (!currentReport) return;
         const id = currentReport.id;
+        const rejectOptionsMap: Record<string, string> = {
+            OPT1: t("moderator.rejectOpt1"),
+            OPT2: t("moderator.rejectOpt2"),
+            OPT3: t("moderator.rejectOpt3"),
+            OPT4: t("moderator.rejectOpt4"),
+        };
         const reason = rejectReason === "OTHER"
-            ? (customRejectReason.trim() || "Không đạt tiêu chuẩn kiểm duyệt")
-            : rejectReason;
+            ? (customRejectReason.trim() || t("moderator.rejectDefaultReason"))
+            : (rejectOptionsMap[rejectReason] || rejectReason);
         setReports((prev) => prev.filter((r) => r.id !== id));
         setRejectModalOpen(false);
         setCustomRejectReason("");
@@ -306,16 +315,23 @@ export default function ModeratorPage({ onBack }: Props) {
     // Mở hộp thoại cảnh cáo người dùng để chọn hoặc tự điền lý do
     function handleOpenWarnModal(userName: string) {
         setWarnTargetUser(userName);
-        setWarnReason("Gửi ảnh chụp không đúng hoặc che khuất hiện trường");
+        setWarnReason("OPT1");
         setCustomWarnReason("");
         setWarnModalOpen(true);
     }
 
     // Thao tác xác nhận gửi cảnh cáo đến người dùng kèm lý do vi phạm
     function handleConfirmWarn() {
+        const warnOptionsMap: Record<string, string> = {
+            OPT1: t("moderator.warnOpt1"),
+            OPT2: t("moderator.warnOpt2"),
+            OPT3: t("moderator.warnOpt3"),
+            OPT4: t("moderator.warnOpt4"),
+            OPT5: t("moderator.warnOpt5"),
+        };
         const reason = warnReason === "OTHER"
-            ? (customWarnReason.trim() || "Vi phạm quy tắc cộng đồng")
-            : warnReason;
+            ? (customWarnReason.trim() || t("moderator.warnDefaultReason"))
+            : (warnOptionsMap[warnReason] || warnReason);
         setWarnModalOpen(false);
         setCustomWarnReason("");
         showToast(`Đã gửi cảnh cáo đến ${warnTargetUser}: "${reason}".`);
@@ -326,10 +342,10 @@ export default function ModeratorPage({ onBack }: Props) {
         <header className={styles.header}>
             <div className={styles.headerLeft}>
                 <button type="button" className={styles.backBtn} onClick={onBack}>
-                    <span>← Quay lại Bản đồ</span>
+                    <span>← {t("common.backToMap")}</span>
                 </button>
                 <div className={styles.titleArea}>
-                    <h1 className={styles.title}>🛡️ Bàn Kiểm duyệt (Moderator Hub)</h1>
+                    <h1 className={styles.title}>🛡️ {t("moderator.title")}</h1>
                     <span className={styles.roleBadge}>MODERATOR</span>
                 </div>
             </div>
@@ -340,15 +356,16 @@ export default function ModeratorPage({ onBack }: Props) {
                     className={`${styles.tabBtn} ${tab === "QUEUE" ? styles.tabActive : ""}`}
                     onClick={() => setTab("QUEUE")}
                 >
-                    Hàng đợi Duyệt Báo cáo ({reports.length})
+                    {t("moderator.tabQueue")} ({reports.length})
                 </button>
                 <button
                     type="button"
                     className={`${styles.tabBtn} ${tab === "USERS" ? styles.tabActive : ""}`}
                     onClick={() => setTab("USERS")}
                 >
-                    Quản lý Người dùng thường ({normalUsers.length})
+                    {t("moderator.tabUsers")} ({normalUsers.length})
                 </button>
+                <LanguageSwitcher />
             </div>
         </header>
     );
@@ -377,14 +394,14 @@ export default function ModeratorPage({ onBack }: Props) {
     const queueListPanel = (
         <aside className={styles.queuePanel}>
             <div className={styles.queueHeader}>
-                <span className={styles.queueTitle}>Báo cáo chờ duyệt (NEEDS_REVIEW)</span>
+                <span className={styles.queueTitle}>{t("moderator.waitingQueue")}</span>
                 <span className={styles.queueCount}>{reports.length}</span>
             </div>
 
             <div className={styles.queueList}>
                 {reports.length === 0 ? (
                     <div style={{ padding: 24, textAlign: "center", color: "#70757a", fontSize: 13 }}>
-                        Đã duyệt sạch hàng đợi! Không còn báo cáo nào cần xử lý.
+                        {t("moderator.emptyQueue")}
                     </div>
                 ) : (
                     reports.map((rep) => {
@@ -429,7 +446,7 @@ export default function ModeratorPage({ onBack }: Props) {
                 <div className={styles.detailHeader}>
                     <div>
                         <h2 className={styles.detailTitle}>
-                            Báo cáo #{currentReport.id}: {currentReport.type}
+                            {t("moderator.reportNum")} #{currentReport.id}: {currentReport.type}
                         </h2>
                         <div className={styles.detailAddress}>
                             📍 {currentReport.street}, {currentReport.ward}
@@ -445,11 +462,11 @@ export default function ModeratorPage({ onBack }: Props) {
                         </div>
                         <div>
                             <div className={styles.reporterName}>
-                                Người gửi: {currentReport.reporter.name}
+                                {t("moderator.sender")}: {currentReport.reporter.name}
                             </div>
                             <div className={styles.reporterStats}>
-                                Khoảng cách gửi: <strong>{currentReport.reporter.distanceM}m</strong>{" "}
-                                • Uy tín:{" "}
+                                {t("moderator.distance")}: <strong>{currentReport.reporter.distanceM}m</strong>{" "}
+                                • {t("moderator.reputation")}:{" "}
                                 <strong>
                                     {Math.round(
                                         ((currentReport.reporter.approvedCount + 1) /
@@ -459,7 +476,7 @@ export default function ModeratorPage({ onBack }: Props) {
                                     %
                                 </strong>{" "}
                                 ({currentReport.reporter.approvedCount}/{currentReport.reporter.totalCount}{" "}
-                                duyệt)
+                                {t("moderator.approved")})
                             </div>
                         </div>
                     </div>
@@ -468,26 +485,26 @@ export default function ModeratorPage({ onBack }: Props) {
                         className={styles.manageUserBtn}
                         onClick={() => handleOpenWarnModal(currentReport.reporter.name)}
                     >
-                        ⚠️ Cảnh cáo user
+                        {t("moderator.warnUser")}
                     </button>
                 </div>
 
                 <div className={styles.photoContainer}>
                     <img
                         src={currentReport.imageUrl}
-                        alt="Hiện trường sự cố"
+                        alt={t("moderator.photoAlt")}
                         className={styles.photoImg}
                     />
                 </div>
 
                 <div style={{ fontSize: 14, color: "#202124", lineHeight: 1.5, marginBottom: 16 }}>
-                    <strong>Mô tả của người dân:</strong> {currentReport.description}
+                    <strong>{t("moderator.citizenDesc")}</strong> {currentReport.description}
                 </div>
 
                 <div className={styles.aiBox}>
                     <div className={styles.aiHeader}>
                         <div className={styles.aiTitle}>
-                            <span>🤖 Đánh giá từ AI (v2.3)</span>
+                            <span>🤖 {t("moderator.aiVerdict")}</span>
                             <span
                                 className={`${styles.aiVerdictChip} ${
                                     currentReport.ai.verdict === "MATCH"
@@ -501,11 +518,11 @@ export default function ModeratorPage({ onBack }: Props) {
                             </span>
                         </div>
                         <span className={styles.aiScore}>
-                            Độ tin cậy: {Math.round(currentReport.ai.confidence * 100)}%
+                            {t("moderator.confidence")} {Math.round(currentReport.ai.confidence * 100)}%
                         </span>
                     </div>
                     <p className={styles.aiReason}>
-                        <strong>Lý do AI phân tích:</strong> {currentReport.ai.reason}
+                        <strong>{t("moderator.aiReason")}</strong> {currentReport.ai.reason}
                     </p>
                 </div>
 
@@ -515,29 +532,29 @@ export default function ModeratorPage({ onBack }: Props) {
                         className={styles.approveBtn}
                         onClick={() => handleApprove(currentReport.id)}
                     >
-                        ✓ Duyệt xuất bản sự cố
+                        {t("moderator.approve")}
                     </button>
                     <button
                         type="button"
                         className={styles.rejectBtn}
                         onClick={() => setRejectModalOpen(true)}
                     >
-                        ✕ Từ chối báo cáo
+                        {t("moderator.reject")}
                     </button>
                     <button
                         type="button"
                         className={styles.mergeBtn}
                         onClick={handleOpenMergeModal}
-                        title="Đối chiếu và gộp vào một sự cố đang có sẵn lân cận"
+                        title={t("moderator.mergeBtnTitle")}
                     >
-                        🔗 Gộp vào sự cố gần đó
+                        {t("moderator.merge")}
                     </button>
                 </div>
             </div>
         </main>
     ) : (
         <div style={{ flex: 1, padding: 32, textAlign: "center", color: "#5f6368" }}>
-            Chọn một báo cáo ở danh sách bên trái để kiểm duyệt
+            {t("moderator.noReportSelected")}
         </div>
     );
 
@@ -548,10 +565,10 @@ export default function ModeratorPage({ onBack }: Props) {
                 <div className={styles.tableHeaderBar}>
                     <div>
                         <h3 style={{ margin: "0 0 4px", fontSize: 16, fontWeight: 600 }}>
-                            Danh sách Người dùng thường (Users)
+                            {t("moderator.userListTitle")}
                         </h3>
                         <div className={styles.tableNotice}>
-                            🛡️ <em>Quy định phân quyền:</em> Moderator chỉ có thẩm quyền chế tài (Cảnh cáo / Khóa tạm thời) đối với tài khoản <strong>User thường</strong> nhằm chống spam. Không có quyền can thiệp vào tài khoản Moderator khác hoặc Admin.
+                            🛡️ <em>{t("moderator.userListNoticePrefix")}</em> {t("moderator.userListNotice")}
                         </div>
                     </div>
                 </div>
@@ -559,14 +576,14 @@ export default function ModeratorPage({ onBack }: Props) {
                 <table className={styles.userTable}>
                     <thead>
                         <tr>
-                            <th>ID</th>
-                            <th>Họ và tên</th>
-                            <th>Email</th>
-                            <th>Tổng báo cáo</th>
-                            <th>Duyệt / Từ chối</th>
-                            <th>Tỉ lệ uy tín</th>
-                            <th>Trạng thái</th>
-                            <th>Thao tác Moderator</th>
+                            <th>{t("moderator.colId")}</th>
+                            <th>{t("moderator.colName")}</th>
+                            <th>{t("moderator.colEmail")}</th>
+                            <th>{t("moderator.colTotal")}</th>
+                            <th>{t("moderator.colApprovedRejected")}</th>
+                            <th>{t("moderator.colReputation")}</th>
+                            <th>{t("moderator.colStatus")}</th>
+                            <th>{t("moderator.colActions")}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -595,7 +612,7 @@ export default function ModeratorPage({ onBack }: Props) {
                                                     : styles.statusBanned
                                             }
                                         >
-                                            {u.status === "ACTIVE" ? "Hoạt động" : "Đã bị khóa"}
+                                            {u.status === "ACTIVE" ? t("moderator.statusActive") : t("moderator.statusBanned")}
                                         </span>
                                     </td>
                                     <td>
@@ -604,7 +621,7 @@ export default function ModeratorPage({ onBack }: Props) {
                                             className={styles.btnWarn}
                                             onClick={() => handleOpenWarnModal(u.name)}
                                         >
-                                            Cảnh cáo
+                                            {t("moderator.actionWarn")}
                                         </button>
                                         {u.status === "ACTIVE" ? (
                                             <button
@@ -612,7 +629,7 @@ export default function ModeratorPage({ onBack }: Props) {
                                                 className={styles.btnBan}
                                                 onClick={() => handleToggleBanUser(u.id)}
                                             >
-                                                Khóa tài khoản
+                                                {t("moderator.actionBan")}
                                             </button>
                                         ) : (
                                             <button
@@ -620,7 +637,7 @@ export default function ModeratorPage({ onBack }: Props) {
                                                 className={styles.btnUnban}
                                                 onClick={() => handleToggleBanUser(u.id)}
                                             >
-                                                Mở khóa
+                                                {t("moderator.actionUnban")}
                                             </button>
                                         )}
                                     </td>
@@ -637,9 +654,11 @@ export default function ModeratorPage({ onBack }: Props) {
     const rejectReasonModal = rejectModalOpen && (
         <div className={styles.rejectModalOverlay} onClick={() => setRejectModalOpen(false)}>
             <div className={styles.rejectModal} onClick={(e) => e.stopPropagation()}>
-                <h3 className={styles.rejectModalTitle}>Từ chối báo cáo #{currentReport?.id}</h3>
+                <h3 className={styles.rejectModalTitle}>
+                    {t("moderator.rejectModalTitle", { id: currentReport?.id ?? "" })}
+                </h3>
                 <p style={{ fontSize: 13, color: "#5f6368", marginTop: 0, marginBottom: 12 }}>
-                    Lý do này sẽ được lưu vào hệ thống và gửi thông báo trực tiếp đến người dùng theo thiết kế v2.9.
+                    {t("moderator.rejectModalDesc")}
                 </p>
 
                 <select
@@ -647,17 +666,17 @@ export default function ModeratorPage({ onBack }: Props) {
                     value={rejectReason}
                     onChange={(e) => setRejectReason(e.target.value)}
                 >
-                    <option value="Ảnh không trùng khớp hiện trường">Ảnh không trùng khớp hiện trường</option>
-                    <option value="Tọa độ GPS gửi quá xa vị trí sự cố">Tọa độ GPS gửi quá xa vị trí sự cố</option>
-                    <option value="Thông tin báo cáo sai lệch hoặc spam">Thông tin báo cáo sai lệch hoặc spam</option>
-                    <option value="Hình ảnh mờ, không xác định được sự cố">Hình ảnh mờ, không xác định được sự cố</option>
-                    <option value="OTHER">Lý do khác...</option>
+                    <option value="OPT1">{t("moderator.rejectOpt1")}</option>
+                    <option value="OPT2">{t("moderator.rejectOpt2")}</option>
+                    <option value="OPT3">{t("moderator.rejectOpt3")}</option>
+                    <option value="OPT4">{t("moderator.rejectOpt4")}</option>
+                    <option value="OTHER">{t("moderator.rejectOptOther")}</option>
                 </select>
 
                 {rejectReason === "OTHER" && (
                     <textarea
                         className={styles.rejectReasonInput}
-                        placeholder="Nhập lý do từ chối cụ thể..."
+                        placeholder={t("moderator.rejectPlaceholder")}
                         value={customRejectReason}
                         onChange={(e) => setCustomRejectReason(e.target.value)}
                         autoFocus
@@ -677,7 +696,7 @@ export default function ModeratorPage({ onBack }: Props) {
                         }}
                         onClick={() => setRejectModalOpen(false)}
                     >
-                        Hủy
+                        {t("common.cancel")}
                     </button>
                     <button
                         type="button"
@@ -693,7 +712,7 @@ export default function ModeratorPage({ onBack }: Props) {
                         }}
                         onClick={handleRejectConfirm}
                     >
-                        Xác nhận từ chối
+                        {t("moderator.confirmReject")}
                     </button>
                 </div>
             </div>
@@ -705,29 +724,29 @@ export default function ModeratorPage({ onBack }: Props) {
         <div className={styles.rejectModalOverlay} onClick={() => setMergeModalOpen(false)}>
             <div className={styles.mergeModal} onClick={(e) => e.stopPropagation()}>
                 <h3 className={styles.mergeModalTitle}>
-                    <span>🔗 Đối chiếu & Gộp Báo cáo vào Sự cố gần đó</span>
+                    <span>{t("moderator.mergeModalTitle")}</span>
                 </h3>
                 <p className={styles.mergeSubtitle}>
-                    Theo quy tắc v2.9: Các báo cáo cùng loại, cùng đoạn đường hoặc cách dưới 300m trong vòng 24h sẽ được gộp chung để tăng điểm tin cậy và tránh rác bản đồ.
+                    {t("moderator.mergeSubtitle")}
                 </p>
 
                 <div className={styles.currentReportBox}>
                     <div>
-                        <strong>Báo cáo #{currentReport.id}:</strong> {currentReport.type} — {currentReport.street} ({currentReport.ward})
+                        <strong>{t("moderator.reportNum")} #{currentReport.id}:</strong> {currentReport.type} — {currentReport.street} ({currentReport.ward})
                     </div>
                     <div style={{ fontSize: 12, color: "#5f6368", marginTop: 2 }}>
-                        Người gửi: {currentReport.reporter.name} ({currentReport.timeAgo}) • <em>"{currentReport.description}"</em>
+                        {t("moderator.sender")}: {currentReport.reporter.name} ({currentReport.timeAgo}) • <em>"{currentReport.description}"</em>
                     </div>
                 </div>
 
                 <div style={{ fontSize: 13, fontWeight: 600, color: "#202124", marginBottom: 8 }}>
-                    Chọn sự cố đang có sẵn trên bản đồ để tiếp nhận báo cáo này:
+                    {t("moderator.mergePickIncident")}
                 </div>
 
                 <div className={styles.candidateList}>
                     {candidateIncidents.length === 0 ? (
                         <div style={{ padding: 20, textAlign: "center", color: "#70757a", fontSize: 13 }}>
-                            Không tìm thấy sự cố nào trong bán kính 300m phù hợp để gộp.
+                            {t("moderator.mergeNoCandidates")}
                         </div>
                     ) : (
                         candidateIncidents.map((cand) => {
@@ -751,7 +770,7 @@ export default function ModeratorPage({ onBack }: Props) {
                                         <div className={styles.candidateTop}>
                                             <span className={styles.candidateCode}>#{cand.code}</span>
                                             <span className={styles.candidateDistance}>
-                                                Cách {cand.distanceM}m
+                                                {t("moderator.mergeDistance", { dist: cand.distanceM })}
                                             </span>
                                         </div>
                                         <div className={styles.candidateTitle}>{cand.title}</div>
@@ -759,7 +778,7 @@ export default function ModeratorPage({ onBack }: Props) {
                                             📍 {cand.location} • {cand.timeAgo}
                                         </div>
                                         <div style={{ fontSize: 11.5, color: "#188038", fontWeight: 500, marginTop: 4 }}>
-                                            Nguồn: {cand.source} • Đã có {cand.mergedReportsCount} báo cáo xác nhận
+                                            {t("moderator.mergeSource", { source: cand.source, count: cand.mergedReportsCount })}
                                         </div>
                                     </div>
                                 </div>
@@ -782,7 +801,7 @@ export default function ModeratorPage({ onBack }: Props) {
                         }}
                         onClick={() => setMergeModalOpen(false)}
                     >
-                        Hủy
+                        {t("common.cancel")}
                     </button>
                     <button
                         type="button"
@@ -800,7 +819,7 @@ export default function ModeratorPage({ onBack }: Props) {
                         disabled={!selectedCandidateId}
                         onClick={handleConfirmMerge}
                     >
-                        Xác nhận gộp vào sự cố đã chọn
+                        {t("moderator.confirmMerge")}
                     </button>
                 </div>
             </div>
@@ -811,9 +830,11 @@ export default function ModeratorPage({ onBack }: Props) {
     const warnUserModal = warnModalOpen && (
         <div className={styles.rejectModalOverlay} onClick={() => setWarnModalOpen(false)}>
             <div className={styles.rejectModal} onClick={(e) => e.stopPropagation()}>
-                <h3 className={styles.warnModalTitle}>⚠️ Cảnh cáo Người dùng: {warnTargetUser}</h3>
+                <h3 className={styles.warnModalTitle}>
+                    {t("moderator.warnModalTitle", { user: warnTargetUser })}
+                </h3>
                 <p style={{ fontSize: 13, color: "#5f6368", marginTop: 0, marginBottom: 12 }}>
-                    Chọn lý do vi phạm để gửi thông báo cảnh cáo chính thức đến tài khoản này.
+                    {t("moderator.warnModalDesc")}
                 </p>
 
                 <select
@@ -821,28 +842,18 @@ export default function ModeratorPage({ onBack }: Props) {
                     value={warnReason}
                     onChange={(e) => setWarnReason(e.target.value)}
                 >
-                    <option value="Gửi ảnh chụp không đúng hoặc che khuất hiện trường">
-                        Gửi ảnh chụp không đúng hoặc che khuất hiện trường
-                    </option>
-                    <option value="Báo cáo thông tin sai lệch / tin giả mạo">
-                        Báo cáo thông tin sai lệch / tin giả mạo
-                    </option>
-                    <option value="Tọa độ GPS gửi quá xa vị trí sự cố thực tế">
-                        Tọa độ GPS gửi quá xa vị trí sự cố thực tế
-                    </option>
-                    <option value="Nội dung mô tả không phù hợp quy định cộng đồng">
-                        Nội dung mô tả không phù hợp quy định cộng đồng
-                    </option>
-                    <option value="Spam liên tục nhiều báo cáo trùng lặp">
-                        Spam liên tục nhiều báo cáo trùng lặp
-                    </option>
-                    <option value="OTHER">Lý do khác...</option>
+                    <option value="OPT1">{t("moderator.warnOpt1")}</option>
+                    <option value="OPT2">{t("moderator.warnOpt2")}</option>
+                    <option value="OPT3">{t("moderator.warnOpt3")}</option>
+                    <option value="OPT4">{t("moderator.warnOpt4")}</option>
+                    <option value="OPT5">{t("moderator.warnOpt5")}</option>
+                    <option value="OTHER">{t("moderator.warnOptOther")}</option>
                 </select>
 
                 {warnReason === "OTHER" && (
                     <textarea
                         className={styles.warnReasonInput}
-                        placeholder="Nhập lý do cảnh cáo cụ thể..."
+                        placeholder={t("moderator.warnPlaceholder")}
                         value={customWarnReason}
                         onChange={(e) => setCustomWarnReason(e.target.value)}
                         autoFocus
@@ -862,7 +873,7 @@ export default function ModeratorPage({ onBack }: Props) {
                         }}
                         onClick={() => setWarnModalOpen(false)}
                     >
-                        Hủy
+                        {t("common.cancel")}
                     </button>
                     <button
                         type="button"
@@ -878,7 +889,7 @@ export default function ModeratorPage({ onBack }: Props) {
                         }}
                         onClick={handleConfirmWarn}
                     >
-                        Xác nhận gửi cảnh cáo
+                        {t("moderator.confirmWarn")}
                     </button>
                 </div>
             </div>

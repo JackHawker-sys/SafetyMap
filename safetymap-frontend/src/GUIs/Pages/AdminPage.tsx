@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useLanguage } from "../Context/LanguageContext";
+import LanguageSwitcher from "../Components/LanguageSwitcher";
 import styles from "../../../public/assets/AdminPage.module.css";
 import type { UserRole } from "../Hooks/useAuth";
 
@@ -75,6 +77,7 @@ interface Props {
 }
 
 export default function AdminPage({ onBack }: Props) {
+    const { t } = useLanguage();
     const [currentTab, setCurrentTab] = useState<"ACCOUNTS" | "SOURCES" | "MAP" | "LOGS">("ACCOUNTS");
     const [users, setUsers] = useState<AdminUserRecord[]>(INITIAL_USERS);
     const [sources, setSources] = useState<NewsSource[]>(INITIAL_SOURCES);
@@ -183,12 +186,15 @@ export default function AdminPage({ onBack }: Props) {
         <header className={styles.header}>
             <div className={styles.headerLeft}>
                 <button type="button" className={styles.backBtn} onClick={onBack}>
-                    <span>← Quay lại Bản đồ</span>
+                    <span>← {t("common.backToMap")}</span>
                 </button>
                 <div className={styles.titleArea}>
-                    <h1 className={styles.title}>⚙️ Bảng Quản trị Hệ thống (Admin Portal)</h1>
+                    <h1 className={styles.title}>⚙️ {t("admin.title")}</h1>
                     <span className={styles.roleBadge}>SUPER ADMIN</span>
                 </div>
+            </div>
+            <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+                <LanguageSwitcher />
             </div>
         </header>
     );
@@ -222,28 +228,28 @@ export default function AdminPage({ onBack }: Props) {
                 className={`${styles.sidebarBtn} ${currentTab === "ACCOUNTS" ? styles.sidebarBtnActive : ""}`}
                 onClick={() => setCurrentTab("ACCOUNTS")}
             >
-                <span>👥</span> Quản lý User & Mod ({users.length})
+                <span>👥</span> {t("admin.tabAccounts")} ({users.length})
             </button>
             <button
                 type="button"
                 className={`${styles.sidebarBtn} ${currentTab === "SOURCES" ? styles.sidebarBtnActive : ""}`}
                 onClick={() => setCurrentTab("SOURCES")}
             >
-                <span>📰</span> Nguồn cào tin ({sources.length})
+                <span>📰</span> {t("admin.tabSources")} ({sources.length})
             </button>
             <button
                 type="button"
                 className={`${styles.sidebarBtn} ${currentTab === "MAP" ? styles.sidebarBtnActive : ""}`}
                 onClick={() => setCurrentTab("MAP")}
             >
-                <span>🗺️</span> Dữ liệu Bản đồ OSM ({imports.length})
+                <span>🗺️</span> {t("admin.tabMap")} ({imports.length})
             </button>
             <button
                 type="button"
                 className={`${styles.sidebarBtn} ${currentTab === "LOGS" ? styles.sidebarBtnActive : ""}`}
                 onClick={() => setCurrentTab("LOGS")}
             >
-                <span>📋</span> Nhật ký Kiểm toán ({logs.length})
+                <span>📋</span> {t("admin.tabAudit")} ({logs.length})
             </button>
         </aside>
     );
@@ -253,9 +259,9 @@ export default function AdminPage({ onBack }: Props) {
         <div className={styles.sectionCard}>
             <div className={styles.cardHeader}>
                 <div>
-                    <h2 className={styles.cardTitle}>Phân quyền & Quản lý Tài khoản</h2>
+                    <h2 className={styles.cardTitle}>{t("admin.accountsTitle")}</h2>
                     <p className={styles.cardDesc}>
-                        Admin có toàn quyền quản lý <strong>cả Moderator lẫn User</strong>: Thăng chức / Thu hồi quyền Mod, Khóa / Mở khóa tài khoản vi phạm.
+                        {t("admin.accountsDesc")}
                     </p>
                 </div>
             </div>
@@ -263,13 +269,13 @@ export default function AdminPage({ onBack }: Props) {
             <table className={styles.adminTable}>
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Người dùng</th>
-                        <th>Email</th>
-                        <th>Vai trò (Roles)</th>
-                        <th>Trạng thái</th>
-                        <th>Ngày tạo</th>
-                        <th>Thao tác Admin</th>
+                        <th>{t("admin.colId")}</th>
+                        <th>{t("admin.colUser")}</th>
+                        <th>{t("admin.colEmail")}</th>
+                        <th>{t("admin.colRoles")}</th>
+                        <th>{t("admin.colStatus")}</th>
+                        <th>{t("admin.colCreatedAt")}</th>
+                        <th>{t("admin.colAdminActions")}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -307,7 +313,7 @@ export default function AdminPage({ onBack }: Props) {
                                                 : styles.statusBanned
                                         }
                                     >
-                                        {u.status === "ACTIVE" ? "Hoạt động" : "Đã bị khóa"}
+                                        {u.status === "ACTIVE" ? t("admin.statusActive") : t("admin.statusBanned")}
                                     </span>
                                 </td>
                                 <td style={{ color: "#70757a" }}>{u.createdAt}</td>
@@ -320,7 +326,7 @@ export default function AdminPage({ onBack }: Props) {
                                                     className={styles.btnDemote}
                                                     onClick={() => handleToggleModRole(u.id)}
                                                 >
-                                                    Hạ quyền Mod
+                                                    {t("admin.btnDemote")}
                                                 </button>
                                             ) : (
                                                 <button
@@ -328,7 +334,7 @@ export default function AdminPage({ onBack }: Props) {
                                                     className={styles.btnPromote}
                                                     onClick={() => handleToggleModRole(u.id)}
                                                 >
-                                                    + Nâng lên Mod
+                                                    {t("admin.btnPromote")}
                                                 </button>
                                             )}
 
@@ -338,7 +344,7 @@ export default function AdminPage({ onBack }: Props) {
                                                     className={styles.btnLock}
                                                     onClick={() => handleToggleStatus(u.id)}
                                                 >
-                                                    Khóa
+                                                    {t("admin.btnLock")}
                                                 </button>
                                             ) : (
                                                 <button
@@ -346,14 +352,14 @@ export default function AdminPage({ onBack }: Props) {
                                                     className={styles.btnUnlock}
                                                     onClick={() => handleToggleStatus(u.id)}
                                                 >
-                                                    Mở khóa
+                                                    {t("admin.btnUnlock")}
                                                 </button>
                                             )}
                                         </>
                                     )}
                                     {hasAdmin && (
                                         <span style={{ fontSize: 12, color: "#1a73e8", fontWeight: 600 }}>
-                                            Tài khoản Root
+                                            {t("admin.rootAccount")}
                                         </span>
                                     )}
                                 </td>
@@ -370,9 +376,9 @@ export default function AdminPage({ onBack }: Props) {
         <div className={styles.sectionCard}>
             <div className={styles.cardHeader}>
                 <div>
-                    <h2 className={styles.cardTitle}>Nguồn tin tức cào tự động (source_reliabilities)</h2>
+                    <h2 className={styles.cardTitle}>{t("admin.sourcesTitle")}</h2>
                     <p className={styles.cardDesc}>
-                        Chỉ những nguồn có trạng thái Bật mới được cào bài viết để trích xuất sự cố.
+                        {t("admin.sourcesDesc")}
                     </p>
                 </div>
             </div>
@@ -380,12 +386,12 @@ export default function AdminPage({ onBack }: Props) {
             <table className={styles.adminTable}>
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Tên nguồn tin</th>
-                        <th>Tên miền (Base URL)</th>
-                        <th>Độ tin cậy</th>
-                        <th>Trạng thái cào</th>
-                        <th>Thao tác</th>
+                        <th>{t("admin.colId")}</th>
+                        <th>{t("admin.colSourceName")}</th>
+                        <th>{t("admin.colBaseUrl")}</th>
+                        <th>{t("admin.colReliability")}</th>
+                        <th>{t("admin.colCrawlStatus")}</th>
+                        <th>{t("admin.colActions")}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -403,7 +409,7 @@ export default function AdminPage({ onBack }: Props) {
                                         s.isActive ? styles.statusActive : styles.statusBanned
                                     }
                                 >
-                                    {s.isActive ? "Đang cào" : "Đã tạm dừng"}
+                                    {s.isActive ? t("admin.statusCrawling") : t("admin.statusPaused")}
                                 </span>
                             </td>
                             <td>
@@ -414,7 +420,7 @@ export default function AdminPage({ onBack }: Props) {
                                     }`}
                                     onClick={() => handleToggleSource(s.id)}
                                 >
-                                    {s.isActive ? "Tạm dừng" : "Bật cào"}
+                                    {s.isActive ? t("admin.btnPause") : t("admin.btnResume")}
                                 </button>
                             </td>
                         </tr>
@@ -429,9 +435,9 @@ export default function AdminPage({ onBack }: Props) {
         <div className={styles.sectionCard}>
             <div className={styles.cardHeader}>
                 <div>
-                    <h2 className={styles.cardTitle}>Lịch sử Nhập Bản đồ OpenStreetMap (map_imports)</h2>
+                    <h2 className={styles.cardTitle}>{t("admin.mapTitle")}</h2>
                     <p className={styles.cardDesc}>
-                        Quản lý các đợt import dữ liệu đoạn đường (road_segments) và các khối nhà (blocks) phục vụ tính điểm nguy hiểm tuyến đường.
+                        {t("admin.mapDesc")}
                     </p>
                 </div>
                 <button
@@ -439,20 +445,20 @@ export default function AdminPage({ onBack }: Props) {
                     className={styles.importTriggerBtn}
                     onClick={handleTriggerImport}
                 >
-                    🔄 Mô phỏng Re-import OSM
+                    {t("admin.btnTriggerImport")}
                 </button>
             </div>
 
             <table className={styles.adminTable}>
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Khu vực (Area Name)</th>
-                        <th>File OSM gốc</th>
-                        <th>Số đoạn đường (Segments)</th>
-                        <th>Số Blocks (Vùng)</th>
-                        <th>Ngày dữ liệu</th>
-                        <th>Thời gian Import</th>
+                        <th>{t("admin.colId")}</th>
+                        <th>{t("admin.colArea")}</th>
+                        <th>{t("admin.colSourceFile")}</th>
+                        <th>{t("admin.colSegments")}</th>
+                        <th>{t("admin.colBlocks")}</th>
+                        <th>{t("admin.colDataDate")}</th>
+                        <th>{t("admin.colImportTime")}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -477,9 +483,9 @@ export default function AdminPage({ onBack }: Props) {
         <div className={styles.sectionCard}>
             <div className={styles.cardHeader}>
                 <div>
-                    <h2 className={styles.cardTitle}>Nhật ký Kiểm toán (audit_logs)</h2>
+                    <h2 className={styles.cardTitle}>{t("admin.auditTitle")}</h2>
                     <p className={styles.cardDesc}>
-                        Theo dõi toàn bộ thao tác nhạy cảm của các Moderator và Admin trên hệ thống để đảm bảo tính minh bạch.
+                        {t("admin.auditDesc")}
                     </p>
                 </div>
             </div>
@@ -487,12 +493,12 @@ export default function AdminPage({ onBack }: Props) {
             <table className={styles.adminTable}>
                 <thead>
                     <tr>
-                        <th>ID</th>
-                        <th>Người thực hiện</th>
-                        <th>Quyền</th>
-                        <th>Hành động</th>
-                        <th>Chi tiết / Đối tượng</th>
-                        <th>Thời gian</th>
+                        <th>{t("admin.colId")}</th>
+                        <th>{t("admin.colActor")}</th>
+                        <th>{t("admin.colRole")}</th>
+                        <th>{t("admin.colAction")}</th>
+                        <th>{t("admin.colTargetDetails")}</th>
+                        <th>{t("admin.colTime")}</th>
                     </tr>
                 </thead>
                 <tbody>

@@ -1,5 +1,7 @@
 import { useRef } from "react";
-import { useTosContent, type TosLanguage } from "../Hooks/useTosContent";
+import { useTosContent } from "../Hooks/useTosContent";
+import { useLanguage } from "../Context/LanguageContext";
+import LanguageSwitcher from "./LanguageSwitcher";
 import styles from "../../../public/assets/TosViewer.module.css";
 
 interface Props {
@@ -15,28 +17,9 @@ export default function TosViewer({
     onAgreeAndClose,
     onBack,
 }: Props) {
-    const { lang, setLang, document, loading, error } = useTosContent();
+    const { document, loading, error } = useTosContent();
+    const { t } = useLanguage();
     const contentRef = useRef<HTMLDivElement>(null);
-
-    // Nút chuyển đổi ngôn ngữ Việt / Anh
-    const languageSwitcher = (
-        <div className={styles.langSwitch} role="group" aria-label="Language selection">
-            <button
-                type="button"
-                className={`${styles.langBtn} ${lang === "vi" ? styles.langBtnActive : ""}`}
-                onClick={() => setLang("vi" as TosLanguage)}
-            >
-                VI
-            </button>
-            <button
-                type="button"
-                className={`${styles.langBtn} ${lang === "en" ? styles.langBtnActive : ""}`}
-                onClick={() => setLang("en" as TosLanguage)}
-            >
-                EN
-            </button>
-        </div>
-    );
 
     // Thanh tiêu đề phía trên cùng
     const headerBar = (
@@ -49,19 +32,19 @@ export default function TosViewer({
                         onClick={onBack}
                         style={{ padding: "6px 12px", fontSize: 13 }}
                     >
-                        ← {lang === "vi" ? "Quay lại Bản đồ" : "Back to Map"}
+                        ← {t("common.backToMap")}
                     </button>
                 )}
                 <div className={styles.iconShield}>🛡️</div>
                 <div>
                     <h2 className={styles.headerTitle}>
-                        {document ? document.title : (lang === "vi" ? "Điều khoản Dịch vụ S.A.F.E.R" : "S.A.F.E.R Terms of Service")}
+                        {document ? document.title : t("tos.defaultTitle")}
                     </h2>
                     {document && (
                         <div className={styles.metaRow}>
                             <span className={styles.versionBadge}>v{document.version}</span>
                             <span>
-                                {lang === "vi" ? "Cập nhật:" : "Updated:"} {document.lastUpdated}
+                                {t("tos.updated")} {document.lastUpdated}
                             </span>
                         </div>
                     )}
@@ -69,14 +52,14 @@ export default function TosViewer({
             </div>
 
             <div className={styles.headerActions}>
-                {languageSwitcher}
+                <LanguageSwitcher />
                 {mode === "modal" && onClose && (
                     <button
                         type="button"
                         className={styles.closeIconBtn}
                         onClick={onClose}
-                        title={lang === "vi" ? "Đóng" : "Close"}
-                        aria-label="Close"
+                        title={t("common.close")}
+                        aria-label={t("common.close")}
                     >
                         ×
                     </button>
@@ -90,22 +73,20 @@ export default function TosViewer({
         <div ref={contentRef} className={styles.contentBody}>
             {loading && (
                 <div style={{ padding: 40, textAlign: "center", color: "#5f6368" }}>
-                    {lang === "vi" ? "Đang tải điều khoản..." : "Loading terms..."}
+                    {t("tos.loading")}
                 </div>
             )}
 
             {error && (
                 <div style={{ padding: 20, background: "#fce8e6", color: "#c5221f", borderRadius: 8 }}>
-                    {lang === "vi"
-                        ? "Không thể tải văn bản điều khoản. Vui lòng thử lại sau."
-                        : "Failed to load terms document. Please try again."}
+                    {t("tos.loadError")}
                 </div>
             )}
 
             {document && (
                 <>
                     <div className={styles.introBox}>
-                        <strong>{lang === "vi" ? "Lời mở đầu:" : "Preamble:"}</strong> {document.introduction}
+                        <strong>{t("tos.preamble")}</strong> {document.introduction}
                     </div>
 
                     {document.sections.map((sec) => (
@@ -143,12 +124,12 @@ export default function TosViewer({
         <div className={styles.footer}>
             {onClose && (
                 <button type="button" className={styles.secondaryBtn} onClick={onClose}>
-                    {lang === "vi" ? "Đóng" : "Close"}
+                    {t("common.close")}
                 </button>
             )}
             {onAgreeAndClose && (
                 <button type="button" className={styles.primaryBtn} onClick={onAgreeAndClose}>
-                    ✓ {lang === "vi" ? "Đã hiểu & Đồng ý" : "I Understand & Agree"}
+                    ✓ {t("tos.agree")}
                 </button>
             )}
         </div>

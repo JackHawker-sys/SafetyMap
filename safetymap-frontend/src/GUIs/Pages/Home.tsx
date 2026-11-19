@@ -11,6 +11,8 @@ import SearchBar from "../Components/SearchBar";
 import PlacePanel from "../Components/PlacePanel";
 import DirectionsPanel from "../Components/DirectionsPanel";
 import AuthModal from "../Components/AuthModal";
+import LanguageSwitcher from "../Components/LanguageSwitcher";
+import { useLanguage } from "../Context/LanguageContext";
 import { UserIcon } from "../Components/Icons";
 import type { MapInsets } from "../Components/FitToPlaces";
 import styles from "../../../public/assets/Home.module.css";
@@ -26,6 +28,7 @@ export default function Home() {
 
     // Quản lý xác thực người dùng thuần frontend (localStorage)
     const auth = useAuth();
+    const { t } = useLanguage();
     const [authModalOpen, setAuthModalOpen] = useState(false);
 
     // Lần bấm "Tìm đường" gần nhất. Lưu theo id 2 điểm -> đổi điểm là thông báo cũ tự hết hiệu lực,
@@ -130,11 +133,12 @@ export default function Home() {
             )}
 
             <div className={styles.topRightSlot}>
+                <LanguageSwitcher />
                 <button
                     type="button"
                     className={styles.authTriggerBtn}
                     onClick={() => setAuthModalOpen(true)}
-                    title={auth.user ? `Tài khoản: ${auth.user.name}` : "Đăng nhập / Đăng ký"}
+                    title={auth.user ? `${t("auth.accountTitle")}: ${auth.user.name}` : t("common.login")}
                 >
                     {auth.user ? (
                         <>
@@ -146,7 +150,7 @@ export default function Home() {
                     ) : (
                         <>
                             <UserIcon size={18} />
-                            <span className={styles.authTriggerText}>Đăng nhập</span>
+                            <span className={styles.authTriggerText}>{t("common.login")}</span>
                         </>
                     )}
                 </button>
