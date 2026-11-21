@@ -13,6 +13,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
+
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,20 +28,24 @@ import vn.safetymap.common.config.GeometryConfig;
 @Entity 
 @Table(name ="road_segments")
 @Getter 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 
 public class RoadSegment {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn (name ="street_id", nullable = false)
     private Street street;
 
-    @ManyToOne (fetch = FetchType.LAZY, optional = false)
+    @ManyToOne (fetch = FetchType.LAZY)
     @JoinColumn(name = "ward_id")
     private Ward ward;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "junction_id")
+    private Junction junction;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "map_import_id")
@@ -76,6 +82,9 @@ public class RoadSegment {
     @Column(name = "length_m", nullable = false)
     private Double lengthM;
 
+    @Column(name = "width_m", nullable = false)
+    private Double widthM;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "road_class", nullable = false, length = 20)
     private RoadClass roadClass;
@@ -89,7 +98,7 @@ public class RoadSegment {
     public static RoadSegment create(Street street, MapImport mapImport,
                                      Long osmWayId, Integer segmentOrder,
                                      Long startNodeId, Long endNodeId,
-                                     RoadClass roadClass, LineString roadShape, Double lengthM) {
+                                     RoadClass roadClass, LineString roadShape, Double lengthM, Double widthM) {
         RoadSegment s = new RoadSegment();
         s.street = street;
         s.mapImport = mapImport;
@@ -100,12 +109,21 @@ public class RoadSegment {
         s.roadClass = roadClass;
         s.roadShape = roadShape;
         s.lengthM = lengthM;
+        s.widthM = widthM;
         s.checkInvariants();
         return s;
     }
 
     public void assignWard(Ward ward) {
         this.ward = ward;
+    }
+
+     /**
+     * Links the segment to the junction it lies in, or unlinks it with null.
+     * Re-import recomputes this link after matching junctions, so null is a legal value.
+     */
+    public void assignJunction(Junction junction) {
+        this.junction = junction;
     }
 
     /* startNodeId == endNodeId is allowed on purpose: a closed roundabout
@@ -127,6 +145,9 @@ public class RoadSegment {
         }
         if (lengthM == null || !Double.isFinite(lengthM) || lengthM <= 0) {
             throw new IllegalStateException("lengthM must be greater than 0, got " + lengthM);
+        }
+        if (widthM == null || !Double.isFinite(widthM) || widthM <= 0) {
+            throw new IllegalStateException("widthM must be greater than 0, got " + widthM);
         }
         if (roadShape == null || roadShape.isEmpty()) {
             throw new IllegalStateException("road shape is required");
