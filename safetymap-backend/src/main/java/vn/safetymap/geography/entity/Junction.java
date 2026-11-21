@@ -34,7 +34,7 @@ import java.util.Arrays;
 @NoArgsConstructor (access = AccessLevel.PROTECTED)
 public class Junction {
     /* Length a route is charged for passing through a junction. */
-    public static final double DEFAULT_EQUIPVALENT_LENGTH_M = 100.0;
+    public static final double DEFAULT_EQUIVALENT_LENGTH_M = 100.0;
 
     static final int NAME_MAX_LENGTH = 200;
 
@@ -69,7 +69,7 @@ public class Junction {
     private Polygon zone;
 
     @Column (name ="equivalent_length_m", nullable = false)
-    private Double equivalentLengthM = DEFAULT_EQUIPVALENT_LENGTH_M;
+    private Double equivalentLengthM = DEFAULT_EQUIVALENT_LENGTH_M;
 
     @Column (name = "created_at", insertable = false, updatable = false)
     private OffsetDateTime createdAt;
@@ -108,7 +108,7 @@ public class Junction {
         this.ward = ward;
     }
 
-    public long[] getNodesId(){
+    public long[] getNodeIds(){
         return nodeIds == null ? null : nodeIds.clone();
     }
 
