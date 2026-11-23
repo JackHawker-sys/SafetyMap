@@ -314,7 +314,7 @@ export default function LoginPage() {
 
                         {/* FORM: LOGIN */}
                         {tab === "LOGIN" ? (
-                            <form onSubmit={loginForm.handleSubmit(onLoginValid)} noValidate>
+                            <form method="POST" onSubmit={loginForm.handleSubmit(onLoginValid)} noValidate>
                                 <div className={styles.formGroup}>
                                     <label className={styles.inputLabel}>{t("auth.email")}</label>
                                     <div className={styles.inputWrap}>
