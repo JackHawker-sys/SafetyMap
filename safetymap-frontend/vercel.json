@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "https://<ten-app>.up.railway.app/api/:path*"
+      "destination": "https://safetymap-api-awdhfwdxhggza4ad.japaneast-01.azurewebsites.net/api/:path*"
     },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
