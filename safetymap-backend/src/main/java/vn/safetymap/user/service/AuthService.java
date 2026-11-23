@@ -8,6 +8,7 @@ import vn.safetymap.common.exception.ForbiddenException;
 import vn.safetymap.common.exception.UnauthorizedException;
 import vn.safetymap.common.security.JwtService;
 import vn.safetymap.common.security.RecaptchaVerifier;
+import vn.safetymap.common.exception.BadRequestException;
 import vn.safetymap.user.dto.LoginRequest;
 import vn.safetymap.user.dto.RegisterRequest;
 import vn.safetymap.user.dto.TokenResponse;
@@ -17,12 +18,14 @@ import vn.safetymap.user.entity.UserRole;
 import vn.safetymap.user.repository.UserRepository;
 
 import java.nio.charset.StandardCharsets;
+import java.util.regex.Pattern;
 import java.util.Locale;
 import java.util.Optional;
 
 @Service
 public class AuthService {
     public static final int BCRYPT_MAX_BYTES = 75;
+    private static final Pattern EIU_EMAIL_PATTERN = Pattern.compile("^[a-z0-9._%+-]+@eiu\\.edu\\.vn$");
 
     private final UserRepository userRepository;
     private final RefreshTokenService refreshTokenService;
@@ -48,8 +51,10 @@ public class AuthService {
 
     @Transactional
     public AuthResult register(RegisterRequest req) {
-        recaptchaVerifier.verify(req.captchaToken());
         String email = normalizeEmail(req.email());
+
+        recaptchaVerifier.verify(req.captchaToken());
+
         if (req.password().getBytes(StandardCharsets.UTF_8).length > BCRYPT_MAX_BYTES) {
             throw new ConflictException("PASSWORD_TOO_LONG", "Password is too long");
         }
@@ -69,9 +74,11 @@ public class AuthService {
 
     @Transactional
     public AuthResult login(LoginRequest req) {
+        String email = normalizeEmail(req.email());
+
         recaptchaVerifier.verify(req.captchaToken());
 
-        Optional<User> found = userRepository.findByEmail(normalizeEmail(req.email()));
+        Optional<User> found = userRepository.findByEmail(normalizeEmail(email));
 
         String hash = found.map(User::getPasswordHash).orElse(dummyHash);
         boolean passwordMatches = passwordEncoder.matches(req.password(), hash);
@@ -128,7 +135,12 @@ public class AuthService {
     }
 
     private static String normalizeEmail(String email) {
-        return email.trim().toLowerCase(Locale.ROOT);
+        String normalized =email.trim().toLowerCase(Locale.ROOT);
+        if(!EIU_EMAIL_PATTERN.matcher(normalized).matches()){
+            throw new BadRequestException("EMAIL_DOMAIN_NOT_ALLOWED",
+             "Only EIU emails (@eiu.edu.vn) are allowe;d")
+        }
+        return normalized;
     }
 
     private static UnauthorizedException sessionExpired() {

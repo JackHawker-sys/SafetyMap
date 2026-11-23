@@ -89,7 +89,8 @@
     "PASSWORD_TOO_LONG": "Mật khẩu quá dài",
     "SESSION_EXPIRED": "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại",
     "NETWORK_ERROR": "Không thể kết nối máy chủ, vui lòng thử lại sau",
-    "INTERNAL_ERROR": "Máy chủ gặp sự cố, vui lòng thử lại sau"
+    "INTERNAL_ERROR": "Máy chủ gặp sự cố, vui lòng thử lại sau",
+    "EMAIL_DOMAIN_NOT_ALLOWED": "Chỉ chấp nhận email trường dạng @eiu.edu.vn"
   },
   "tos": {
     "defaultTitle": "Điều khoản Dịch vụ S.A.F.E.R",

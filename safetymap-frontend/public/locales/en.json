@@ -89,7 +89,8 @@
     "PASSWORD_TOO_LONG": "Password is too long",
     "SESSION_EXPIRED": "Your session has expired, please sign in again",
     "NETWORK_ERROR": "Cannot reach the server, please try again later",
-    "INTERNAL_ERROR": "Server error, please try again later"
+    "INTERNAL_ERROR": "Server error, please try again later",
+    "EMAIL_DOMAIN_NOT_ALLOWED": "Only EIU emails (@eiu.edu.vn) are allowed"
   },
   "tos": {
     "defaultTitle": "S.A.F.E.R Terms of Service",
