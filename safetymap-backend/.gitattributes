@@ -1,2 +1,5 @@
 /mvnw text eol=lf
 *.cmd text eol=crlf
+
+# OSM PBF is binary: never convert line endings or diff it as text
+*.pbf binary

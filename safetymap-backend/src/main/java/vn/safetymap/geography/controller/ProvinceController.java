@@ -13,7 +13,7 @@ import vn.safetymap.geography.service.WardService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/v1/provinces")
+@RequestMapping("/api/provinces")
 @RequiredArgsConstructor
 
 public class ProvinceController {
