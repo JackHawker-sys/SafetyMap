@@ -100,7 +100,7 @@ export function getMyLocation(): Promise<GeoPlace> {
 
         navigator.geolocation.getCurrentPosition(
             (pos) => resolve({
-                id: `my-location-${pos.timestamp}`,
+                id: `my-location-${Date.now()}`,
                 label: "Vị trí của tôi",
                 name: "Vị trí của tôi",
                 address: null,
@@ -113,7 +113,7 @@ export function getMyLocation(): Promise<GeoPlace> {
                     ? "Bạn đã chặn quyền truy cập vị trí"
                     : "Không lấy được vị trí, thử lại sau",
             )),
-            { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 15000 },
         )
     })
 }

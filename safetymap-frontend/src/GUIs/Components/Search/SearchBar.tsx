@@ -5,7 +5,7 @@ import { usePlaceSuggestions } from "../../Hooks/usePlaceSuggestions";
 import { useListNavigation } from "../../Hooks/useListNavigation";
 import { BookmarkFilledIcon, CloseIcon, DirectionsIcon, PinIcon, SearchIcon } from "../Common/Icons";
 import { useLanguage } from "../../Context/LanguageContext";
-import styles from "../../../../public/assets/SearchBar.module.css";
+import styles from "../../../assets/styles/SearchBar.module.css";
 
 
 interface Props {
@@ -127,6 +127,19 @@ export default function SearchBar({
                         </li>
                     ))}
                 </ul>
+            )}
+
+            {!showList && (
+                <div className={styles.quickChipsRow}>
+                    <button type="button" className={styles.quickChip} onClick={onOpenDirections}>
+                        <i className="fa-solid fa-route" style={{ color: "var(--color-primary, #2563eb)", marginRight: 6 }}></i>
+                        {t("directions.title")}
+                    </button>
+                    <button type="button" className={styles.quickChip} onClick={() => setOpen(true)}>
+                        <i className="fa-solid fa-bookmark" style={{ color: "#f59e0b", marginRight: 6 }}></i>
+                        {t("place.saved")}
+                    </button>
+                </div>
             )}
         </div>
     );

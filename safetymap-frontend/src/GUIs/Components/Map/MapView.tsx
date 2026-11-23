@@ -7,7 +7,14 @@ import MapOverlay from "./MapOverlay";
 import MapClickHandler from "./MapClickHandler";
 import type { GeoPlace, SavedPlace } from "../../../Business/Models/MapModels";
 import FitToPlaces, { type MapInsets } from "./FitToPlaces";
-import { savedPinIcon, selectedPinIcon } from "./MapMarkers";
+import {
+    departureWaypointIcon,
+    destinationWaypointIcon,
+    savedPinIcon,
+    selectedPinIcon,
+    userLocationDotIcon,
+    userLocationOriginIcon,
+} from "./MapMarkers";
 import { DEFAULT_CENTER, VIETNAM_BOUNDS } from "../../../Business/Config/MapConfig";
 import { ENV } from "../../../Business/Config/Env";
 
@@ -35,6 +42,7 @@ interface Props {
     insets: MapInsets;
     onMapClick: (lat: number, lng: number) => void;
     onSavedClick: (place: GeoPlace) => void;
+    onLocationFound?: (place: GeoPlace) => void;
 }
 
 // Bấm vào đoạn đường / sự cố thì chỉ mở popup, KHÔNG lan xuống bản đồ (nếu lan sẽ ghim thêm 1 điểm)
@@ -69,8 +77,14 @@ const DangerLayer = memo(function DangerLayer({ data }: { data: MapData }) {
     );
 });
 
-export default function MapView({ selected, from, to, savedPlaces, insets, onMapClick, onSavedClick }: Props) {
+export default function MapView({ selected, from, to, savedPlaces, insets, onMapClick, onSavedClick, onLocationFound }: Props) {
     const [data, setData] = useState<MapData>({ segments: [], incidents: [] });
+    const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+
+    const handleLocationFound = (place: GeoPlace) => {
+        setUserLocation(place.position);
+        onLocationFound?.(place);
+    };
 
     useEffect(() => {
         let cancelled = false;
@@ -96,7 +110,7 @@ export default function MapView({ selected, from, to, savedPlaces, insets, onMap
         >
             <MapResizeWatcher />
             <MapLibreLayer style={ENV.mapStyleUrl} attribution={MAP_ATTRIBUTION} />
-            <MapOverlay />
+            <MapOverlay onLocationFound={handleLocationFound} />
 
             {ENV.enableCoordPicker ? <CoordPicker /> : <MapClickHandler onClick={onMapClick} />}
 
@@ -105,26 +119,80 @@ export default function MapView({ selected, from, to, savedPlaces, insets, onMap
             {savedPlaces.map((s) => (
                 <Marker key={s.key} position={s.place.position} icon={savedPinIcon}
                     eventHandlers={{ click: () => onSavedClick(s.place) }}>
-                    <Tooltip direction="top" offset={[0, -8]}>{s.place.name}</Tooltip>
+                    <Tooltip className="sm-hud-tooltip" direction="top" offset={[0, -14]}>
+                        <i className="fa-solid fa-bookmark" style={{ color: "#f59e0b", marginRight: 6 }}></i>
+                        {s.place.name}
+                    </Tooltip>
                 </Marker>
             ))}
 
             <FitToPlaces places={selected ? [selected] : [from, to]} insets={insets} />
 
+            {/* Ghim điểm đang xem (Place mode) */}
             {selected && (
-                <Marker position={selected.position} icon={selectedPinIcon} zIndexOffset={1000} />
+                <Marker
+                    position={selected.position}
+                    icon={selectedPinIcon}
+                    zIndexOffset={1000}
+                >
+                    <Tooltip className="sm-hud-tooltip" direction="top" offset={[0, -44]}>
+                        <i className="fa-solid fa-location-dot" style={{ color: "#ef4444", marginRight: 6 }}></i>
+                        {selected.name}
+                    </Tooltip>
+                </Marker>
             )}
 
+            {/* Vị trí của tôi Live GPS (hiển thị khi chưa làm điểm from) */}
+            {userLocation && (
+                (!from || from.position[0] !== userLocation[0] || from.position[1] !== userLocation[1])
+            ) && (
+                <Marker
+                    position={userLocation}
+                    icon={userLocationDotIcon}
+                    zIndexOffset={900}
+                    eventHandlers={{
+                        click: () => {
+                            if (onLocationFound) {
+                                onLocationFound({
+                                    id: `my-location-${Date.now()}`,
+                                    label: "Vị trí của tôi",
+                                    name: "Vị trí của tôi",
+                                    address: null,
+                                    position: userLocation,
+                                    source: "GPS",
+                                });
+                            }
+                        }
+                    }}
+                >
+                    <Tooltip className="sm-hud-tooltip" direction="top" offset={[0, -18]}>
+                        <i className="fa-solid fa-location-crosshairs" style={{ color: "#38bdf8", marginRight: 6 }}></i>
+                        Vị trí của bạn (Live GPS)
+                    </Tooltip>
+                </Marker>
+            )}
+
+            {/* Điểm đi (From): Nếu GPS -> userLocationOriginIcon (Beacon có mũi tên). Nếu thủ công -> departureWaypointIcon (Emerald mũi tên xuất phát) */}
             {from && (
-                <CircleMarker center={from.position} radius={8}
-                    pathOptions={{ color: "#202124", weight: 3, fillColor: "#fff", fillOpacity: 1, ...NO_BUBBLE }}>
-                    <Tooltip direction="top" offset={[0, -8]}>Điểm đi: {from.name}</Tooltip>
-                </CircleMarker>
+                <Marker
+                    position={from.position}
+                    icon={from.source === "GPS" ? userLocationOriginIcon : departureWaypointIcon}
+                    zIndexOffset={950}
+                >
+                    <Tooltip className="sm-hud-tooltip" direction="top" offset={[0, from.source === "GPS" ? -18 : -18]}>
+                        <i className="fa-solid fa-location-arrow" style={{ color: "#10b981", marginRight: 6 }}></i>
+                        Điểm xuất phát: {from.name}
+                    </Tooltip>
+                </Marker>
             )}
 
+            {/* Điểm đến (To): destinationWaypointIcon (Crimson Target có cờ về đích) */}
             {to && (
-                <Marker position={to.position} icon={selectedPinIcon} zIndexOffset={1000}>
-                    <Tooltip direction="top" offset={[0, -40]}>Điểm đến: {to.name}</Tooltip>
+                <Marker position={to.position} icon={destinationWaypointIcon} zIndexOffset={1000}>
+                    <Tooltip className="sm-hud-tooltip" direction="top" offset={[0, -46]}>
+                        <i className="fa-solid fa-flag-checkered" style={{ color: "#ef4444", marginRight: 6 }}></i>
+                        Điểm đến an toàn: {to.name}
+                    </Tooltip>
                 </Marker>
             )}
         </MapContainer>

@@ -30,7 +30,9 @@ export type AuthAction =
     | { type: "authenticateFailed"; error: ApiError }
     | { type: "sessionChecked" }
     | { type: "logout" }
-    | { type: "clearError" };
+    | { type: "clearError" }
+    | { type: "setDemoUser"; user: User; roles: UserRole[] }
+    | { type: "toggleRole"; role: UserRole };
 
 function reducer(state: State, action: AuthAction): State {
     switch (action.type) {
@@ -46,6 +48,25 @@ function reducer(state: State, action: AuthAction): State {
                 loading: false,
                 error: null,
             };
+        case "setDemoUser":
+            return {
+                ...state,
+                user: action.user,
+                roles: action.roles,
+                expiresAt: Date.now() + 86400_000,
+                initializing: false,
+                loading: false,
+                error: null,
+            };
+        case "toggleRole": {
+            if (!state.user) return state;
+            const exists = state.roles.includes(action.role);
+            const nextRoles = exists
+                ? state.roles.filter((r) => r !== action.role)
+                : [...state.roles, action.role];
+            const finalRoles = nextRoles.length === 0 ? ["USER" as UserRole] : nextRoles;
+            return { ...state, roles: finalRoles };
+        }
         case "authenticateFailed":
             return { ...state, loading: false, error: action.error };
         case "sessionChecked":
@@ -66,10 +87,25 @@ const AuthContext = createContext<AuthContextType>({ ...initState, dispatch: () 
 export function AuthProvider({ children }: { children: ReactNode }) {
     const [state, dispatch] = useReducer(reducer, initState);
 
-    // 1. Tải trang: khôi phục phiên bằng cookie refresh token
+    // 1. Tải trang: khôi phục phiên bằng cookie refresh token hoặc demo user trong localStorage
     useEffect(() => {
         let active = true;
         refreshSession(dispatch, () => active)
+            .then((outcome) => {
+                if (outcome !== "ok") {
+                    const demoRaw = localStorage.getItem("safetymap_demo_user");
+                    if (demoRaw) {
+                        try {
+                            const parsed = JSON.parse(demoRaw);
+                            if (parsed?.user && Array.isArray(parsed?.roles)) {
+                                dispatch({ type: "setDemoUser", user: parsed.user, roles: parsed.roles });
+                            }
+                        } catch {
+                            localStorage.removeItem("safetymap_demo_user");
+                        }
+                    }
+                }
+            })
             .finally(() => dispatch({ type: "sessionChecked" }));
         return () => { active = false; };
     }, []);

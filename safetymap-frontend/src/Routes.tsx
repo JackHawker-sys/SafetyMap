@@ -4,6 +4,7 @@ import RequireRole from "./GUIs/Components/RequireRole";
 
 // Mỗi trang tải riêng: người chỉ xem bản đồ không phải tải code trang quản trị
 const Home = lazy(() => import("./GUIs/Pages/Home"));
+const LoginPage = lazy(() => import("./GUIs/Pages/LoginPage"));
 const TosPage = lazy(() => import("./GUIs/Pages/TosPage"));
 const ModeratorPage = lazy(() => import("./GUIs/Pages/ModeratorPage"));
 const AdminPage = lazy(() => import("./GUIs/Pages/AdminPage"));
@@ -23,6 +24,7 @@ const router = createBrowserRouter([
         element: <RootLayout />,
         children: [
             { index: true, element: <Home /> },
+            { path: "login", element: <LoginPage /> },
             { path: "tos", element: <TosPage /> },
             {
                 path: "moderator",

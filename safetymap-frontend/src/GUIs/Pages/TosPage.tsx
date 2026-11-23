@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import TosViewer from "../Components/TosViewer";
-import styles from "../../../public/assets/TosPage.module.css";
+import styles from "../../assets/styles/TosPage.module.css";
 
 // Trang Điều khoản Dịch vụ toàn màn hình tại /tos
 export default function TosPage() {

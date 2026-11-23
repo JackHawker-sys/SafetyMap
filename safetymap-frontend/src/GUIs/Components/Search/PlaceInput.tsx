@@ -2,7 +2,7 @@ import { useEffect, useId, useRef, useState, type ChangeEvent, type ReactNode } 
 import type { GeoPlace } from "../../../Business/Models/MapModels";
 import { usePlaceSuggestions } from "../../Hooks/usePlaceSuggestions";
 import { useListNavigation } from "../../Hooks/useListNavigation";
-import styles from "../../../../public/assets/PlaceInput.module.css";
+import styles from "../../../assets/styles/PlaceInput.module.css";
 
 interface Props {
     label: string;            // đọc bởi trình đọc màn hình (ẩn trên giao diện)

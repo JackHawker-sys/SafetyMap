@@ -1,0 +1,848 @@
+/* ==========================================================================
+   SidePanel Styles - Modern High-Trust Safety Command Terminal (Light Theme)
+   Place & Directions Panels (Waze / Apple Maps Polish)
+   ========================================================================== */
+
+.panel {
+    display: flex;
+    flex-direction: column;
+    color: #0f172a;
+    font-family: inherit;
+    padding-top: 4px;
+    padding-bottom: 20px;
+    animation: contentFade 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
+}
+
+@keyframes contentFade {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Tactical Telemetry Header & Navigation Row */
+.panelNavRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px 4px;
+}
+
+.telemetryTag {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10.5px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: #0284c7;
+    text-transform: uppercase;
+    user-select: none;
+}
+
+.telemetryDot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+    animation: telemetryPulse 2s infinite;
+}
+
+@keyframes telemetryPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+}
+
+/* ---------- PlacePanel ---------- */
+.placeHeader {
+    padding: 8px 18px 14px;
+}
+
+.placeTitleRow {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.placeName {
+    flex: 1;
+    margin: 0;
+    font-size: 21px;
+    font-weight: 850;
+    line-height: 1.25;
+    letter-spacing: -0.025em;
+    word-break: break-word;
+    color: #0f172a;
+}
+
+.placeAddress {
+    margin: 6px 0 0;
+    font-size: 13px;
+    color: #64748b;
+    line-height: 1.45;
+}
+
+.closeButton {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 10px;
+    background: rgba(241, 245, 249, 0.85);
+    color: #475569;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.closeButton:hover {
+    background: #ffffff;
+    color: var(--color-primary, #2563eb);
+    border-color: rgba(37, 99, 235, 0.35);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+    transform: translateY(-1px);
+}
+
+.closeButton:active {
+    transform: translateY(0) scale(0.95);
+}
+
+/* --- Centerpiece: High-Trust Tactical Safety Evaluation HUD Card --- */
+.safetyCard {
+    margin: 0 18px 16px;
+    padding: 16px;
+    border-radius: 20px;
+    box-sizing: border-box;
+    background: linear-gradient(135deg, rgba(236, 253, 245, 0.94) 0%, rgba(240, 253, 250, 0.85) 100%);
+    border: 1.5px solid rgba(16, 185, 129, 0.32);
+    box-shadow: 0 10px 28px -4px rgba(16, 185, 129, 0.14), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    position: relative;
+    transition: box-shadow 0.25s ease;
+}
+
+.safetyCard:hover {
+    box-shadow: 0 14px 34px -4px rgba(16, 185, 129, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+/* Tia năng lượng chỉ chạy duy nhất trên viền 1.5px, loại trừ hoàn toàn ruột bên trong */
+.safetyCard::after {
+    content: "";
+    position: absolute;
+    inset: -1.5px;
+    border-radius: 20px;
+    box-sizing: border-box;
+    padding: 1.5px;
+    background: conic-gradient(
+        from var(--border-angle, 0deg) at 50% 50%,
+        transparent 0%,
+        transparent 70%,
+        rgba(16, 185, 129, 0.5) 80%,
+        #10b981 90%,
+        #2563eb 96%,
+        transparent 100%
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    animation: borderBeamRotate 4s linear infinite;
+    pointer-events: none;
+    z-index: 2;
+}
+
+@keyframes borderBeamRotate {
+    from {
+        --border-angle: 0deg;
+    }
+    to {
+        --border-angle: 360deg;
+    }
+}
+
+.safetyCardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+}
+
+.safetyBadge {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.shieldPulseWrap {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2) 0%, rgba(16, 185, 129, 0.08) 100%);
+    border: 1px solid rgba(16, 185, 129, 0.38);
+    color: #059669;
+    font-size: 19px;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+    animation: shieldBreath 3s ease-in-out infinite;
+}
+
+@keyframes shieldBreath {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+    }
+    50% {
+        transform: scale(1.05);
+        box-shadow: 0 4px 14px rgba(16, 185, 129, 0.35);
+    }
+}
+
+.safetyTitle {
+    font-size: 14.5px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.01em;
+}
+
+.safetyStatusText {
+    font-size: 11px;
+    font-weight: 750;
+    color: #059669;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 2px;
+}
+
+/* Circular SVG Score Gauge with Fill Animation */
+.scoreGauge {
+    position: relative;
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+}
+
+.gaugeSvg {
+    width: 100%;
+    height: 100%;
+    transform: rotate(-90deg);
+}
+
+.gaugeTrack {
+    fill: none;
+    stroke: rgba(16, 185, 129, 0.16);
+    stroke-width: 4.5;
+}
+
+.gaugeBar {
+    fill: none;
+    stroke: #10b981;
+    stroke-width: 4.5;
+    stroke-linecap: round;
+    stroke-dasharray: 125.6;
+    stroke-dashoffset: 8;
+    filter: drop-shadow(0 2px 4px rgba(16, 185, 129, 0.35));
+    animation: fillGauge 1.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fillGauge {
+    from {
+        stroke-dashoffset: 125.6;
+    }
+    to {
+        stroke-dashoffset: 8;
+    }
+}
+
+.gaugeContent {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gaugeVal {
+    font-size: 16px;
+    font-weight: 850;
+    color: #059669;
+    letter-spacing: -0.02em;
+}
+
+.gaugeUnit {
+    font-size: 10px;
+    font-weight: 700;
+    color: #64748b;
+    margin-top: 3px;
+}
+
+/* 3-Pillar Telemetry Grid */
+.safetyMetricsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(16, 185, 129, 0.22);
+}
+
+.safetyMetricItem {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    background: rgba(255, 255, 255, 0.88);
+    padding: 8px;
+    border-radius: 12px;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.safetyMetricItem:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.08);
+}
+
+.safetyMetricItem i {
+    font-size: 13px;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.metricLabel {
+    font-size: 10px;
+    font-weight: 750;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    line-height: 1.1;
+}
+
+.metricVal {
+    font-size: 11.5px;
+    font-weight: 750;
+    color: #0f172a;
+    margin-top: 3px;
+    line-height: 1.2;
+}
+
+/* Visual Gradient Threat Meter with Marker Slide Animation */
+.threatMeterContainer {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.threatMeterLabels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9.5px;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+}
+
+.threatMeterTrack {
+    height: 6px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #10b981 0%, #f59e0b 50%, #ef4444 100%);
+    position: relative;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+.threatMeterMarker {
+    position: absolute;
+    top: -4px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 3px solid #10b981;
+    box-shadow: 0 0 8px rgba(16, 185, 129, 0.6), 0 2px 4px rgba(0, 0, 0, 0.15);
+    transform: translateX(-50%);
+    animation: slideMarker 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideMarker {
+    0% {
+        left: 0%;
+        opacity: 0;
+    }
+    30% {
+        opacity: 1;
+    }
+    100% {
+        left: var(--marker-left, 12%);
+        opacity: 1;
+    }
+}
+
+/* --- Action Hub --- */
+.actions {
+    display: flex;
+    gap: 10px;
+    padding: 0 18px 14px;
+}
+
+.action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 48px;
+    border: none;
+    border-radius: 14px;
+    padding: 0 16px;
+    cursor: pointer;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 750;
+    letter-spacing: -0.01em;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
+}
+
+.action:active {
+    transform: scale(0.97);
+}
+
+.actionPrimaryBtn {
+    flex: 2;
+    min-width: 150px;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    color: #ffffff;
+    box-shadow: 0 8px 22px -3px rgba(37, 99, 235, 0.45);
+}
+
+.actionPrimaryBtn:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    box-shadow: 0 12px 28px -3px rgba(37, 99, 235, 0.55);
+    transform: translateY(-2px);
+}
+
+.actionSaveBtn {
+    flex: 1;
+    min-width: 105px;
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(203, 213, 225, 0.9);
+    color: #334155;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+}
+
+.actionSaveBtn:hover {
+    background: #ffffff;
+    border-color: rgba(245, 158, 11, 0.5);
+    color: #d97706;
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.18);
+    transform: translateY(-2px);
+}
+
+.actionOn {
+    background: #fffbeb !important;
+    border-color: #fde68a !important;
+    color: #d97706 !important;
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.2) !important;
+}
+
+.actionLabel {
+    font-size: 13.5px;
+    font-weight: 750;
+    white-space: nowrap;
+}
+
+/* --- Coordinate Card --- */
+.coordCard {
+    margin: 0 18px;
+    padding: 10px 14px;
+    border-radius: 14px;
+    background: rgba(248, 250, 252, 0.9);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    color: #334155;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.coordInfo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.infoIcon {
+    color: #ef4444;
+    flex-shrink: 0;
+}
+
+.coordValue {
+    font-family: ui-monospace, 'JetBrains Mono', SFMono-Regular, monospace;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #1e40af;
+    letter-spacing: 0.02em;
+}
+
+.smallButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    padding: 0 12px;
+    border: 1px solid rgba(203, 213, 225, 0.9);
+    border-radius: 8px;
+    background: #ffffff;
+    color: #475569;
+    font-size: 12px;
+    font-weight: 650;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    white-space: nowrap;
+}
+
+.smallButton:hover {
+    color: var(--color-primary, #2563eb);
+    border-color: rgba(37, 99, 235, 0.4);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
+}
+
+.smallButton:active {
+    transform: scale(0.96);
+}
+
+.errorText {
+    margin: 0 18px 10px;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: rgba(254, 226, 226, 0.85);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    font-size: 12.5px;
+    color: #b91c1c;
+}
+
+/* ---------- DirectionsPanel ---------- */
+.directionsTop {
+    display: flex;
+    align-items: center;
+    padding: 2px 18px 10px;
+}
+
+.directionsTitle {
+    flex: 1;
+    margin: 0;
+    font-size: 17.5px;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: -0.015em;
+}
+
+/* Routing Filter Chips */
+.routeFilterRow {
+    display: flex;
+    gap: 8px;
+    padding: 0 18px 12px;
+    overflow-x: auto;
+}
+
+.filterChip {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: rgba(241, 245, 249, 0.85);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    font-size: 12px;
+    font-weight: 650;
+    color: #475569;
+    cursor: default;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.filterChipActive {
+    background: rgba(37, 99, 235, 0.1);
+    border-color: rgba(37, 99, 235, 0.35);
+    color: var(--color-primary, #2563eb);
+    box-shadow: 0 2px 8px rgba(37, 99, 235, 0.15);
+}
+
+.routeFields {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 18px 6px;
+}
+
+.routeInputs {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.routeConnector {
+    position: absolute;
+    left: 12px;
+    top: 32px;
+    height: 32px;
+    border-left: 2px dashed #94a3b8;
+    z-index: 1;
+    pointer-events: none;
+    opacity: 0.8;
+}
+
+.fromDot {
+    display: block;
+    width: 12px;
+    height: 12px;
+    border: 3px solid #10b981;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.25);
+}
+
+.fromWaypointBadge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid #10b981;
+    color: #059669;
+    font-size: 11px;
+    font-weight: 900;
+    box-shadow: 0 2px 6px rgba(16, 185, 129, 0.35);
+    flex-shrink: 0;
+}
+
+.fromGpsBeacon {
+    position: relative;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.gpsPulseRing {
+    position: absolute;
+    inset: 1px;
+    border-radius: 50%;
+    background: rgba(37, 99, 235, 0.25);
+    border: 1px solid rgba(37, 99, 235, 0.6);
+    animation: gpsBeaconPulse 2s infinite;
+}
+
+@keyframes gpsBeaconPulse {
+    0% { transform: scale(0.7); opacity: 0.9; }
+    100% { transform: scale(1.6); opacity: 0; }
+}
+
+.gpsCoreDot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #2563eb;
+    border: 2px solid #ffffff;
+    box-shadow: 0 1px 4px rgba(37, 99, 235, 0.5);
+    position: relative;
+    z-index: 2;
+}
+
+.toWaypointBadge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+    border: 2px solid #ffffff;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 900;
+    box-shadow: 0 2px 8px rgba(220, 38, 38, 0.45);
+    flex-shrink: 0;
+}
+
+.toPin {
+    color: #ef4444;
+    filter: drop-shadow(0 2px 4px rgba(239, 68, 68, 0.35));
+}
+
+.swapButton {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 12px;
+    background: #ffffff;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.05);
+}
+
+.swapButton svg {
+    display: block;
+    transform-origin: center;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.swapButton:hover:not(:disabled) {
+    background: #ffffff;
+    color: var(--color-primary, #2563eb);
+    border-color: rgba(37, 99, 235, 0.35);
+    box-shadow: 0 6px 16px rgba(37, 99, 235, 0.15);
+    transform: translateY(-1px);
+}
+
+.swapButton:hover:not(:disabled) svg {
+    transform: rotate(180deg);
+}
+
+.swapButton:active:not(:disabled) {
+    transform: translateY(0) scale(0.95);
+}
+
+.swapButton:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+    border-color: rgba(226, 232, 240, 0.6);
+}
+
+.inlineIconButton {
+    display: grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--color-primary, #2563eb);
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all 0.15s ease;
+}
+
+.inlineIconButton svg {
+    display: block;
+    transform-origin: center;
+}
+
+.inlineSpacer {
+    width: 32px;
+    flex-shrink: 0;
+}
+
+.inlineIconButton:hover:not(:disabled) {
+    background: rgba(37, 99, 235, 0.1);
+    transform: scale(1.08);
+}
+
+.inlineIconButton:active:not(:disabled) {
+    transform: scale(0.95);
+}
+
+.inlineIconButton:disabled {
+    cursor: progress;
+}
+
+.spin {
+    display: block;
+    transform-origin: center;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.mapHint {
+    margin: 10px 18px 0 18px;
+    font-size: 12.5px;
+    color: #64748b;
+}
+
+.mapHint b {
+    color: var(--color-primary, #2563eb);
+    font-weight: 700;
+}
+
+/* Tactical "Find Safe Route" CTA Button */
+.searchButton {
+    margin: 16px 18px 0 18px;
+    height: 50px;
+    border: none;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    color: #ffffff;
+    font: inherit;
+    font-size: 15px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    box-shadow: 0 8px 24px -4px rgba(37, 99, 235, 0.45);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.searchButton:hover:not(:disabled) {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    box-shadow: 0 12px 28px -4px rgba(37, 99, 235, 0.55);
+    transform: translateY(-2px);
+}
+
+.searchButton:active:not(:disabled) {
+    transform: translateY(0) scale(0.98);
+}
+
+.searchButton:disabled {
+    background: rgba(203, 213, 225, 0.65);
+    color: #94a3b8;
+    box-shadow: none;
+    cursor: not-allowed;
+}
+
+/* Personal Security Advisory Banner */
+.notice {
+    margin: 14px 18px 0 18px;
+    padding: 12px 16px;
+    border-radius: 14px;
+    background: rgba(254, 243, 199, 0.85);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(245, 158, 11, 0.35);
+    color: #92400e;
+    font-size: 13px;
+    line-height: 1.5;
+    box-shadow: 0 4px 14px rgba(245, 158, 11, 0.1);
+}

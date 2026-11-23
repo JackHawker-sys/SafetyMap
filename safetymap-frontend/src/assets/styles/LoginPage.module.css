@@ -1,0 +1,706 @@
+/* ==========================================================================
+   S.A.F.E.R Dedicated Auth Page - Split-Screen Tactical Security Experience
+   ========================================================================== */
+
+.pageContainer {
+    display: flex;
+    min-height: 100vh;
+    width: 100%;
+    background-color: #f8fafc;
+    font-family: var(--font-family, 'Plus Jakarta Sans', sans-serif);
+    color: var(--color-text-main, #0f172a);
+    overflow-x: hidden;
+}
+
+/* ==========================================================================
+   1. Left Column: Tactical Security Showcase & Radar Visuals (Hero Section)
+   ========================================================================== */
+.heroSection {
+    flex: 1.15;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 48px 56px;
+    background: radial-gradient(circle at 20% 20%, #1e293b 0%, #090d16 70%, #030712 100%);
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    overflow: hidden;
+    color: #ffffff;
+}
+
+/* Background Animated Radar Grid */
+.radarContainer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.radarRings {
+    position: absolute;
+    top: 50%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+    width: 680px;
+    height: 680px;
+    border-radius: 50%;
+    border: 1px solid rgba(37, 99, 235, 0.14);
+    box-shadow: 
+        0 0 0 80px rgba(37, 99, 235, 0.06),
+        0 0 0 160px rgba(37, 99, 235, 0.04),
+        0 0 0 240px rgba(37, 99, 235, 0.02);
+}
+
+.radarScanner {
+    position: absolute;
+    top: 50%;
+    left: 45%;
+    width: 340px;
+    height: 340px;
+    transform-origin: top left;
+    background: conic-gradient(from 0deg at 0% 0%, rgba(37, 99, 235, 0.28) 0deg, rgba(37, 99, 235, 0) 60deg);
+    animation: radarSweep 6s linear infinite;
+    border-radius: 0 100% 0 0;
+}
+
+@keyframes radarSweep {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.radarGridLines {
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+/* Tactical Beacons Floating on Radar */
+.tacticalBeacon1,
+.tacticalBeacon2,
+.tacticalBeacon3 {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 750;
+    letter-spacing: 0.02em;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    z-index: 2;
+}
+
+.tacticalBeacon1 {
+    top: 28%;
+    right: 18%;
+    color: #38bdf8;
+    border-color: rgba(56, 189, 248, 0.4);
+    animation: beaconFloat 4s ease-in-out infinite alternate;
+}
+
+.tacticalBeacon2 {
+    bottom: 32%;
+    left: 20%;
+    color: #10b981;
+    border-color: rgba(16, 185, 129, 0.4);
+    animation: beaconFloat 5s ease-in-out infinite alternate 1s;
+}
+
+.tacticalBeacon3 {
+    top: 65%;
+    right: 22%;
+    color: #f59e0b;
+    border-color: rgba(245, 158, 11, 0.4);
+    animation: beaconFloat 4.5s ease-in-out infinite alternate 2s;
+}
+
+@keyframes beaconFloat {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-8px); }
+}
+
+.beaconDot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 8px currentColor;
+}
+
+/* Hero Content Stack */
+.heroContent {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    max-width: 580px;
+}
+
+.brandCapsule {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    padding: 8px 16px;
+    border-radius: 30px;
+    width: fit-content;
+}
+
+.brandLogo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    color: #ffffff;
+    font-size: 16px;
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.5);
+}
+
+.brandTitle {
+    font-size: 15px;
+    font-weight: 850;
+    letter-spacing: 0.12em;
+    color: #ffffff;
+}
+
+.brandStatusDot {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+    margin-right: 6px;
+}
+
+.heroHeading {
+    font-size: 40px;
+    font-weight: 850;
+    line-height: 1.22;
+    letter-spacing: -0.02em;
+    margin: 0;
+    background: linear-gradient(135deg, #ffffff 0%, #cbd5e1 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.heroAccent {
+    background: linear-gradient(135deg, #60a5fa 0%, #38bdf8 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.heroSubtext {
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: #94a3b8;
+    margin: 0;
+}
+
+/* Feature List Cards */
+.featureList {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.featureCard {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 14px 18px;
+    border-radius: 16px;
+    transition: all 0.25s ease;
+}
+
+.featureCard:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(56, 189, 248, 0.3);
+    transform: translateX(4px);
+}
+
+.featureIconWrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    background: rgba(37, 99, 235, 0.2);
+    color: #60a5fa;
+    font-size: 16px;
+    flex-shrink: 0;
+}
+
+.featureTitle {
+    font-size: 14px;
+    font-weight: 750;
+    color: #f1f5f9;
+    margin-bottom: 3px;
+}
+
+.featureDesc {
+    font-size: 12.5px;
+    color: #94a3b8;
+    line-height: 1.45;
+}
+
+/* Hero Footer Stats */
+.heroFooter {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    gap: 40px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.statItem {
+    display: flex;
+    flex-direction: column;
+}
+
+.statVal {
+    font-size: 22px;
+    font-weight: 850;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+}
+
+.statLabel {
+    font-size: 11px;
+    color: #94a3b8;
+    font-weight: 650;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 2px;
+}
+
+/* ==========================================================================
+   2. Right Column: Authentication Terminal (Form Section)
+   ========================================================================== */
+.formSection {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 36px 48px;
+    background: #f8fafc;
+    position: relative;
+    overflow-y: auto;
+}
+
+.formTopBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 24px;
+}
+
+.backBtn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    color: #334155;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    transition: all 0.18s ease;
+}
+
+.backBtn:hover {
+    color: var(--color-primary, #2563eb);
+    border-color: rgba(37, 99, 235, 0.4);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
+    transform: translateX(-2px);
+}
+
+.authCardWrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: auto 0;
+}
+
+.authCard {
+    width: 100%;
+    max-width: 440px;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 24px;
+    padding: 36px 40px;
+    box-shadow: 0 20px 48px -12px rgba(15, 23, 42, 0.1), 0 0 0 1px rgba(255, 255, 255, 0.85);
+    box-sizing: border-box;
+}
+
+.cardHeader {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.cardTitle {
+    font-size: 24px;
+    font-weight: 850;
+    color: #0f172a;
+    letter-spacing: -0.02em;
+    margin: 0 0 6px 0;
+}
+
+.cardSubtitle {
+    font-size: 13.5px;
+    color: #64748b;
+    margin: 0;
+    line-height: 1.5;
+}
+
+/* Tabs: Login / Signup Switcher */
+.tabSwitch {
+    display: flex;
+    background: #f1f5f9;
+    padding: 4px;
+    border-radius: 14px;
+    margin-bottom: 24px;
+    border: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.tabBtn {
+    flex: 1;
+    padding: 9px 16px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: #64748b;
+    font-size: 13.5px;
+    font-weight: 750;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tabBtnActive {
+    background: #ffffff;
+    color: var(--color-primary, #2563eb);
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+/* Google OAuth Button */
+.googleBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    width: 100%;
+    height: 46px;
+    border-radius: 14px;
+    background: #ffffff;
+    border: 1px solid rgba(203, 213, 225, 0.9);
+    color: #1e293b;
+    font-size: 13.5px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+    transition: all 0.2s ease;
+    margin-bottom: 20px;
+}
+
+.googleBtn:hover {
+    background: #f8fafc;
+    border-color: rgba(37, 99, 235, 0.4);
+    box-shadow: 0 4px 14px rgba(37, 99, 235, 0.12);
+}
+
+.dividerRow {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.dividerLine {
+    flex: 1;
+    height: 1px;
+    background: rgba(226, 232, 240, 0.9);
+}
+
+.dividerText {
+    font-size: 11.5px;
+    font-weight: 650;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    white-space: nowrap;
+}
+
+/* Form Groups & Inputs */
+.formGroup {
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.inputLabel {
+    font-size: 12.5px;
+    font-weight: 750;
+    color: #334155;
+}
+
+.inputWrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.inputLeadingIcon {
+    position: absolute;
+    left: 14px;
+    color: #94a3b8;
+    font-size: 14px;
+    pointer-events: none;
+    transition: color 0.18s ease;
+}
+
+.textInput {
+    width: 100%;
+    height: 44px;
+    padding: 0 14px 0 42px;
+    border-radius: 12px;
+    border: 1.5px solid rgba(226, 232, 240, 0.9);
+    background: #ffffff;
+    font-size: 13.5px;
+    color: #0f172a;
+    font-family: inherit;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+.textInput:focus {
+    outline: none;
+    border-color: var(--color-primary, #2563eb);
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.textInput:focus + .inputLeadingIcon {
+    color: var(--color-primary, #2563eb);
+}
+
+.pwdToggleBtn {
+    position: absolute;
+    right: 12px;
+    background: transparent;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px;
+}
+
+.pwdToggleBtn:hover {
+    color: #475569;
+}
+
+/* Agreement Checkbox */
+.checkboxRow {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 16px 0 20px 0;
+    font-size: 12.5px;
+    color: #475569;
+    line-height: 1.45;
+}
+
+.checkboxInput {
+    margin-top: 2px;
+    cursor: pointer;
+    accent-color: var(--color-primary, #2563eb);
+}
+
+.tosLinkBtn {
+    background: none;
+    border: none;
+    padding: 0;
+    color: var(--color-primary, #2563eb);
+    font-weight: 750;
+    cursor: pointer;
+    text-decoration: underline;
+    font-size: inherit;
+}
+
+/* Submit Action Button */
+.submitBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    height: 48px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    border: none;
+    color: #ffffff;
+    font-size: 14.5px;
+    font-weight: 750;
+    cursor: pointer;
+    box-shadow: 0 8px 24px -4px rgba(37, 99, 235, 0.45);
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
+}
+
+.submitBtn:hover {
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+    box-shadow: 0 12px 28px -4px rgba(37, 99, 235, 0.55);
+    transform: translateY(-2px);
+}
+
+.submitBtn:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.submitBtn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* Error Banner */
+.errorBanner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+    padding: 10px 14px;
+    border-radius: 12px;
+    font-size: 12.5px;
+    font-weight: 650;
+    margin-bottom: 18px;
+    animation: errPop 0.2s ease;
+}
+
+@keyframes errPop {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   3. Quick Role Demo Hub (Dành cho Mentor / Thử nghiệm phân quyền)
+   ========================================================================== */
+.demoHub {
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px dashed rgba(203, 213, 225, 0.9);
+    width: 100%;
+}
+
+.demoTitle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11.5px;
+    font-weight: 800;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 12px;
+}
+
+.demoBadge {
+    background: #eff6ff;
+    color: #2563eb;
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 10px;
+}
+
+.demoButtonsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.demoRoleBtn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 10px 6px;
+    border-radius: 12px;
+    background: #ffffff;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    color: #334155;
+    font-size: 11px;
+    font-weight: 750;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+    transition: all 0.18s ease;
+}
+
+.demoRoleBtn:hover {
+    border-color: rgba(37, 99, 235, 0.4);
+    color: var(--color-primary, #2563eb);
+    background: #eff6ff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.12);
+}
+
+.demoRoleIcon {
+    font-size: 15px;
+}
+
+/* ==========================================================================
+   4. Responsive Breakpoints
+   ========================================================================== */
+@media (max-width: 960px) {
+    .pageContainer {
+        flex-direction: column;
+    }
+    
+    .heroSection {
+        display: none; /* Hide heavy radar on mobile screens for high-performance load */
+    }
+
+    .formSection {
+        padding: 24px 20px;
+        min-height: 100vh;
+    }
+
+    .authCard {
+        padding: 28px 20px;
+        border: none;
+        box-shadow: none;
+        background: transparent;
+    }
+}
