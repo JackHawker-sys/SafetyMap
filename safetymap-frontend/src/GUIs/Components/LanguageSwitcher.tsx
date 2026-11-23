@@ -1,5 +1,5 @@
 import { useLanguage, type AppLanguage } from "../Context/LanguageContext";
-import styles from "../../../public/assets/LanguageSwitcher.module.css";
+import styles from "../../assets/styles/LanguageSwitcher.module.css";
 
 interface Props {
     className?: string;

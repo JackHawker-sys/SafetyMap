@@ -1,5 +1,5 @@
 import TosViewer from "./TosViewer";
-import styles from "../../../public/assets/TosViewer.module.css";
+import styles from "../../assets/styles/TosViewer.module.css";
 
 interface Props {
     isOpen: boolean;

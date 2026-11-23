@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useLanguage } from "../Context/LanguageContext";
 import LanguageSwitcher from "../Components/LanguageSwitcher";
-import styles from "../../../public/assets/ModeratorPage.module.css";
+import styles from "../../assets/styles/ModeratorPage.module.css";
 import { useNavigate } from "react-router-dom";
 
 interface ReportItem {
@@ -343,7 +343,7 @@ export default function ModeratorPage() {
                     <span>← {t("common.backToMap")}</span>
                 </button>
                 <div className={styles.titleArea}>
-                    <h1 className={styles.title}>🛡️ {t("moderator.title")}</h1>
+                    <h1 className={styles.title}><i className="fa-solid fa-shield-halved" style={{ marginRight: 8, color: "#1a73e8" }}></i>{t("moderator.title")}</h1>
                     <span className={styles.roleBadge}>MODERATOR</span>
                 </div>
             </div>
@@ -446,7 +446,7 @@ export default function ModeratorPage() {
                             {t("moderator.reportNum")} #{currentReport.id}: {currentReport.type}
                         </h2>
                         <div className={styles.detailAddress}>
-                            📍 {currentReport.street}, {currentReport.ward}
+                            <i className="fa-solid fa-location-dot" style={{ marginRight: 6, color: "#ea4335" }}></i>{currentReport.street}, {currentReport.ward}
                         </div>
                     </div>
                     <span className={styles.timeText}>{currentReport.timeAgo}</span>
@@ -482,7 +482,7 @@ export default function ModeratorPage() {
                         className={styles.manageUserBtn}
                         onClick={() => handleOpenWarnModal(currentReport.reporter.name)}
                     >
-                        {t("moderator.warnUser")}
+                        <i className="fa-solid fa-triangle-exclamation" style={{ marginRight: 6 }}></i>{t("moderator.warnUser")}
                     </button>
                 </div>
 
@@ -501,7 +501,7 @@ export default function ModeratorPage() {
                 <div className={styles.aiBox}>
                     <div className={styles.aiHeader}>
                         <div className={styles.aiTitle}>
-                            <span>🤖 {t("moderator.aiVerdict")}</span>
+                            <span><i className="fa-solid fa-robot" style={{ marginRight: 6, color: "#1a73e8" }}></i>{t("moderator.aiVerdict")}</span>
                             <span
                                 className={`${styles.aiVerdictChip} ${currentReport.ai.verdict === "MATCH"
                                     ? styles.chipMatch
@@ -528,14 +528,14 @@ export default function ModeratorPage() {
                         className={styles.approveBtn}
                         onClick={() => handleApprove(currentReport.id)}
                     >
-                        {t("moderator.approve")}
+                        <i className="fa-solid fa-check" style={{ marginRight: 6 }}></i>{t("moderator.approve")}
                     </button>
                     <button
                         type="button"
                         className={styles.rejectBtn}
                         onClick={() => setRejectModalOpen(true)}
                     >
-                        {t("moderator.reject")}
+                        <i className="fa-solid fa-xmark" style={{ marginRight: 6 }}></i>{t("moderator.reject")}
                     </button>
                     <button
                         type="button"
@@ -543,7 +543,7 @@ export default function ModeratorPage() {
                         onClick={handleOpenMergeModal}
                         title={t("moderator.mergeBtnTitle")}
                     >
-                        {t("moderator.merge")}
+                        <i className="fa-solid fa-link" style={{ marginRight: 6 }}></i>{t("moderator.merge")}
                     </button>
                 </div>
             </div>
@@ -564,7 +564,7 @@ export default function ModeratorPage() {
                             {t("moderator.userListTitle")}
                         </h3>
                         <div className={styles.tableNotice}>
-                            🛡️ <em>{t("moderator.userListNoticePrefix")}</em> {t("moderator.userListNotice")}
+                            <i className="fa-solid fa-shield-halved" style={{ marginRight: 6, color: "#188038" }}></i><em>{t("moderator.userListNoticePrefix")}</em> {t("moderator.userListNotice")}
                         </div>
                     </div>
                 </div>
@@ -720,7 +720,7 @@ export default function ModeratorPage() {
         <div className={styles.rejectModalOverlay} onClick={() => setMergeModalOpen(false)}>
             <div className={styles.mergeModal} onClick={(e) => e.stopPropagation()}>
                 <h3 className={styles.mergeModalTitle}>
-                    <span>{t("moderator.mergeModalTitle")}</span>
+                    <span><i className="fa-solid fa-link" style={{ marginRight: 8, color: "#1a73e8" }}></i>{t("moderator.mergeModalTitle")}</span>
                 </h3>
                 <p className={styles.mergeSubtitle}>
                     {t("moderator.mergeSubtitle")}
@@ -770,7 +770,7 @@ export default function ModeratorPage() {
                                         </div>
                                         <div className={styles.candidateTitle}>{cand.title}</div>
                                         <div className={styles.candidateMeta}>
-                                            📍 {cand.location} • {cand.timeAgo}
+                                            <i className="fa-solid fa-location-dot" style={{ marginRight: 6, color: "#ea4335" }}></i>{cand.location} • {cand.timeAgo}
                                         </div>
                                         <div style={{ fontSize: 11.5, color: "#188038", fontWeight: 500, marginTop: 4 }}>
                                             {t("moderator.mergeSource", { source: cand.source, count: cand.mergedReportsCount })}
@@ -826,7 +826,7 @@ export default function ModeratorPage() {
         <div className={styles.rejectModalOverlay} onClick={() => setWarnModalOpen(false)}>
             <div className={styles.rejectModal} onClick={(e) => e.stopPropagation()}>
                 <h3 className={styles.warnModalTitle}>
-                    {t("moderator.warnModalTitle", { user: warnTargetUser })}
+                    <i className="fa-solid fa-triangle-exclamation" style={{ marginRight: 8, color: "#f59e0b" }}></i>{t("moderator.warnModalTitle", { user: warnTargetUser })}
                 </h3>
                 <p style={{ fontSize: 13, color: "#5f6368", marginTop: 0, marginBottom: 12 }}>
                     {t("moderator.warnModalDesc")}

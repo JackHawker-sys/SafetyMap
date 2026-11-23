@@ -1,4 +1,5 @@
 import { useCallback, useMemo, useReducer, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import type { GeoPlace } from "../../Business/Models/MapModels";
 import { createDroppedPin, withSource } from "../../Business/Logic/PlaceLogic";
 import { DEFAULT_CENTER } from "../../Business/Config/MapConfig";
@@ -15,7 +16,7 @@ import LanguageSwitcher from "../Components/LanguageSwitcher";
 import { useLanguage } from "../Context/LanguageContext";
 import { UserIcon } from "../Components/Common/Icons";
 import type { MapInsets } from "../Components/Map/FitToPlaces";
-import styles from "../../../public/assets/Home.module.css";
+import styles from "../../assets/styles/Home.module.css";
 import { getDisplayName } from "../../Business/Logic/Auth/UserLogic";
 
 // Khớp với CSS trong Home.module.css (.panel width / max-height)
@@ -26,6 +27,7 @@ export default function Home() {
     const [ui, dispatch] = useReducer(mapUiReducer, initialMapUiState);
     const saved = useSavedPlaces();
     const isDesktop = useMediaQuery("(min-width: 769px)");
+    const navigate = useNavigate();
 
     // Trạng thái đăng nhập dùng chung toàn app (AuthContext)
 
@@ -36,6 +38,7 @@ export default function Home() {
     // Lần bấm "Tìm đường" gần nhất. Lưu theo id 2 điểm -> đổi điểm là thông báo cũ tự hết hiệu lực,
     // không cần effect dọn dẹp (và sau này kết quả API cũ về trễ cũng không hiện nhầm)
     const [routeRequest, setRouteRequest] = useState<{ fromId: string; toId: string } | null>(null);
+    const [userPlace, setUserPlace] = useState<GeoPlace | null>(null);
 
     // dispatch của useReducer luôn ổn định -> các callback này không đổi giữa các lần render,
     // MapClickHandler / FitToPlaces không phải đăng ký lại
@@ -43,6 +46,10 @@ export default function Home() {
         dispatch({ type: "MAP_CLICK", place: createDroppedPin(lat, lng) });
     }, []);
     const handleSelect = useCallback((place: GeoPlace) => dispatch({ type: "SELECT_PLACE", place }), []);
+    const handleLocationFound = useCallback((place: GeoPlace) => {
+        setUserPlace(place);
+        dispatch({ type: "SET_MY_LOCATION", place });
+    }, []);
     const handleSavedClick = useCallback(
         (place: GeoPlace) => dispatch({ type: "SELECT_PLACE", place: withSource(place, "SAVED") }), []);
     const handleFieldChange = useCallback(
@@ -73,8 +80,6 @@ export default function Home() {
             ? "Chưa có API tìm đường. Sẽ vẽ tuyến khi kết nối backend."
             : null;
 
-    // Giống Google: đang chỉ đường thì ẩn thanh tìm kiếm, 2 ô điểm đi/đến thay thế nó
-    const showSearchBar = ui.mode !== "directions";
     // Nút Đăng nhập / Tài khoản nổi ở góc trên phải: mở modal đăng nhập / thông tin tài khoản
 
     return (
@@ -88,51 +93,68 @@ export default function Home() {
                     insets={insets}
                     onMapClick={handleMapClick}
                     onSavedClick={handleSavedClick}
+                    onLocationFound={handleLocationFound}
                 />
             </main>
 
-            {panelOpen && (
-                <aside className={`${styles.panel} ${ui.mode === "place" ? styles.panelWithSearch : ""}`}>
-                    {ui.mode === "place" && (
-                        <PlacePanel
-                            place={ui.place}
-                            saved={saved.isSaved(ui.place)}
-                            saving={saved.isBusy(ui.place)}
-                            saveError={saved.error}
-                            onDirections={() => dispatch({ type: "OPEN_DIRECTIONS" })}
-                            onToggleSave={() => void saved.toggle(ui.place)}
-                            onClose={() => dispatch({ type: "CLOSE" })}
-                        />
-                    )}
-                    {ui.mode === "directions" && (
-                        <DirectionsPanel
-                            from={ui.from}
-                            to={ui.to}
-                            activeField={ui.activeField}
-                            routeNotice={routeNotice}
-                            onFieldChange={handleFieldChange}
-                            onFieldFocus={handleFieldFocus}
-                            onSwap={() => dispatch({ type: "SWAP" })}
-                            onSearch={handleSearchRoute}
-                            onBack={() => dispatch({ type: "EXIT_DIRECTIONS" })}
-                            onClose={() => dispatch({ type: "CLOSE" })}
-                        />
-                    )}
-                </aside>
-            )}
+            {/* Unified Floating Tactical Command Island - No Overlap */}
+            <aside className={styles.commandIsland}>
+                {ui.mode === "idle" && (
+                    <div className={styles.idlePanel}>
+                        <div className={styles.brandCapsule}>
+                            <div className={styles.brandLogo}>
+                                <i className="fa-solid fa-shield-halved"></i>
+                            </div>
+                            <div className={styles.brandText}>
+                                <span className={styles.brandTitle}>S.A.F.E.R</span>
+                                <span className={styles.brandSubtitle}>
+                                    <span className={styles.livePulseDot}></span>
+                                    SAFETY RADAR • ONLINE
+                                </span>
+                            </div>
+                        </div>
 
-            {showSearchBar && (
-                <div className={styles.searchSlot}>
-                    <SearchBar
-                        value={selected}
-                        savedPlaces={saved.items}
-                        near={selected?.position ?? DEFAULT_CENTER}
-                        onSelect={handleSelect}
-                        onClear={() => dispatch({ type: "CLOSE" })}
-                        onOpenDirections={() => dispatch({ type: "OPEN_DIRECTIONS" })}
+                        <SearchBar
+                            value={selected}
+                            savedPlaces={saved.items}
+                            near={selected?.position ?? DEFAULT_CENTER}
+                            onSelect={handleSelect}
+                            onClear={() => dispatch({ type: "CLOSE" })}
+                            onOpenDirections={() => dispatch({ type: "OPEN_DIRECTIONS", defaultFrom: userPlace })}
+                        />
+                    </div>
+                )}
+
+                {ui.mode === "place" && (
+                    <PlacePanel
+                        place={ui.place}
+                        saved={saved.isSaved(ui.place)}
+                        saving={saved.isBusy(ui.place)}
+                        saveError={saved.error}
+                        onDirections={() => dispatch({ type: "OPEN_DIRECTIONS", defaultFrom: userPlace })}
+                        onToggleSave={() => void saved.toggle(ui.place)}
+                        onClose={() => dispatch({ type: "CLOSE" })}
                     />
-                </div>
-            )}
+                )}
+
+                {ui.mode === "directions" && (
+                    <DirectionsPanel
+                        from={ui.from}
+                        to={ui.to}
+                        activeField={ui.activeField}
+                        routeNotice={routeNotice}
+                        onFieldChange={handleFieldChange}
+                        onFieldFocus={handleFieldFocus}
+                        onSwap={() => {
+                            dispatch({ type: "SWAP" });
+                            setRouteRequest(null);
+                        }}
+                        onSearch={handleSearchRoute}
+                        onBack={() => dispatch({ type: "EXIT_DIRECTIONS" })}
+                        onClose={() => dispatch({ type: "CLOSE" })}
+                    />
+                )}
+            </aside>
 
             <div className={styles.topRightSlot}>
                 <LanguageSwitcher />
@@ -142,8 +164,13 @@ export default function Home() {
                     <button
                         type="button"
                         className={styles.authTriggerBtn}
-                        onClick={() => setAuthModalOpen(true)}
-
+                        onClick={() => {
+                            if (auth.user) {
+                                setAuthModalOpen(true);
+                            } else {
+                                navigate("/login");
+                            }
+                        }}
                         title={auth.user ? `${t("auth.accountTitle")}: ${getDisplayName(auth.user)}` : t("common.login")}
 
                     >

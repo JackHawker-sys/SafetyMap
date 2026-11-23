@@ -1,18 +1,72 @@
 /* ==========================================================================
-   Global Polish & Modern Map Tokens
+   S.A.F.E.R Design System - Modern Light Safety & Security Platform Tokens
    ========================================================================== */
 :root {
-  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  --color-primary: #1a73e8;
-  --color-primary-hover: #1557b0;
-  --color-text-main: #202124;
-  --color-text-secondary: #5f6368;
-  --color-border: #dadce0;
-  --color-card-bg: rgba(255, 255, 255, 0.96);
-  --shadow-elevation: 0 4px 20px -2px rgba(0, 0, 0, 0.12), 0 2px 6px -1px rgba(0, 0, 0, 0.08);
+  --font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  
+  /* Primary & Brand (High-Trust Electric Cobalt & Security Indigo) */
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-primary-light: #eff6ff;
+  --color-primary-glow: rgba(37, 99, 235, 0.25);
+
+  /* Security Status Tokens */
+  --color-safety-safe: #10b981;
+  --color-safety-safe-bg: rgba(16, 185, 129, 0.12);
+  --color-safety-safe-border: rgba(16, 185, 129, 0.3);
+
+  --color-safety-moderate: #f59e0b;
+  --color-safety-moderate-bg: rgba(245, 158, 11, 0.12);
+  --color-safety-moderate-border: rgba(245, 158, 11, 0.3);
+
+  --color-safety-danger: #ef4444;
+  --color-safety-danger-bg: rgba(239, 68, 68, 0.12);
+  --color-safety-danger-border: rgba(239, 68, 68, 0.3);
+
+  --color-safety-critical: #b91c1c;
+  --color-safety-critical-bg: rgba(185, 28, 28, 0.15);
+
+  /* High-Trust Frosted Glass Light Theme Tokens */
+  --surface-glass: rgba(255, 255, 255, 0.90);
+  --surface-glass-solid: rgba(255, 255, 255, 0.98);
+  --surface-glass-border: rgba(226, 232, 240, 0.9);
+  --surface-glass-subtle-border: rgba(255, 255, 255, 0.95);
+  --surface-glass-blur: blur(24px) saturate(190%);
+  --surface-card: #ffffff;
+
+  /* Typography Colors (High-Contrast Light Theme) */
+  --color-text-main: #0f172a;
+  --color-text-secondary: #475569;
+  --color-text-muted: #64748b;
+  --color-border: rgba(226, 232, 240, 0.9);
+
+  /* Elevation & Glow Shadows */
+  --shadow-elevation: 0 4px 20px -2px rgba(15, 23, 42, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04);
+  --shadow-hud: 0 16px 40px -6px rgba(15, 23, 42, 0.12), 0 4px 12px -2px rgba(15, 23, 42, 0.05);
+  --shadow-active: 0 16px 36px -4px rgba(37, 99, 235, 0.25);
+  --shadow-card-hover: 0 14px 34px -4px rgba(15, 23, 42, 0.14);
+
+  /* Radii */
+  --radius-xl: 20px;
   --radius-lg: 16px;
-  --radius-md: 10px;
-  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+}
+
+/* 4-Sided Perimeter Border Beam Animation */
+@property --border-angle {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes borderBeamRotate {
+  from {
+    --border-angle: 0deg;
+  }
+  to {
+    --border-angle: 360deg;
+  }
 }
 
 html,
@@ -24,6 +78,7 @@ body,
   width: 100%;
   font-family: var(--font-family);
   color: var(--color-text-main);
+  background-color: #f8fafc;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -41,56 +96,351 @@ body,
 
 .sm-pin svg {
   display: block;
-  filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.3));
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
 }
 
 .sm-saved-dot {
-  display: block;
-  width: 12px;
-  height: 12px;
-  border: 3px solid #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border: 2px solid #ffffff;
   border-radius: 50%;
-  background: #1a73e8;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #ffffff;
+  font-size: 10px;
+  box-shadow: 0 3px 10px rgba(245, 158, 11, 0.45);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Incident / Segment Popup: clean card with smooth shadow */
+.sm-saved-dot:hover {
+  transform: scale(1.2);
+}
+
+/* Incident / Segment Popup: High-Trust Frosted Glass Card */
 .leaflet-popup-content-wrapper {
-  background: var(--color-card-bg) !important;
-  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.96) !important;
+  backdrop-filter: blur(20px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
   border-radius: var(--radius-md) !important;
-  box-shadow: var(--shadow-elevation) !important;
-  padding: 6px !important;
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.15), 0 0 0 1px rgba(226, 232, 240, 0.8) !important;
+  padding: 8px !important;
+  border: 1px solid rgba(226, 232, 240, 0.9) !important;
 }
 
 .leaflet-popup-content {
   margin: 8px 12px !important;
   line-height: 1.5 !important;
   font-size: 13px !important;
-  color: var(--color-text-main) !important;
+  color: #0f172a !important;
 }
 
 .leaflet-popup-tip {
-  background: var(--color-card-bg) !important;
+  background: rgba(255, 255, 255, 0.96) !important;
   box-shadow: none !important;
+  border: 1px solid rgba(226, 232, 240, 0.9) !important;
 }
 
 .leaflet-container a.leaflet-popup-close-button {
   top: 8px !important;
   right: 8px !important;
-  color: var(--color-text-secondary) !important;
+  color: #64748b !important;
   font-size: 16px !important;
-  width: 20px !important;
-  height: 20px !important;
+  width: 22px !important;
+  height: 22px !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 50%;
-  transition: background-color 0.15s ease;
+  border-radius: 6px;
+  transition: all 0.15s ease;
 }
 
 .leaflet-container a.leaflet-popup-close-button:hover {
-  background-color: #f1f3f4;
-  color: var(--color-text-main);
+  background-color: rgba(15, 23, 42, 0.06);
+  color: #0f172a;
+}
+
+/* ==========================================================================
+   S.A.F.E.R Tactical Marker System - Modern Distinctive Security HUD
+   ========================================================================== */
+
+/* 0. Normal Dropped Pin (Vị trí đã ghim ngoài bản đồ - Ghim đỏ sắc nét) */
+.sm-dropped-pin-wrap {
+  position: relative;
+  width: 32px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sm-pin-ground-shadow {
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(15, 23, 42, 0.32);
+  filter: blur(1.5px);
+  pointer-events: none;
+}
+
+.sm-dropped-pin-body svg {
+  display: block;
+  filter: drop-shadow(0 5px 12px rgba(220, 38, 38, 0.42));
+  animation: droppedPinBounce 0.36s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: bottom center;
+}
+
+@keyframes droppedPinBounce {
+  0% {
+    transform: translateY(-18px) scale(0.75);
+    opacity: 0;
+  }
+  65% {
+    transform: translateY(2px) scale(1.06);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+/* 1. Target Destination Waypoint (B / Selected) */
+.sm-target-beacon {
+  position: relative;
+  width: 34px;
+  height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sm-target-pin-wrap svg {
+  display: block;
+  filter: drop-shadow(0 6px 14px rgba(220, 38, 38, 0.45));
+  animation: targetPinDrop 0.38s cubic-bezier(0.16, 1, 0.3, 1);
+  transform-origin: bottom center;
+}
+
+@keyframes targetPinDrop {
+  0% {
+    transform: translateY(-20px) scale(0.7);
+    opacity: 0;
+  }
+  65% {
+    transform: translateY(3px) scale(1.08);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.sm-target-ripple {
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 26px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.35);
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.75);
+  animation: targetRipple 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+
+@keyframes targetRipple {
+  0% {
+    transform: translateX(-50%) scale(0.5);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translateX(-50%) scale(2.6);
+    opacity: 0;
+  }
+}
+
+/* 2. Manual Departure Waypoint (A) - Emerald Tactical Badge */
+.sm-waypoint-beacon {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sm-waypoint-badge {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 3px solid #10b981;
+  box-shadow: 0 4px 14px rgba(16, 185, 129, 0.5), inset 0 0 0 2px rgba(16, 185, 129, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 2;
+  animation: waypointPop 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes waypointPop {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  70% {
+    transform: scale(1.15);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.sm-waypoint-icon {
+  font-size: 11px;
+  color: #059669;
+  line-height: 1;
+  display: block;
+}
+
+.sm-waypoint-pulse {
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  background: rgba(16, 185, 129, 0.4);
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.6);
+  animation: waypointPulse 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+  z-index: 1;
+}
+
+@keyframes waypointPulse {
+  0% {
+    transform: scale(0.7);
+    opacity: 0.95;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+/* 3. Live GPS Telemetry Beacon - Double Concentric Sonar Waves */
+.sm-user-sonar-wrap,
+.sm-user-origin-wrap {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sm-sonar-wave {
+  position: absolute;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(37, 99, 235, 0.7);
+  background: rgba(37, 99, 235, 0.18);
+  pointer-events: none;
+  animation: sonarPing 2.4s cubic-bezier(0.1, 0.5, 0.2, 1) infinite;
+}
+
+.sm-sonar-wave-1 {
+  animation-delay: 0s;
+}
+
+.sm-sonar-wave-2 {
+  animation-delay: 1.2s;
+}
+
+@keyframes sonarPing {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.95;
+  }
+  70% {
+    opacity: 0.45;
+  }
+  100% {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+}
+
+.sm-sonar-core {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #2563eb;
+  border: 3px solid #ffffff;
+  box-shadow: 0 2px 10px rgba(37, 99, 235, 0.6), 0 0 0 2px rgba(37, 99, 235, 0.35);
+  position: relative;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+}
+
+.sm-sonar-core-glow {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 6px #ffffff;
+}
+
+/* GPS selected as Route Origin: Add tactical A Badge */
+.sm-sonar-core-origin {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+}
+
+.sm-origin-tag-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: #10b981;
+  border: 2px solid #ffffff;
+  color: #ffffff;
+  font-size: 9.5px;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.45);
+  z-index: 4;
+}
+
+/* S.A.F.E.R High-Trust HUD Tooltips on Map */
+.leaflet-tooltip.sm-hud-tooltip {
+  background: rgba(15, 23, 42, 0.92) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 8px !important;
+  padding: 5px 10px !important;
+  color: #ffffff !important;
+  font-family: var(--font-family) !important;
+  font-size: 11px !important;
+  font-weight: 750 !important;
+  letter-spacing: 0.03em !important;
+  box-shadow: 0 8px 24px -4px rgba(15, 23, 42, 0.35) !important;
+  white-space: nowrap !important;
+}
+
+.leaflet-tooltip.sm-hud-tooltip::before {
+  border-top-color: rgba(15, 23, 42, 0.92) !important;
 }

@@ -5,9 +5,9 @@ import type { RouteField } from "../../State/mapUiReducer";
 import { getMyLocation } from "../../../Business/DAL/GeocodeApi";
 import { DEFAULT_CENTER } from "../../../Business/Config/MapConfig";
 import PlaceInput from "../Search/PlaceInput";
-import { BackIcon, CloseIcon, MyLocationIcon, PinIcon, SwapIcon } from "../Common/Icons";
+import { BackIcon, CloseIcon, MyLocationIcon, SwapIcon } from "../Common/Icons";
 import { useLanguage } from "../../Context/LanguageContext";
-import styles from "../../../../public/assets/SidePanel.module.css";
+import styles from "../../../assets/styles/SidePanel.module.css";
 
 interface Props {
     from: GeoPlace | null;
@@ -67,14 +67,34 @@ export default function DirectionsPanel({
 
     return (
         <section className={styles.panel} aria-label={t("directions.findRoute")}>
-            <div className={styles.directionsTop}>
+            {/* Tactical Navigation Bar */}
+            <div className={styles.panelNavRow}>
                 <button type="button" className={styles.closeButton} onClick={onBack} title={t("common.backToMap")}>
                     <BackIcon />
                 </button>
-                <h1 className={styles.directionsTitle}>{t("directions.title")}</h1>
+                <div className={styles.telemetryTag}>
+                    <span className={styles.telemetryDot} />
+                    <span>SAFE ROUTE PLANNER • S.A.F.E.R</span>
+                </div>
                 <button type="button" className={styles.closeButton} onClick={onClose} title={t("common.close")}>
                     <CloseIcon />
                 </button>
+            </div>
+
+            <div className={styles.directionsTop}>
+                <h1 className={styles.directionsTitle}>{t("directions.title")}</h1>
+            </div>
+
+            {/* Tactical Routing Preference Chips */}
+            <div className={styles.routeFilterRow}>
+                <span className={`${styles.filterChip} ${styles.filterChipActive}`}>
+                    <i className="fa-solid fa-shield-halved" style={{ marginRight: 6 }}></i>
+                    {t("directions.prioritySafe")}
+                </span>
+                <span className={styles.filterChip}>
+                    <i className="fa-solid fa-lightbulb" style={{ marginRight: 6 }}></i>
+                    {t("directions.priorityLit")}
+                </span>
             </div>
 
             <div className={styles.routeFields}>
@@ -88,7 +108,18 @@ export default function DirectionsPanel({
                         active={activeField === "from"}
                         autoFocus={from === null}
                         near={near}
-                        leading={<span className={styles.fromDot} />}
+                        leading={
+                            from?.source === "GPS" ? (
+                                <span className={styles.fromGpsBeacon} title="Vị trí của tôi (GPS)">
+                                    <span className={styles.gpsPulseRing} />
+                                    <span className={styles.gpsCoreDot} />
+                                </span>
+                            ) : (
+                                <span className={styles.fromWaypointBadge} title="Điểm xuất phát">
+                                    <i className="fa-solid fa-location-arrow" style={{ fontSize: 9 }}></i>
+                                </span>
+                            )
+                        }
                         extraAction={
                             <button type="button" className={styles.inlineIconButton} onClick={handleMyLocation}
                                 disabled={locating} title={t("directions.useMyLocation")}>
@@ -105,7 +136,11 @@ export default function DirectionsPanel({
                         onFocus={() => onFieldFocus("to")}
                         active={activeField === "to"}
                         near={near}
-                        leading={<PinIcon size={18} className={styles.toPin} />}
+                        leading={
+                            <span className={styles.toWaypointBadge} title="Điểm đến an toàn">
+                                <i className="fa-solid fa-flag-checkered" style={{ fontSize: 9 }}></i>
+                            </span>
+                        }
                         // ô trống bằng nút GPS -> 2 ô thẳng hàng
                         extraAction={<span className={styles.inlineSpacer} aria-hidden="true" />}
                     />
@@ -124,6 +159,7 @@ export default function DirectionsPanel({
             </p>
 
             <button type="button" className={styles.searchButton} onClick={onSearch} disabled={!bothChosen}>
+                <i className="fa-solid fa-route" style={{ marginRight: 8 }}></i>
                 {t("directions.findRoute")}
             </button>
 

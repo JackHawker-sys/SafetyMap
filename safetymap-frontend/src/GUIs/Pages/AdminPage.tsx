@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useLanguage } from "../Context/LanguageContext";
 import LanguageSwitcher from "../Components/LanguageSwitcher";
-import styles from "../../../public/assets/AdminPage.module.css";
+import styles from "../../assets/styles/AdminPage.module.css";
 import type { UserRole } from "../Hooks/useAuth";
 
 interface AdminUserRecord {
@@ -189,7 +189,7 @@ export default function AdminPage() {
                     <span>← {t("common.backToMap")}</span>
                 </button>
                 <div className={styles.titleArea}>
-                    <h1 className={styles.title}>⚙️ {t("admin.title")}</h1>
+                    <h1 className={styles.title}><i className="fa-solid fa-gear" style={{ marginRight: 8, color: "#2563eb" }}></i>{t("admin.title")}</h1>
                     <span className={styles.roleBadge}>SUPER ADMIN</span>
                 </div>
             </div>
@@ -228,28 +228,28 @@ export default function AdminPage() {
                 className={`${styles.sidebarBtn} ${currentTab === "ACCOUNTS" ? styles.sidebarBtnActive : ""}`}
                 onClick={() => setCurrentTab("ACCOUNTS")}
             >
-                <span>👥</span> {t("admin.tabAccounts")} ({users.length})
+                <span><i className="fa-solid fa-users"></i></span> {t("admin.tabAccounts")} ({users.length})
             </button>
             <button
                 type="button"
                 className={`${styles.sidebarBtn} ${currentTab === "SOURCES" ? styles.sidebarBtnActive : ""}`}
                 onClick={() => setCurrentTab("SOURCES")}
             >
-                <span>📰</span> {t("admin.tabSources")} ({sources.length})
+                <span><i className="fa-solid fa-newspaper"></i></span> {t("admin.tabSources")} ({sources.length})
             </button>
             <button
                 type="button"
                 className={`${styles.sidebarBtn} ${currentTab === "MAP" ? styles.sidebarBtnActive : ""}`}
                 onClick={() => setCurrentTab("MAP")}
             >
-                <span>🗺️</span> {t("admin.tabMap")} ({imports.length})
+                <span><i className="fa-solid fa-map-location-dot"></i></span> {t("admin.tabMap")} ({imports.length})
             </button>
             <button
                 type="button"
                 className={`${styles.sidebarBtn} ${currentTab === "LOGS" ? styles.sidebarBtnActive : ""}`}
                 onClick={() => setCurrentTab("LOGS")}
             >
-                <span>📋</span> {t("admin.tabAudit")} ({logs.length})
+                <span><i className="fa-solid fa-clipboard-list"></i></span> {t("admin.tabAudit")} ({logs.length})
             </button>
         </aside>
     );
@@ -443,7 +443,7 @@ export default function AdminPage() {
                     className={styles.importTriggerBtn}
                     onClick={handleTriggerImport}
                 >
-                    {t("admin.btnTriggerImport")}
+                    <i className="fa-solid fa-arrows-rotate" style={{ marginRight: 6 }}></i>{t("admin.btnTriggerImport")}
                 </button>
             </div>
 

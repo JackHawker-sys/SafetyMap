@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { useTosContent } from "../Hooks/useTosContent";
 import { useLanguage } from "../Context/LanguageContext";
 import LanguageSwitcher from "./LanguageSwitcher";
-import styles from "../../../public/assets/TosViewer.module.css";
+import styles from "../../assets/styles/TosViewer.module.css";
 
 interface Props {
     mode?: "modal" | "page";
@@ -35,7 +35,9 @@ export default function TosViewer({
                         ← {t("common.backToMap")}
                     </button>
                 )}
-                <div className={styles.iconShield}>🛡️</div>
+                <div className={styles.iconShield}>
+                    <i className="fa-solid fa-shield-halved" style={{ fontSize: 22, color: "#2563eb" }}></i>
+                </div>
                 <div>
                     <h2 className={styles.headerTitle}>
                         {document ? document.title : t("tos.defaultTitle")}
@@ -129,7 +131,7 @@ export default function TosViewer({
             )}
             {onAgreeAndClose && (
                 <button type="button" className={styles.primaryBtn} onClick={onAgreeAndClose}>
-                    ✓ {t("tos.agree")}
+                    <i className="fa-solid fa-check" style={{ marginRight: 6 }}></i>{t("tos.agree")}
                 </button>
             )}
         </div>
