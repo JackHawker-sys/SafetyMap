@@ -6,6 +6,7 @@ interface ImportMetaEnv {
     readonly VITE_MAP_STYLE_URL: string;
     readonly VITE_USE_MOCK_DATA: string;
     readonly VITE_ENABLE_COORD_PICKER?: string; // "true" = bật công cụ vẽ road_segment (chỉ dev)
+    readonly VITE_ENABLE_DEMO_LOGIN?: string;   // "true" = cho phép tài khoản demo test@gmail.com
 }
 
 interface ImportMeta {

@@ -13,6 +13,7 @@ type State = {
     initializing: boolean; // đang khôi phục phiên lúc tải trang
     loading: boolean;
     error: ApiError | null;
+    isDemo: boolean;       // đang dùng tài khoản demo (không có JWT, không gọi được API thật)
 };
 
 const initState: State = {
@@ -22,6 +23,7 @@ const initState: State = {
     initializing: true,
     loading: false,
     error: null,
+    isDemo: false,
 };
 
 export type AuthAction =
@@ -53,13 +55,14 @@ function reducer(state: State, action: AuthAction): State {
                 ...state,
                 user: action.user,
                 roles: action.roles,
-                expiresAt: Date.now() + 86400_000,
+                expiresAt: undefined,  // demo không có token -> không hẹn giờ refresh
+                isDemo: true,
                 initializing: false,
                 loading: false,
                 error: null,
             };
         case "toggleRole": {
-            if (!state.user) return state;
+            if (!state.user || !state.isDemo) return state; // chỉ tài khoản demo được đổi quyền giả
             const exists = state.roles.includes(action.role);
             const nextRoles = exists
                 ? state.roles.filter((r) => r !== action.role)
@@ -92,18 +95,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         let active = true;
         refreshSession(dispatch, () => active)
             .then((outcome) => {
-                if (outcome !== "ok") {
-                    const demoRaw = localStorage.getItem("safetymap_demo_user");
-                    if (demoRaw) {
-                        try {
-                            const parsed = JSON.parse(demoRaw);
-                            if (parsed?.user && Array.isArray(parsed?.roles)) {
-                                dispatch({ type: "setDemoUser", user: parsed.user, roles: parsed.roles });
-                            }
-                        } catch {
-                            localStorage.removeItem("safetymap_demo_user");
-                        }
-                    }
+                if (outcome !== "ok" && outcome !== "cancelled") {
+                    const demo = loadDemoSession();
+                    if (demo) dispatch({ type: "setDemoUser", user: demo.user, roles: demo.roles });
                 }
             })
             .finally(() => dispatch({ type: "sessionChecked" }));

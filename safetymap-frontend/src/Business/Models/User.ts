@@ -13,6 +13,7 @@ export type User = {
 export type LoginRequest = {
     email: string;
     password: string;
+    captchaToken: string; // backend gửi token này cho Google để xác minh
 }
 
 // Response của POST /api/auth/login và POST /api/auth/refresh

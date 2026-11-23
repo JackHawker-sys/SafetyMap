@@ -3,7 +3,6 @@ package vn.safetymap.user.service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import vn.safetymap.common.exception.BadRequestException;
 import vn.safetymap.common.exception.ConflictException;
 import vn.safetymap.common.exception.ForbiddenException;
 import vn.safetymap.common.exception.UnauthorizedException;
@@ -17,7 +16,6 @@ import vn.safetymap.user.entity.User;
 import vn.safetymap.user.entity.UserRole;
 import vn.safetymap.user.repository.UserRepository;
 
-import java.lang.classfile.ClassFile.Option;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 import java.util.Optional;
@@ -71,6 +69,8 @@ public class AuthService {
 
     @Transactional
     public AuthResult login(LoginRequest req) {
+        recaptchaVerifier.verify(req.captchaToken());
+
         Optional<User> found = userRepository.findByEmail(normalizeEmail(req.email()));
 
         String hash = found.map(User::getPasswordHash).orElse(dummyHash);

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { Controller, useForm, type FieldErrors } from "react-hook-form";
-import { useAuth, type UserRole } from "../Hooks/useAuth";
+import { useAuth } from "../Hooks/useAuth";
 import { useLanguage } from "../Context/LanguageContext";
 import type { ApiError } from "../../Business/DAL/AuthApi";
 import { GoogleIcon } from "../Components/Common/Icons";
@@ -13,6 +13,7 @@ import styles from "../../assets/styles/LoginPage.module.css";
 type LoginFormValues = {
     email: string;
     password: string;
+    captchaToken: string;
 };
 
 type SignupFormValues = {
@@ -35,7 +36,7 @@ function firstErrorMessage<T extends Record<string, unknown>>(errors: FieldError
 }
 
 export default function LoginPage() {
-    const { user, roles, error, clearError, login, signup, loginAsDemo } = useAuth();
+    const { user, roles, error, clearError, login, signup } = useAuth();
     const { t, lang } = useLanguage();
     const navigate = useNavigate();
     const location = useLocation();
@@ -64,7 +65,7 @@ export default function LoginPage() {
     }, [user, roles, targetPath, navigate]);
 
     const loginForm = useForm<LoginFormValues>({
-        defaultValues: { email: "", password: "" },
+        defaultValues: { email: "", password: "", captchaToken: "" },
     });
 
     const signupForm = useForm<SignupFormValues>({
@@ -82,6 +83,9 @@ export default function LoginPage() {
     const switchTab = (next: "LOGIN" | "SIGNUP") => {
         setTab(next);
         clearError();
+        // Widget captcha của tab cũ bị gỡ -> token cũ không còn dùng được
+        loginForm.setValue("captchaToken", "");
+        signupForm.setValue("captchaToken", "");
     };
 
     const handleBack = () => {
@@ -94,7 +98,16 @@ export default function LoginPage() {
     };
 
     const onLoginValid = async (data: LoginFormValues) => {
-        const success = await login({ email: data.email, password: data.password });
+        const success = await login({
+            email: data.email,
+            password: data.password,
+            captchaToken: data.captchaToken,
+        });
+
+        // Token reCAPTCHA chỉ dùng 1 lần -> luôn reset
+        recaptchaRef.current?.reset();
+        loginForm.setValue("captchaToken", "");
+
         if (success) {
             loginForm.reset();
         }
@@ -121,11 +134,6 @@ export default function LoginPage() {
     const handleGoogleClick = () => {
         setGoogleNotice(t("auth.googleSoon") || "Đăng nhập Google sắp ra mắt");
         setTimeout(() => setGoogleNotice(null), 3000);
-    };
-
-    const handleQuickDemo = (demoRoles: UserRole[], dest: string) => {
-        loginAsDemo(demoRoles);
-        navigate(dest, { replace: true });
     };
 
     const validationError =
@@ -356,6 +364,25 @@ export default function LoginPage() {
                                     </div>
                                 </div>
 
+                                {RECAPTCHA_SITE_KEY && (
+                                    <Controller
+                                        name="captchaToken"
+                                        control={loginForm.control}
+                                        rules={{ required: t("auth.captchaRequired") }}
+                                        render={({ field }) => (
+                                            <div style={{ display: "flex", justifyContent: "center", margin: "14px 0" }}>
+                                                <ReCAPTCHA
+                                                    ref={recaptchaRef}
+                                                    sitekey={RECAPTCHA_SITE_KEY}
+                                                    onChange={(token) => field.onChange(token ?? "")}
+                                                    onExpired={() => field.onChange("")}
+                                                    onError={() => field.onChange("")}
+                                                />
+                                            </div>
+                                        )}
+                                    />
+                                )}
+
                                 <button
                                     type="submit"
                                     className={styles.submitBtn}
@@ -464,6 +491,8 @@ export default function LoginPage() {
                                                     ref={recaptchaRef}
                                                     sitekey={RECAPTCHA_SITE_KEY}
                                                     onChange={(token) => field.onChange(token ?? "")}
+                                                    onExpired={() => field.onChange("")}
+                                                    onError={() => field.onChange("")}
                                                 />
                                             </div>
                                         )}
@@ -510,42 +539,6 @@ export default function LoginPage() {
                             </form>
                         )}
 
-                        {/* Quick Role Demo Hub (Dành riêng cho Mentor / Thử nghiệm) */}
-                        <div className={styles.demoHub}>
-                            <div className={styles.demoTitle}>
-                                <span>{lang === "vi" ? "Truy cập nhanh Demo" : "Fast Demo Access"}</span>
-                                <span className={styles.demoBadge}>MENTOR / TEST</span>
-                            </div>
-                            <div className={styles.demoButtonsGrid}>
-                                <button
-                                    type="button"
-                                    className={styles.demoRoleBtn}
-                                    onClick={() => handleQuickDemo(["USER"], "/")}
-                                    title="Đăng nhập tài khoản User thường"
-                                >
-                                    <i className={`fa-solid fa-user ${styles.demoRoleIcon}`} style={{ color: "#2563eb" }} />
-                                    <span>User</span>
-                                </button>
-                                <button
-                                    type="button"
-                                    className={styles.demoRoleBtn}
-                                    onClick={() => handleQuickDemo(["USER", "MODERATOR"], "/moderator")}
-                                    title="Đăng nhập tài khoản Kiểm duyệt viên"
-                                >
-                                    <i className={`fa-solid fa-shield-halved ${styles.demoRoleIcon}`} style={{ color: "#10b981" }} />
-                                    <span>Moderator</span>
-                                </button>
-                                <button
-                                    type="button"
-                                    className={styles.demoRoleBtn}
-                                    onClick={() => handleQuickDemo(["USER", "MODERATOR", "ADMIN"], "/admin")}
-                                    title="Đăng nhập tài khoản Quản trị viên"
-                                >
-                                    <i className={`fa-solid fa-crown ${styles.demoRoleIcon}`} style={{ color: "#f59e0b" }} />
-                                    <span>Admin</span>
-                                </button>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

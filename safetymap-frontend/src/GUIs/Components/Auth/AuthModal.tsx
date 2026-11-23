@@ -19,6 +19,7 @@ interface Props {
 type LoginFormValues = {
     email: string;
     password: string;
+    captchaToken: string;
 };
 
 type SignupFormValues = {
@@ -52,7 +53,7 @@ function firstErrorMessage<T extends Record<string, unknown>>(errors: FieldError
 
 export default function AuthModal({ isOpen, onClose }: Props) {
     // Mọi hook phải gọi TRƯỚC "if (!isOpen) return null"
-    const { user, roles, error, clearError, login, signup, logout, loginAsDemo, toggleRole } = useAuth();
+    const { user, roles, isDemo, error, clearError, login, signup, logout, loginAsDemo, toggleRole } = useAuth();
     const { t, lang } = useLanguage();
     const navigate = useNavigate();
     const [tab, setTab] = useState<"LOGIN" | "SIGNUP">("LOGIN");
@@ -62,7 +63,7 @@ export default function AuthModal({ isOpen, onClose }: Props) {
     const [showTosModal, setShowTosModal] = useState(false);
 
     const loginForm = useForm<LoginFormValues>({
-        defaultValues: { email: "", password: "" },
+        defaultValues: { email: "", password: "", captchaToken: "" },
     });
 
     const signupForm = useForm<SignupFormValues>({
@@ -89,6 +90,9 @@ export default function AuthModal({ isOpen, onClose }: Props) {
     const switchTab = (next: "LOGIN" | "SIGNUP") => {
         setTab(next);
         clearError();
+        // Widget captcha của tab cũ bị gỡ -> token cũ không còn dùng được
+        loginForm.setValue("captchaToken", "");
+        signupForm.setValue("captchaToken", "");
     };
 
     const goTo = (path: string) => {
@@ -98,7 +102,16 @@ export default function AuthModal({ isOpen, onClose }: Props) {
 
     // Handler async -> react-hook-form tự bật isSubmitting, nút bị khoá trong lúc chờ
     const onLoginValid = async (data: LoginFormValues) => {
-        const success = await login({ email: data.email, password: data.password });
+        const success = await login({
+            email: data.email,
+            password: data.password,
+            captchaToken: data.captchaToken,
+        });
+
+        // Token reCAPTCHA chỉ dùng 1 lần -> luôn reset
+        recaptchaRef.current?.reset();
+        loginForm.setValue("captchaToken", "");
+
         if (success) {
             loginForm.reset();
             onClose();
@@ -172,29 +185,31 @@ export default function AuthModal({ isOpen, onClose }: Props) {
                 </div>
             )}
 
-            {/* Hộp công cụ thử nghiệm bật/tắt quyền nhanh để kiểm tra phân quyền */}
-            <div className="auth-role-tester">
-                <div className="auth-role-tester-title">
-                    <i className="fa-solid fa-sliders" style={{ marginRight: 6 }}></i>
-                    {lang === "vi" ? "Thử nghiệm bật/tắt quyền" : "Role Testing Switcher"}
+            {/* Chỉ tài khoản demo mới được bật/tắt quyền giả để xem giao diện */}
+            {isDemo && (
+                <div className="auth-role-tester">
+                    <div className="auth-role-tester-title">
+                        <i className="fa-solid fa-sliders" style={{ marginRight: 6 }}></i>
+                        {lang === "vi" ? "Thử nghiệm bật/tắt quyền" : "Role Testing Switcher"}
+                    </div>
+                    <div className="auth-role-chips">
+                        {(["USER", "MODERATOR", "ADMIN"] as UserRole[]).map((r) => {
+                            const active = roles.includes(r);
+                            return (
+                                <button
+                                    key={r}
+                                    type="button"
+                                    className={`auth-chip ${active ? "auth-chip-active" : ""}`}
+                                    onClick={() => toggleRole(r)}
+                                >
+                                    {active ? <i className="fa-solid fa-check" style={{ marginRight: 4 }}></i> : <i className="fa-solid fa-plus" style={{ marginRight: 4 }}></i>}
+                                    {r}
+                                </button>
+                            );
+                        })}
+                    </div>
                 </div>
-                <div className="auth-role-chips">
-                    {(["USER", "MODERATOR", "ADMIN"] as UserRole[]).map((r) => {
-                        const active = roles.includes(r);
-                        return (
-                            <button
-                                key={r}
-                                type="button"
-                                className={`auth-chip ${active ? "auth-chip-active" : ""}`}
-                                onClick={() => toggleRole(r)}
-                            >
-                                {active ? <i className="fa-solid fa-check" style={{ marginRight: 4 }}></i> : <i className="fa-solid fa-plus" style={{ marginRight: 4 }}></i>}
-                                {r}
-                            </button>
-                        );
-                    })}
-                </div>
-            </div>
+            )}
 
             <button type="button" className="auth-logout-btn" onClick={handleLogout}>
                 {t("common.logout")}
@@ -222,20 +237,6 @@ export default function AuthModal({ isOpen, onClose }: Props) {
             >
                 <GoogleIcon size={18} />
                 <span>{t("auth.googleSoon")}</span>
-            </button>
-
-            {/* Nút riêng biệt đăng nhập tài khoản mẫu */}
-            <button
-                type="button"
-                className="auth-demo-btn"
-                onClick={() => {
-                    loginAsDemo();
-                    onClose();
-                }}
-                title={lang === "vi" ? "Đăng nhập nhanh tài khoản mẫu đầy đủ quyền" : "Quick sign in with demo full roles"}
-            >
-                <i className="fa-solid fa-flask" style={{ color: "var(--color-primary, #2563eb)", fontSize: 16 }}></i>
-                <span>{lang === "vi" ? "Đăng nhập tài khoản mẫu (Admin & Mod)" : "Sign in as Demo (Admin & Mod)"}</span>
             </button>
 
             <div className="auth-divider">
@@ -289,6 +290,21 @@ export default function AuthModal({ isOpen, onClose }: Props) {
                             })}
                         />
                     </label>
+
+                    <Controller
+                        name="captchaToken"
+                        control={loginForm.control}
+                        rules={{ required: t("auth.captchaRequired") }}
+                        render={({ field }) => (
+                            <ReCAPTCHA
+                                ref={recaptchaRef}
+                                sitekey={RECAPTCHA_SITE_KEY}
+                                onChange={(token) => field.onChange(token ?? "")}
+                                onExpired={() => field.onChange("")}
+                                onError={() => field.onChange("")}
+                            />
+                        )}
+                    />
                     <button
                         type="submit"
                         className="auth-primary-btn"
