@@ -53,7 +53,7 @@ function firstErrorMessage<T extends Record<string, unknown>>(errors: FieldError
 
 export default function AuthModal({ isOpen, onClose }: Props) {
     // Mọi hook phải gọi TRƯỚC "if (!isOpen) return null"
-    const { user, roles, isDemo, error, clearError, login, signup, logout, loginAsDemo, toggleRole } = useAuth();
+    const { user, roles, isDemo, error, clearError, login, signup, logout, toggleRole } = useAuth();
     const { t, lang } = useLanguage();
     const navigate = useNavigate();
     const [tab, setTab] = useState<"LOGIN" | "SIGNUP">("LOGIN");

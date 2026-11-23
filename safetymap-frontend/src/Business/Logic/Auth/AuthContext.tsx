@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useReducer, type Dispatch, type R
 import type { User, UserRole } from "../../Models/User";
 import type { ApiError } from "../../DAL/AuthApi";
 import { refreshSession } from "./AuthSession";
+import { loadDemoSession } from "./DemoAccount";
 
 const REFRESH_MARGIN_MS = 60_000; // refresh trước khi access token hết hạn 1 phút
 const RETRY_MS = 30_000;          // mất mạng thì 30 giây sau thử lại
