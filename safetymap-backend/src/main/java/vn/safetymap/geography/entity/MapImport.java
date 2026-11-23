@@ -62,8 +62,8 @@ public class MapImport {
     }
 
     public void recordResult(int segmentCount, int blockCount, int junctionCount) {
-        if (segmentCount < 0 || blockCount < 0) {
-            throw new IllegalArgumentException("count must be 0 or more!!!");
+        if (segmentCount < 0 || blockCount < 0 || junctionCount < 0) {
+            throw new IllegalArgumentException("count must be 0 or more");
         }
         this.segmentCount = segmentCount;
         this.blockCount = blockCount;
