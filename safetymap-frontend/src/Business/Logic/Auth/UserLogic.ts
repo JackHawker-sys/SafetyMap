@@ -12,3 +12,5 @@ const ROLE_PRIORITY: UserRole[] = ["ADMIN", "MODERATOR", "USER"];
 export function getHighestRole(roles: UserRole[]): UserRole {
     return ROLE_PRIORITY.find((r) => roles.includes(r)) ?? "USER";
 }
+
+export const EIU_EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@eiu\.edu\.vn$/i;

@@ -403,7 +403,7 @@ export default function LoginPage() {
                             </form>
                         ) : (
                             /* FORM: SIGNUP */
-                            <form onSubmit={signupForm.handleSubmit(onSignupValid)} noValidate>
+                            <form method="POST" onSubmit={signupForm.handleSubmit(onSignupValid)} noValidate>
                                 <div className={styles.formGroup}>
                                     <label className={styles.inputLabel}>{t("auth.fullName")}</label>
                                     <div className={styles.inputWrap}>
