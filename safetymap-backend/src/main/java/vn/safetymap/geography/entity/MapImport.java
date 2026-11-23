@@ -44,8 +44,8 @@ public class MapImport {
     @Column(name = "block_count", nullable = false)
     private Integer blockCount = 0;
 
-    @Column(name = "created_at", insertable = false, updatable = false)
-    private Instant createdAt;
+    @Column(name = "imported_at", insertable = false, updatable = false)
+    private Instant importedAt;
 
     public static MapImport start(String areaName, String sourceName, Instant osmDataAt, Polygon areaShape) {
         MapImport mi = new MapImport();

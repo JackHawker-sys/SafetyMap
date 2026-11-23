@@ -34,9 +34,14 @@ public class Block {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "map_import_id", nullable = false)
     private MapImport mapImport;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ward_id")
     private Ward ward;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn (name = "junction_id")
+    private Junction junction;
 
     /** Outline of the block, SRID 4326. Holes are allowed (a block can enclose another). */
     @Column(name = "shape", nullable = false)
@@ -45,6 +50,10 @@ public class Block {
     /** Area in square metres, computed on the geography type; always finite and greater than 0. */
     @Column(name = "area_m2", nullable = false)
     private Double areaM2;
+    // Column display_shape is NOT mapped on purpose: it is the block minus the
+    // road surface, computed in SQL at import (ST_Difference of buffered segments) and used only for
+    // drawing. Loading it with every Block would pull large polygons nobody reads here; the map API
+    // reads it with its own GeoJSON query, like wards.boundary
 
     @Column(name = "created_at", insertable = false, updatable = false)
     private Instant createdAt;
@@ -62,9 +71,19 @@ public class Block {
         this.ward = ward;
     }
 
+    public void markAsIsland(Junction junction){
+        if(junction == null){
+            throw new IllegalArgumentException("junction is required to mark an island");
+        }
+        this.junction = junction;
+    } 
+
+    public boolean isIsland(){
+        return junction != null;
+    }
     @PrePersist
     @PreUpdate 
-    public void checkInvariants() {
+    void checkInvariants() {
         if (mapImport == null) {
             throw new IllegalStateException("mapImport is required");
         }
