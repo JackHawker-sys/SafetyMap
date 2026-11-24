@@ -135,10 +135,10 @@ public class AuthService {
     }
 
     private static String normalizeEmail(String email) {
-        String normalized =email.trim().toLowerCase(Locale.ROOT);
-        if(!EIU_EMAIL_PATTERN.matcher(normalized).matches()){
+        String normalized = email.trim().toLowerCase(Locale.ROOT);
+        if (!EIU_EMAIL_PATTERN.matcher(normalized).matches()) {
             throw new BadRequestException("EMAIL_DOMAIN_NOT_ALLOWED",
-             "Only EIU emails (@eiu.edu.vn) are allowe;d")
+                    "Only EIU emails (@eiu.edu.vn) are allowed");
         }
         return normalized;
     }
