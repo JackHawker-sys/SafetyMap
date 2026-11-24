@@ -1,0 +1,200 @@
+import { memo, useEffect, useState } from "react";
+import { MapContainer, Polyline, CircleMarker, Marker, Popup, Tooltip, useMap } from "react-leaflet";
+import { loadMapData, type MapData } from "../../../Business/Logic/MapLogic";
+import CoordPicker from "./CoordPicker";
+import MapLibreLayer from "./MapLibreLayer";
+import MapOverlay from "./MapOverlay";
+import MapClickHandler from "./MapClickHandler";
+import type { GeoPlace, SavedPlace } from "../../../Business/Models/MapModels";
+import FitToPlaces, { type MapInsets } from "./FitToPlaces";
+import {
+    departureWaypointIcon,
+    destinationWaypointIcon,
+    savedPinIcon,
+    selectedPinIcon,
+    userLocationDotIcon,
+    userLocationOriginIcon,
+} from "./MapMarkers";
+import { DEFAULT_CENTER, VIETNAM_BOUNDS } from "../../../Business/Config/MapConfig";
+import { ENV } from "../../../Business/Config/Env";
+
+function MapResizeWatcher() {
+    const map = useMap();
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            map.invalidateSize();
+        }, 200);
+        return () => clearTimeout(timer);
+    }, [map]);
+    return null;
+}
+
+const MAP_ATTRIBUTION =
+    '&copy; <a href="https://openfreemap.org">OpenFreeMap</a> ' +
+    '<a href="https://www.openmaptiles.org/">&copy; OpenMapTiles</a> ' +
+    'Data from <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
+
+interface Props {
+    selected: GeoPlace | null;   // điểm đang xem (chế độ "place")
+    from: GeoPlace | null;       // chế độ "directions"
+    to: GeoPlace | null;
+    savedPlaces: SavedPlace[];
+    insets: MapInsets;
+    onMapClick: (lat: number, lng: number) => void;
+    onSavedClick: (place: GeoPlace) => void;
+    onLocationFound?: (place: GeoPlace) => void;
+}
+
+// Bấm vào đoạn đường / sự cố thì chỉ mở popup, KHÔNG lan xuống bản đồ (nếu lan sẽ ghim thêm 1 điểm)
+const NO_BUBBLE = { bubblingMouseEvents: false } as const;
+
+// Lớp dữ liệu nguy hiểm tách riêng + memo: chọn điểm / gõ chữ làm MapView render lại,
+// nhưng hàng trăm Polyline này chỉ vẽ lại khi `data` đổi
+const DangerLayer = memo(function DangerLayer({ data }: { data: MapData }) {
+    return (
+        <>
+            {data.segments.map((seg) => (
+                <Polyline key={seg.id} positions={seg.positions}
+                    pathOptions={{ color: seg.color, weight: 8, opacity: 0.8, ...NO_BUBBLE }}>
+                    <Popup>
+                        Đoạn {seg.order} — {seg.lengthM} m<br />
+                        Điểm nguy hiểm: {seg.score}
+                    </Popup>
+                </Polyline>
+            ))}
+
+            {data.incidents.map((inc) => (
+                <CircleMarker key={inc.id} center={inc.position} radius={8}
+                    pathOptions={{ color: "#fff", weight: 2, fillColor: inc.color, fillOpacity: 1, ...NO_BUBBLE }}>
+                    <Popup>
+                        <b>{inc.type}</b> ({inc.severity})<br />
+                        {inc.description}<br />
+                        {inc.houseNumber && `Số ${inc.houseNumber}, `}Trần Văn Ơn
+                    </Popup>
+                </CircleMarker>
+            ))}
+        </>
+    );
+});
+
+export default function MapView({ selected, from, to, savedPlaces, insets, onMapClick, onSavedClick, onLocationFound }: Props) {
+    const [data, setData] = useState<MapData>({ segments: [], incidents: [] });
+    const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+
+    const handleLocationFound = (place: GeoPlace) => {
+        setUserLocation(place.position);
+        onLocationFound?.(place);
+    };
+
+    useEffect(() => {
+        let cancelled = false;
+        loadMapData()
+            .then((mapData) => { if (!cancelled) setData(mapData); })
+            .catch((err) => { if (!cancelled) console.error("Lỗi tải dữ liệu", err); });
+        return () => { cancelled = true; };
+    }, []);
+
+    // File style MapLibre (đã ẩn nhãn TQ, thêm nhãn Hoàng Sa, Trường Sa tiếng Việt): Đặt tại public/map/openfreemap_liberty_vn.json
+    // Hai công cụ cùng nghe click bản đồ -> chỉ bật 1 cái (CoordPicker hoặc MapClickHandler)
+    return (
+        <MapContainer
+            center={DEFAULT_CENTER}
+            zoom={16}
+            minZoom={5}
+            maxZoom={18}
+            maxBounds={VIETNAM_BOUNDS}
+            maxBoundsViscosity={1.0}
+            zoomControl={false}
+            attributionControl={false}
+            style={{ height: "100%", width: "100%" }}
+        >
+            <MapResizeWatcher />
+            <MapLibreLayer style={ENV.mapStyleUrl} attribution={MAP_ATTRIBUTION} />
+            <MapOverlay onLocationFound={handleLocationFound} />
+
+            {ENV.enableCoordPicker ? <CoordPicker /> : <MapClickHandler onClick={onMapClick} />}
+
+            <DangerLayer data={data} />
+
+            {savedPlaces.map((s) => (
+                <Marker key={s.key} position={s.place.position} icon={savedPinIcon}
+                    eventHandlers={{ click: () => onSavedClick(s.place) }}>
+                    <Tooltip className="sm-hud-tooltip" direction="top" offset={[0, -14]}>
+                        <i className="fa-solid fa-bookmark" style={{ color: "#f59e0b", marginRight: 6 }}></i>
+                        {s.place.name}
+                    </Tooltip>
+                </Marker>
+            ))}
+
+            <FitToPlaces places={selected ? [selected] : [from, to]} insets={insets} />
+
+            {/* Ghim điểm đang xem (Place mode) */}
+            {selected && (
+                <Marker
+                    position={selected.position}
+                    icon={selectedPinIcon}
+                    zIndexOffset={1000}
+                >
+                    <Tooltip className="sm-hud-tooltip" direction="top" offset={[0, -44]}>
+                        <i className="fa-solid fa-location-dot" style={{ color: "#ef4444", marginRight: 6 }}></i>
+                        {selected.name}
+                    </Tooltip>
+                </Marker>
+            )}
+
+            {/* Vị trí của tôi Live GPS (hiển thị khi chưa làm điểm from) */}
+            {userLocation && (
+                (!from || from.position[0] !== userLocation[0] || from.position[1] !== userLocation[1])
+            ) && (
+                <Marker
+                    position={userLocation}
+                    icon={userLocationDotIcon}
+                    zIndexOffset={900}
+                    eventHandlers={{
+                        click: () => {
+                            if (onLocationFound) {
+                                onLocationFound({
+                                    id: `my-location-${Date.now()}`,
+                                    label: "Vị trí của tôi",
+                                    name: "Vị trí của tôi",
+                                    address: null,
+                                    position: userLocation,
+                                    source: "GPS",
+                                });
+                            }
+                        }
+                    }}
+                >
+                    <Tooltip className="sm-hud-tooltip" direction="top" offset={[0, -18]}>
+                        <i className="fa-solid fa-location-crosshairs" style={{ color: "#38bdf8", marginRight: 6 }}></i>
+                        Vị trí của bạn (Live GPS)
+                    </Tooltip>
+                </Marker>
+            )}
+
+            {/* Điểm đi (From): Nếu GPS -> userLocationOriginIcon (Beacon có mũi tên). Nếu thủ công -> departureWaypointIcon (Emerald mũi tên xuất phát) */}
+            {from && (
+                <Marker
+                    position={from.position}
+                    icon={from.source === "GPS" ? userLocationOriginIcon : departureWaypointIcon}
+                    zIndexOffset={950}
+                >
+                    <Tooltip className="sm-hud-tooltip" direction="top" offset={[0, from.source === "GPS" ? -18 : -18]}>
+                        <i className="fa-solid fa-location-arrow" style={{ color: "#10b981", marginRight: 6 }}></i>
+                        Điểm xuất phát: {from.name}
+                    </Tooltip>
+                </Marker>
+            )}
+
+            {/* Điểm đến (To): destinationWaypointIcon (Crimson Target có cờ về đích) */}
+            {to && (
+                <Marker position={to.position} icon={destinationWaypointIcon} zIndexOffset={1000}>
+                    <Tooltip className="sm-hud-tooltip" direction="top" offset={[0, -46]}>
+                        <i className="fa-solid fa-flag-checkered" style={{ color: "#ef4444", marginRight: 6 }}></i>
+                        Điểm đến an toàn: {to.name}
+                    </Tooltip>
+                </Marker>
+            )}
+        </MapContainer>
+    );
+}

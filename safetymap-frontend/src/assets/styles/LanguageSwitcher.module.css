@@ -1,0 +1,52 @@
+/* ==========================================================================
+   LanguageSwitcher Styles - Modern Frosted Glass Capsule (Light Theme)
+   ========================================================================== */
+
+.langSwitch {
+  display: inline-flex;
+  align-items: center;
+  height: 48px;
+  box-sizing: border-box;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.90);
+  backdrop-filter: blur(24px) saturate(190%);
+  -webkit-backdrop-filter: blur(24px) saturate(190%);
+  border-radius: 14px;
+  border: 1px solid rgba(226, 232, 240, 0.85);
+  box-shadow: 0 10px 28px -4px rgba(15, 23, 42, 0.1);
+  user-select: none;
+  gap: 4px;
+}
+
+.langBtn {
+  border: none;
+  background: transparent;
+  height: 38px;
+  width: 44px;
+  min-width: 44px;
+  max-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  box-sizing: border-box;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 10px;
+  cursor: pointer;
+  color: #64748b;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: inherit;
+  letter-spacing: 0.02em;
+}
+
+.langBtn:hover {
+  color: #0f172a;
+  background: rgba(15, 23, 42, 0.05);
+}
+
+.langBtnActive {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
+  color: #ffffff !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}

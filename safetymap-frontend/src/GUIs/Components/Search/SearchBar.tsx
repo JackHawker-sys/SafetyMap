@@ -1,0 +1,146 @@
+import { useEffect, useId, useState, type ChangeEvent } from "react";
+
+import type { GeoPlace, SavedPlace } from "../../../Business/Models/MapModels";
+import { usePlaceSuggestions } from "../../Hooks/usePlaceSuggestions";
+import { useListNavigation } from "../../Hooks/useListNavigation";
+import { BookmarkFilledIcon, CloseIcon, DirectionsIcon, PinIcon, SearchIcon } from "../Common/Icons";
+import { useLanguage } from "../../Context/LanguageContext";
+import styles from "../../../assets/styles/SearchBar.module.css";
+
+
+interface Props {
+    value: GeoPlace | null;                 // điểm đang mở trên sidebar (để hiện chữ trong ô)
+    savedPlaces: SavedPlace[];
+    near: [number, number];
+    onSelect: (place: GeoPlace) => void;
+    onClear: () => void;
+    onOpenDirections: () => void;
+}
+
+const MIN_QUERY = 3;
+const MAX_SAVED_SHOWN = 5;
+
+export default function SearchBar({
+    value, savedPlaces, near, onSelect, onClear, onOpenDirections,
+}: Props) {
+    const { t } = useLanguage();
+    const inputId = useId();
+    const listId = `${inputId}-list`;
+
+    const [text, setText] = useState(value?.label ?? "");
+    const [open, setOpen] = useState(false);
+
+    // Điểm đổi từ bên ngoài (click bản đồ, chọn điểm đã lưu, đóng sidebar) -> cập nhật chữ trong ô
+    useEffect(() => {
+        setText(value?.label ?? "");
+    }, [value?.id, value?.label]);
+
+    // Chỉ gọi API khi người dùng THẬT SỰ gõ (chữ khác label của điểm đang chọn)
+    const isTyping = open && text.trim().length >= MIN_QUERY && text !== value?.label;
+    const { results, loading, error } = usePlaceSuggestions(isTyping ? text : "", near[0], near[1]);
+
+    // Chưa gõ đủ 3 ký tự -> hiện danh sách "Đã lưu" như Google hiện lịch sử gần đây
+    const showingSaved = !isTyping;
+    const items: GeoPlace[] = showingSaved
+        ? savedPlaces.slice(0, MAX_SAVED_SHOWN).map((s) => s.place)
+        : results;
+
+    function pick(place: GeoPlace) {
+        setOpen(false);
+        setText(place.label);
+        onSelect(place);
+    }
+
+    const nav = useListNavigation(items, pick, () => setOpen(false));
+
+    function handleType(e: ChangeEvent<HTMLInputElement>) {
+        setText(e.target.value);
+        setOpen(true);
+        nav.setActiveIndex(-1);
+    }
+
+    function handleClear() {
+        setText("");
+        setOpen(false);
+        onClear();
+    }
+
+    const showList = open && (isTyping ? (loading || error !== null || results.length > 0) : items.length > 0);
+
+    return (
+        <div className={`${styles.wrapper} ${showList ? styles.wrapperOpen : ""}`}>
+            <div className={styles.bar}>
+                <label htmlFor={inputId} className={styles.leadingLabel} aria-label={t("search.searchLabel")} title={t("search.searchLabel")}>
+                    <SearchIcon className={styles.leadingIcon} />
+                </label>
+                <input
+                    id={inputId}
+                    className={styles.input}
+                    value={text}
+                    placeholder={t("search.placeholder")}
+                    autoComplete="off"
+                    role="combobox"
+                    aria-label={t("search.searchLabel")}
+                    aria-expanded={showList}
+                    aria-controls={listId}
+                    aria-activedescendant={nav.activeIndex >= 0 ? `${listId}-${nav.activeIndex}` : undefined}
+                    onChange={handleType}
+                    onKeyDown={nav.handleKeyDown}
+                    onFocus={() => setOpen(true)}
+                    onBlur={() => setOpen(false)}
+                />
+                {text !== "" && (
+                    <button type="button" className={styles.iconButton} onClick={handleClear} title={t("search.clear")}>
+                        <CloseIcon />
+                    </button>
+                )}
+                <span className={styles.divider} />
+                <button type="button" className={`${styles.iconButton} ${styles.directionsButton}`}
+                    onClick={onOpenDirections} title={t("search.directions")}>
+                    <DirectionsIcon size={22} />
+                </button>
+            </div>
+
+            {showList && (
+                <ul id={listId} role="listbox" className={styles.list}>
+                    {showingSaved && <li className={styles.sectionTitle}>{t("place.saved")}</li>}
+                    {isTyping && loading && <li className={styles.hint}>{t("search.searching")}</li>}
+                    {isTyping && error && <li className={styles.error}>{error}</li>}
+                    {items.map((place, i) => (
+                        <li
+                            key={place.id}
+                            id={`${listId}-${i}`}
+                            role="option"
+                            aria-selected={i === nav.activeIndex}
+                            className={`${styles.item} ${i === nav.activeIndex ? styles.active : ""}`}
+                            // mousedown + preventDefault: chọn TRƯỚC khi input bị blur đóng danh sách
+                            onMouseDown={(e) => { e.preventDefault(); pick(place); }}
+                            onMouseEnter={() => nav.setActiveIndex(i)}
+                        >
+                            <span className={styles.itemIcon}>
+                                {showingSaved ? <BookmarkFilledIcon size={18} /> : <PinIcon size={18} />}
+                            </span>
+                            <span className={styles.itemText}>
+                                <span className={styles.itemName}>{place.name}</span>
+                                {place.address && <span className={styles.itemAddress}>{place.address}</span>}
+                            </span>
+                        </li>
+                    ))}
+                </ul>
+            )}
+
+            {!showList && (
+                <div className={styles.quickChipsRow}>
+                    <button type="button" className={styles.quickChip} onClick={onOpenDirections}>
+                        <i className="fa-solid fa-route" style={{ color: "var(--color-primary, #2563eb)", marginRight: 6 }}></i>
+                        {t("directions.title")}
+                    </button>
+                    <button type="button" className={styles.quickChip} onClick={() => setOpen(true)}>
+                        <i className="fa-solid fa-bookmark" style={{ color: "#f59e0b", marginRight: 6 }}></i>
+                        {t("place.saved")}
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+}

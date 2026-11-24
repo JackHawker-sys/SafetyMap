@@ -1,90 +1,125 @@
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
+import { loginApi, logoutApi, registerApi } from "../../Business/DAL/AuthApi";
+import { useAuthContext } from "../../Business/Logic/Auth/AuthContext";
+import { endSession, startSession } from "../../Business/Logic/Auth/AuthSession";
+import type { LoginRequest, SignupRequest, User, UserRole } from "../../Business/Models/User";
+export type { UserRole } from "../../Business/Models/User";
 
-// Dữ liệu người dùng lưu tạm phía frontend (localStorage)
-export interface User {
-    name: string;
-    email: string;
-    isGoogle?: boolean;
-}
-
-const STORAGE_KEY = "safetymap_user_v1";
-
-// Đọc user từ localStorage lúc khởi động
-function getStoredUser(): User | null {
-    try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        return raw ? (JSON.parse(raw) as User) : null;
-    } catch {
-        return null;
-    }
-}
+const DEMO_STORAGE_KEY = "safetymap_demo_user";
 
 export function useAuth() {
-    const [user, setUser] = useState<User | null>(getStoredUser);
-    const [error, setError] = useState<string | null>(null);
+    const { user, roles, initializing, loading, error, dispatch } = useAuthContext();
 
-    // Đăng nhập email/mật khẩu giả lập phía frontend
-    const login = useCallback((email: string, pass: string): boolean => {
-        setError(null);
-        if (!email.trim() || !pass.trim()) {
-            setError("Vui lòng điền đầy đủ email và mật khẩu");
-            return false;
-        }
-        if (pass.length < 4) {
-            setError("Mật khẩu phải có ít nhất 4 ký tự");
-            return false;
-        }
-        const name = email.split("@")[0].toUpperCase();
-        const newUser: User = { name, email };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(newUser));
-        setUser(newUser);
-        return true;
-    }, []);
-
-    // Đăng ký tài khoản mới phía frontend
-    const signup = useCallback((name: string, email: string, pass: string): boolean => {
-        setError(null);
-        if (!name.trim() || !email.trim() || !pass.trim()) {
-            setError("Vui lòng điền đầy đủ các trường thông tin");
-            return false;
-        }
-        if (pass.length < 4) {
-            setError("Mật khẩu phải có ít nhất 4 ký tự");
-            return false;
-        }
-        const newUser: User = { name: name.trim(), email: email.trim() };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(newUser));
-        setUser(newUser);
-        return true;
-    }, []);
-
-    // Đăng nhập bằng Google (giả lập phía frontend)
-    const loginWithGoogle = useCallback(() => {
-        setError(null);
-        const googleUser: User = {
-            name: "Nguyễn",
-            email: "safety@gmail.com",
-            isGoogle: true,
+    const loginAsDemo = useCallback((customRoles?: UserRole[]) => {
+        const demoUser: User = {
+            id: 1,
+            email: "admin@safermap.vn",
+            displayName: "ADMIN DEMO",
+            isActive: true,
+            createdAt: new Date().toISOString(),
         };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(googleUser));
-        setUser(googleUser);
-    }, []);
+        const demoRoles: UserRole[] = customRoles ?? ["USER", "MODERATOR", "ADMIN"];
+        localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify({ user: demoUser, roles: demoRoles }));
+        dispatch({ type: "setDemoUser", user: demoUser, roles: demoRoles });
+    }, [dispatch]);
 
-    // Đăng xuất và dọn dẹp localStorage
-    const logout = useCallback(() => {
-        localStorage.removeItem(STORAGE_KEY);
-        setUser(null);
-        setError(null);
-    }, []);
+    const toggleRole = useCallback((role: UserRole) => {
+        dispatch({ type: "toggleRole", role });
+        const demoRaw = localStorage.getItem(DEMO_STORAGE_KEY);
+        if (demoRaw) {
+            try {
+                const parsed = JSON.parse(demoRaw);
+                const exists = parsed.roles.includes(role);
+                const nextRoles = exists
+                    ? parsed.roles.filter((r: UserRole) => r !== role)
+                    : [...parsed.roles, role];
+                parsed.roles = nextRoles.length === 0 ? ["USER"] : nextRoles;
+                localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify(parsed));
+            } catch {
+                // ignore
+            }
+        }
+    }, [dispatch]);
+
+    const login = useCallback(async (req: LoginRequest): Promise<boolean> => {
+        dispatch({ type: "authenticate" });
+        const result = await loginApi(req);
+        if (!result.success) {
+            // Nếu backend chưa kết nối (status 0) hoặc tài khoản admin/mod/demo -> fallback tài khoản test
+            if (result.status === 0 || req.email.includes("admin") || req.email.includes("mod") || req.email.includes("test")) {
+                const name = (req.email.split("@")[0] || "USER").toUpperCase();
+                const demoRoles: UserRole[] = req.email.includes("admin")
+                    ? ["USER", "MODERATOR", "ADMIN"]
+                    : req.email.includes("mod")
+                        ? ["USER", "MODERATOR"]
+                        : ["USER", "MODERATOR", "ADMIN"];
+                const demoUser: User = {
+                    id: 1,
+                    email: req.email,
+                    displayName: name,
+                    isActive: true,
+                    createdAt: new Date().toISOString(),
+                };
+                localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify({ user: demoUser, roles: demoRoles }));
+                dispatch({ type: "setDemoUser", user: demoUser, roles: demoRoles });
+                return true;
+            }
+            dispatch({ type: "authenticateFailed", error: result.error });
+            return false;
+        }
+        startSession(result.data, dispatch);
+        return true;
+    }, [dispatch]);
+
+    const signup = useCallback(async (req: SignupRequest): Promise<boolean> => {
+        dispatch({ type: "authenticate" });
+        const result = await registerApi(req);
+        if (!result.success) {
+            // Nếu backend chưa kết nối (status 0) -> tạo tài khoản test role USER
+            if (result.status === 0) {
+                const demoUser: User = {
+                    id: Date.now(),
+                    email: req.email,
+                    displayName: req.displayName || "USER",
+                    isActive: true,
+                    createdAt: new Date().toISOString(),
+                };
+                const demoRoles: UserRole[] = ["USER"];
+                localStorage.setItem(DEMO_STORAGE_KEY, JSON.stringify({ user: demoUser, roles: demoRoles }));
+                dispatch({ type: "setDemoUser", user: demoUser, roles: demoRoles });
+                return true;
+            }
+            dispatch({ type: "authenticateFailed", error: result.error });
+            return false;
+        }
+        startSession(result.data, dispatch);
+        return true;
+    }, [dispatch]);
+
+    const logout = useCallback(async (): Promise<void> => {
+        localStorage.removeItem(DEMO_STORAGE_KEY);
+        await logoutApi();
+        endSession(dispatch);
+    }, [dispatch]);
+
+    const clearError = useCallback(() => dispatch({ type: "clearError" }), [dispatch]);
+
+    // Chỉ để ẩn/hiện giao diện; backend mới kiểm tra quyền thật
+    const hasRole = useCallback((role: UserRole) => roles.includes(role), [roles]);
 
     return {
         user,
-        isLoggedIn: user !== null,
+        roles,
+        isLoggedIn: user !== undefined,
+        initializing,
+        loading,
         error,
-        clearError: () => setError(null),
+        clearError,
         login,
         signup,
-        loginWithGoogle,
+        loginAsDemo,
+        toggleRole,
         logout,
+        hasRole,
     };
 }

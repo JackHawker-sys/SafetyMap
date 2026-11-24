@@ -1,0 +1,447 @@
+/* ==========================================================================
+   MapOverlay - Tactical Safety HUD & Controls (Light Theme)
+   ========================================================================== */
+
+/* --- Bottom-Right Group (Zoom Controls, My Location & Legend Toggle) --- */
+.bottomRightStack {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    margin-right: 18px !important;
+    margin-bottom: 22px !important;
+    pointer-events: auto;
+    cursor: default;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* Unified Modern Control Squircle Button (44x44) */
+.controlBtn {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(24px) saturate(190%);
+    -webkit-backdrop-filter: blur(24px) saturate(190%);
+    border-radius: 14px;
+    box-shadow: 0 10px 24px -4px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(226, 232, 240, 0.85);
+    color: #475569;
+    font-size: 17px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.controlBtn:hover {
+    background: #ffffff;
+    color: var(--color-primary, #2563eb);
+    border-color: rgba(37, 99, 235, 0.35);
+    box-shadow: 0 12px 28px -4px rgba(37, 99, 235, 0.2);
+    transform: translateY(-2px);
+}
+
+.controlBtn:active {
+    transform: translateY(0) scale(0.95);
+}
+
+/* Dedicated "My Location" Pinpoint / Crosshairs Button */
+.myLocationBtn {
+    color: var(--color-primary, #2563eb);
+    font-size: 19px;
+}
+
+.myLocationBtn:hover {
+    background: #ffffff;
+    color: #1d4ed8;
+    box-shadow: 0 12px 28px -4px rgba(37, 99, 235, 0.28);
+}
+
+.locating {
+    cursor: wait;
+    color: var(--color-primary, #2563eb);
+    opacity: 0.9;
+}
+
+/* Legend Toggle Active State */
+.legendToggleActive {
+    background: #ffffff !important;
+    color: var(--color-primary, #2563eb) !important;
+    border-color: rgba(37, 99, 235, 0.5) !important;
+    box-shadow: 0 4px 16px rgba(37, 99, 235, 0.25) !important;
+}
+
+.locationBtnWrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.locationToast {
+    position: absolute;
+    right: 54px;
+    display: flex;
+    align-items: center;
+    background: rgba(15, 23, 42, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: #fca5a5;
+    font-size: 12px;
+    font-weight: 650;
+    padding: 7px 12px;
+    border-radius: 10px;
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+    animation: toastPop 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+    z-index: 1000;
+}
+
+@keyframes toastPop {
+    from {
+        opacity: 0;
+        transform: translateX(8px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+/* Glassmorphic Zoom Control Pod (44px wide) */
+.zoomGroup {
+    width: 44px;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(24px) saturate(190%);
+    -webkit-backdrop-filter: blur(24px) saturate(190%);
+    border-radius: 14px;
+    box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(226, 232, 240, 0.85);
+    overflow: hidden;
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.zoomGroup:hover {
+    box-shadow: 0 16px 36px -4px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.95);
+    transform: translateY(-1px);
+}
+
+.zoomBtn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 38px;
+    background: transparent;
+    border: none;
+    color: #334155;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.18s ease;
+}
+
+.zoomBtn:hover {
+    background: rgba(37, 99, 235, 0.08);
+    color: var(--color-primary, #2563eb);
+}
+
+.zoomBtn:active {
+    background: rgba(37, 99, 235, 0.16);
+    transform: scale(0.92);
+}
+
+.zoomDivider {
+    height: 1px;
+    background: rgba(226, 232, 240, 0.85);
+    width: 100%;
+}
+
+/* Tactical Safety Legend Card - Flyout to the LEFT of the button stack (Never blocks buttons) */
+.legendCard {
+    position: absolute;
+    right: 56px;
+    bottom: 0;
+    background: var(--surface-glass, rgba(255, 255, 255, 0.92));
+    backdrop-filter: blur(28px) saturate(190%);
+    -webkit-backdrop-filter: blur(28px) saturate(190%);
+    padding: 16px 18px;
+    border-radius: 20px;
+    box-shadow: 0 20px 48px -8px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    font-size: 12.5px;
+    line-height: 1.6;
+    width: 235px;
+    min-width: 235px;
+    max-width: 235px;
+    box-sizing: border-box;
+    color: #0f172a;
+    animation: legendFlyout 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 1000;
+    cursor: default;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+@keyframes legendFlyout {
+    from {
+        opacity: 0;
+        transform: translateX(12px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+.radarStatusHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+}
+
+.radarStatusLeft {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    color: #059669;
+    text-transform: uppercase;
+}
+
+.radarPulseDot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #10b981;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.3);
+    animation: radarPulseDotAnim 2s infinite;
+}
+
+@keyframes radarPulseDotAnim {
+    0% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.6);
+    }
+    70% {
+        box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+    }
+}
+
+.legendCloseBtn {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    background: rgba(15, 23, 42, 0.05);
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+    transition: all 0.15s ease;
+}
+
+.legendCloseBtn:hover {
+    background: rgba(15, 23, 42, 0.1);
+    color: #0f172a;
+}
+
+.legendTitle {
+    font-weight: 750;
+    font-size: 11px;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    cursor: default;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.legendRow {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: #1e293b;
+    font-weight: 550;
+    font-size: 12.5px;
+    padding: 2px 0;
+    transition: color 0.15s ease;
+    cursor: default;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.lineSwatch {
+    width: 22px;
+    height: 5px;
+    border-radius: 999px;
+    flex-shrink: 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.dotSwatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.14), 0 1px 3px rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
+}
+
+/* --- Bottom-Left Group (Info / Attribution Modal) --- */
+.bottomLeftStack {
+    position: relative;
+    margin: 18px !important;
+    pointer-events: auto;
+    cursor: default;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.infoBtn {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.90);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(226, 232, 240, 0.85);
+    box-shadow: 0 8px 20px -4px rgba(15, 23, 42, 0.1);
+    font-size: 15px;
+    color: #64748b;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.infoBtn:hover {
+    background: #ffffff;
+    color: var(--color-primary, #2563eb);
+    box-shadow: 0 12px 28px -4px rgba(37, 99, 235, 0.2);
+    transform: translateY(-2px);
+}
+
+.infoBtn:active {
+    transform: translateY(0) scale(0.95);
+}
+
+.infoModal {
+    position: absolute;
+    bottom: 46px;
+    left: 0;
+    width: 290px;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(24px) saturate(190%);
+    -webkit-backdrop-filter: blur(24px) saturate(190%);
+    border-radius: 18px;
+    box-shadow: 0 20px 45px -10px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.85);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    padding: 16px 18px;
+    font-size: 13px;
+    line-height: 1.55;
+    color: #334155;
+    z-index: 1000;
+    cursor: default;
+    user-select: none;
+    -webkit-user-select: none;
+    animation: modalPop 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes modalPop {
+    from {
+        opacity: 0;
+        transform: translateY(8px) scale(0.96);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modalHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 750;
+    font-size: 13.5px;
+    color: #0f172a;
+    margin-bottom: 10px;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.85);
+    padding-bottom: 8px;
+}
+
+.closeBtn {
+    background: rgba(0, 0, 0, 0.04);
+    border: none;
+    font-size: 14px;
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #64748b;
+    display: grid;
+    place-items: center;
+    transition: all 0.15s ease;
+}
+
+.closeBtn:hover {
+    color: #0f172a;
+    background: rgba(0, 0, 0, 0.08);
+}
+
+.modalBody p {
+    margin: 0 0 10px;
+    color: #64748b;
+    font-size: 12.5px;
+}
+
+.modalBody ul {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.modalBody li {
+    margin-bottom: 5px;
+}
+
+.modalBody a {
+    color: var(--color-primary, #2563eb);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.15s;
+}
+
+.modalBody a:hover {
+    color: #1d4ed8;
+    text-decoration: underline;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+    .legendCard {
+        right: 0;
+        bottom: calc(100% + 12px);
+    }
+}

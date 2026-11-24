@@ -17,7 +17,7 @@ const raw = {
 };
 
 export const ENV = Object.freeze({
-    apiBaseUrl: stripTrailingSlash(required("VITE_API_BASE_URL", raw.apiBaseUrl)),
+    apiBaseUrl: stripTrailingSlash(raw.apiBaseUrl ?? ""),
     geocoderUrl: required("VITE_GEOCODER_URL", raw.geocoderUrl),
     mapStyleUrl: new URL(required("VITE_MAP_STYLE_URL", raw.mapStyleUrl), window.location.origin).href,
     useMockData: raw.useMockData === "true",

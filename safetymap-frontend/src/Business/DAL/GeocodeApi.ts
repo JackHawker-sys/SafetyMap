@@ -61,11 +61,13 @@ export async function searchPlaces(query: string,
     const q = query.trim();
     if (q.length < MIN_QUERY_LENGTH) return [];
 
+    const currentLang = typeof localStorage !== "undefined" && localStorage.getItem("safetymap_lang") === "en" ? "en" : "default";
+
     const params = new URLSearchParams({
         q,
         limit: String(FETCH_LIMIT),
         bbox: VN_BBOX,
-        lang: "default",
+        lang: currentLang,
         dedupe: "0", // tắt gộp trùng của Photon (gộp sai vì đường VN không có postcode)
     });
     if (nearLat !== undefined && nearLng !== undefined) {
@@ -98,7 +100,7 @@ export function getMyLocation(): Promise<GeoPlace> {
 
         navigator.geolocation.getCurrentPosition(
             (pos) => resolve({
-                id: `my-location-${pos.timestamp}`,
+                id: `my-location-${Date.now()}`,
                 label: "Vị trí của tôi",
                 name: "Vị trí của tôi",
                 address: null,
@@ -111,7 +113,7 @@ export function getMyLocation(): Promise<GeoPlace> {
                     ? "Bạn đã chặn quyền truy cập vị trí"
                     : "Không lấy được vị trí, thử lại sau",
             )),
-            { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 },
+            { enableHighAccuracy: true, timeout: 10000, maximumAge: 15000 },
         )
     })
 }

@@ -1,0 +1,130 @@
+/* ==========================================================================
+   PlaceInput Styles - High-Precision Route Field & Autocomplete (Light Theme)
+   ========================================================================== */
+
+.wrapper {
+    position: relative;
+}
+
+/* Screen reader only */
+.srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
+
+.inputRow {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.leading {
+    display: grid;
+    place-items: center;
+    width: 24px;
+    flex-shrink: 0;
+}
+
+/* Modern Frosted Route Input */
+.input {
+    flex: 1;
+    min-width: 0;
+    height: 44px;
+    padding: 0 14px;
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 12px;
+    font: inherit;
+    font-size: 14px;
+    color: #0f172a;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 2px 6px rgba(15, 23, 42, 0.03);
+    transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.input::placeholder {
+    color: #94a3b8;
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--color-primary, #2563eb);
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.16), 0 4px 12px rgba(37, 99, 235, 0.08);
+}
+
+/* Active Row targeted by map click */
+.activeRow .input {
+    border-color: var(--color-primary, #2563eb);
+    background: #ffffff;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2), 0 4px 12px rgba(37, 99, 235, 0.08);
+}
+
+/* Autocomplete suggestions dropdown - Frosted Glass Card */
+.list {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 34px;
+    right: 0;
+    z-index: 1300;
+    margin: 0;
+    padding: 6px;
+    list-style: none;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(24px) saturate(190%);
+    -webkit-backdrop-filter: blur(24px) saturate(190%);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    border-radius: 14px;
+    box-shadow: 0 16px 40px -6px rgba(15, 23, 42, 0.16), 0 0 0 1px rgba(255, 255, 255, 0.8);
+    max-height: 280px;
+    overflow-y: auto;
+    animation: listPop 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes listPop {
+    from {
+        opacity: 0;
+        transform: translateY(6px) scale(0.98);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.item {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+}
+
+.item:hover {
+    background: rgba(37, 99, 235, 0.06);
+}
+
+.active {
+    background: rgba(37, 99, 235, 0.1);
+}
+
+.itemName {
+    font-size: 14px;
+    font-weight: 650;
+    color: #0f172a;
+}
+
+.itemAddress {
+    font-size: 12px;
+    color: #64748b;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

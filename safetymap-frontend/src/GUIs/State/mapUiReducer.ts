@@ -23,7 +23,8 @@ export type MapUiAction =
     | { type: "SELECT_PLACE"; place: GeoPlace }       // chọn từ thanh tìm kiếm / điểm đã lưu
     | { type: "MAP_CLICK"; place: GeoPlace }          // click lên bản đồ
     | { type: "CLOSE" }                               // đóng sidebar / xóa ô tìm kiếm
-    | { type: "OPEN_DIRECTIONS" }
+    | { type: "OPEN_DIRECTIONS"; defaultFrom?: GeoPlace | null }
+    | { type: "SET_MY_LOCATION"; place: GeoPlace }
     | { type: "EXIT_DIRECTIONS" }
     | { type: "SET_FIELD"; field: RouteField; place: GeoPlace | null }
     | { type: "FOCUS_FIELD"; field: RouteField }
@@ -61,13 +62,46 @@ export function mapUiReducer(state: MapUiState, action: MapUiAction): MapUiState
             return { mode: "idle" };
 
         case "OPEN_DIRECTIONS":
-            // Google: điểm đang xem trở thành ĐIỂM ĐẾN, con trỏ nằm ở ô điểm đi
+            // Google: điểm đang xem trở thành ĐIỂM ĐẾN
             if (state.mode === "place") {
-                return { mode: "directions", from: null, to: state.place, activeField: "from" };
+                return {
+                    mode: "directions",
+                    from: action.defaultFrom ?? null,
+                    to: state.place,
+                    activeField: action.defaultFrom ? "to" : "from",
+                };
             }
             if (state.mode === "idle") {
-                return { mode: "directions", from: null, to: null, activeField: "from" };
+                return {
+                    mode: "directions",
+                    from: action.defaultFrom ?? null,
+                    to: null,
+                    activeField: action.defaultFrom ? "to" : "from",
+                };
             }
+            return state;
+
+        case "SET_MY_LOCATION":
+            if (state.mode === "place") {
+                // Đang chọn 1 điểm (đích đến) -> bấm Vị trí của tôi:
+                // Tự động chuyển sang dẫn đường với Điểm đi = Vị trí của tôi, Điểm đến = Điểm vừa chọn
+                return {
+                    mode: "directions",
+                    from: action.place,
+                    to: state.place,
+                    activeField: "to",
+                };
+            }
+            if (state.mode === "directions") {
+                // Đang trong giao diện chỉ đường -> bấm Vị trí của tôi:
+                // Điền Vị trí của tôi vào ô Điểm đi (from)
+                return {
+                    ...state,
+                    from: action.place,
+                    activeField: state.to === null ? "to" : state.activeField,
+                };
+            }
+            // mode === "idle": Chưa chọn điểm nào -> giữ nguyên idle, vị trí đã lưu và hiển thị trên bản đồ
             return state;
 
         case "EXIT_DIRECTIONS":
