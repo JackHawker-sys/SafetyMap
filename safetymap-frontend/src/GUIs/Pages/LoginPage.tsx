@@ -8,6 +8,7 @@ import type { ApiError } from "../../Business/DAL/AuthApi";
 import { GoogleIcon } from "../Components/Common/Icons";
 import TosModal from "../Components/TosModal";
 import LanguageSwitcher from "../Components/LanguageSwitcher";
+import InteractiveMapPlayground from "../Components/Auth/InteractiveMapPlayground";
 import styles from "../../assets/styles/LoginPage.module.css";
 
 type LoginFormValues = {
@@ -37,7 +38,7 @@ function firstErrorMessage<T extends Record<string, unknown>>(errors: FieldError
 
 export default function LoginPage() {
     const { user, roles, error, clearError, login, signup } = useAuth();
-    const { t, lang } = useLanguage();
+    const { t } = useLanguage();
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -145,114 +146,10 @@ export default function LoginPage() {
     return (
         <div className={styles.pageContainer}>
             {/* ============================================================== */}
-            {/* 1. Left Hero Column: S.A.F.E.R Tactical Security Showcase      */}
+            {/* 1. Left Column: Interactive S.A.F.E.R Map Navigation Simulator */}
             {/* ============================================================== */}
             <div className={styles.heroSection}>
-                {/* Radar Animated Visual Background */}
-                <div className={styles.radarContainer}>
-                    <div className={styles.radarGridLines} />
-                    <div className={styles.radarRings}>
-                        <div className={styles.radarScanner} />
-                    </div>
-
-                    {/* Floating Tactical Beacons */}
-                    <div className={styles.tacticalBeacon1}>
-                        <span className={styles.beaconDot} />
-                        <span>RADAR SECTOR • 98.4% SAFE</span>
-                    </div>
-                    <div className={styles.tacticalBeacon2}>
-                        <span className={styles.beaconDot} />
-                        <span>AI INCIDENT DEFENSE • ACTIVE</span>
-                    </div>
-                    <div className={styles.tacticalBeacon3}>
-                        <span className={styles.beaconDot} />
-                        <span>LIVE TELEMETRY HUD</span>
-                    </div>
-                </div>
-
-                {/* Hero Header & Brand Capsule */}
-                <div className={styles.heroContent}>
-                    <div className={styles.brandCapsule}>
-                        <div className={styles.brandLogo}>
-                            <i className="fa-solid fa-shield-halved" />
-                        </div>
-                        <span className={styles.brandTitle}>
-                            <span className={styles.brandStatusDot} />
-                            S.A.F.E.R PLATFORM
-                        </span>
-                    </div>
-
-                    <h1 className={styles.heroHeading}>
-                        {lang === "vi" ? (
-                            <>Hệ Thống Lộ Trình <span className={styles.heroAccent}>An Toàn Thông Minh</span></>
-                        ) : (
-                            <>Intelligent <span className={styles.heroAccent}>Safe Route Platform</span></>
-                        )}
-                    </h1>
-
-                    <p className={styles.heroSubtext}>
-                        {lang === "vi"
-                            ? "Bảo vệ hành trình của bạn với mạng lưới radar thời gian thực, thuật toán phân tích rủi ro bằng AI và tối ưu tuyến đường sáng đèn."
-                            : "Safeguard your journeys with real-time radar networks, AI risk prediction algorithms, and well-lit optimal navigation."}
-                    </p>
-
-                    {/* Feature Cards Grid */}
-                    <div className={styles.featureList}>
-                        <div className={styles.featureCard}>
-                            <div className={styles.featureIconWrap}>
-                                <i className="fa-solid fa-route" />
-                            </div>
-                            <div>
-                                <div className={styles.featureTitle}>
-                                    {lang === "vi" ? "Tuyến đường an toàn đa tiêu chí" : "Multi-criteria Safe Routing"}
-                                </div>
-                                <div className={styles.featureDesc}>
-                                    {lang === "vi"
-                                        ? "Ưu tiên độ sáng đèn, mật độ lưu thông và né tránh điểm đen rủi ro 24h."
-                                        : "Prioritizes street illumination, traffic density, and 24h hazard avoidance."}
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className={styles.featureCard}>
-                            <div className={styles.featureIconWrap}>
-                                <i className="fa-solid fa-robot" />
-                            </div>
-                            <div>
-                                <div className={styles.featureTitle}>
-                                    {lang === "vi" ? "Kiểm duyệt & AI Radar tự động" : "Automated AI Radar Moderation"}
-                                </div>
-                                <div className={styles.featureDesc}>
-                                    {lang === "vi"
-                                        ? "Phát hiện sự cố và đối chiếu báo cáo lân cận để cảnh báo ngay trên bản đồ."
-                                        : "Detects hazards and cross-references citizen reports to warn instantly on the map."}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Hero Footer Stats */}
-                <div className={styles.heroFooter}>
-                    <div className={styles.statItem}>
-                        <span className={styles.statVal}>98.4%</span>
-                        <span className={styles.statLabel}>
-                            {lang === "vi" ? "Độ tin cậy AI" : "AI Confidence"}
-                        </span>
-                    </div>
-                    <div className={styles.statItem}>
-                        <span className={styles.statVal}>24/7</span>
-                        <span className={styles.statLabel}>
-                            {lang === "vi" ? "Giám sát trực tuyến" : "Live Telemetry"}
-                        </span>
-                    </div>
-                    <div className={styles.statItem}>
-                        <span className={styles.statVal}>0</span>
-                        <span className={styles.statLabel}>
-                            {lang === "vi" ? "Điểm mù dữ liệu" : "Blind Spots"}
-                        </span>
-                    </div>
-                </div>
+                <InteractiveMapPlayground />
             </div>
 
             {/* ============================================================== */}
@@ -329,7 +226,7 @@ export default function LoginPage() {
                                         <input
                                             type="email"
                                             className={styles.textInput}
-                                            placeholder="name@example.com"
+                                            placeholder="mail@example.com"
                                             autoComplete="email"
                                             {...loginForm.register("email", {
                                                 required: t("auth.emailRequired"),
@@ -410,7 +307,7 @@ export default function LoginPage() {
                                         <input
                                             type="text"
                                             className={styles.textInput}
-                                            placeholder="Nguyễn Văn A"
+                                            placeholder={t("auth.fullName")}
                                             autoComplete="name"
                                             {...signupForm.register("name", {
                                                 required: t("auth.nameRequired"),
@@ -427,7 +324,7 @@ export default function LoginPage() {
                                         <input
                                             type="email"
                                             className={styles.textInput}
-                                            placeholder="name@example.com"
+                                            placeholder="mail@example.com"
                                             autoComplete="email"
                                             {...signupForm.register("email", {
                                                 required: t("auth.emailRequired"),
@@ -538,7 +435,6 @@ export default function LoginPage() {
                                 </button>
                             </form>
                         )}
-
                     </div>
                 </div>
             </div>
