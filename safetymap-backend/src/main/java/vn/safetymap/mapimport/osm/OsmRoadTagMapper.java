@@ -68,7 +68,7 @@ public class OsmRoadTagMapper {
     private static final Pattern LANES = Pattern.compile("\\d{1,2}");
 
     private OsmRoadTagMapper() {
-        // static Heper only
+        // static helpers only
     }
 
     /**
@@ -104,7 +104,7 @@ public class OsmRoadTagMapper {
                 parseLanes(tags.get("lanes")), "roundabouts".equals(normalize(tags.get("junction")))));
 
     }
- /** "7", "7.5", "7,5", "7 m", "7 metres" -> metres; anything else, zero, or above MAX_WIDTH_M -> null. */
+    /** "7", "7.5", "7,5", "7 m", "7 metres" -> metres; anything else, zero, or above MAX_WIDTH_M -> null. */
     static Double parseWidth(String raw){
         if(raw == null){
             return null;
@@ -139,7 +139,7 @@ public class OsmRoadTagMapper {
         String name = raw.strip();
         return name.isEmpty() ?  null : name;
     }
-    public static String normalize(String value) {
+    private static String normalize(String value) {
         return value == null ? null : value.strip().toLowerCase(Locale.ROOT);
     }
 
