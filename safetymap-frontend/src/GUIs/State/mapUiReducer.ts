@@ -113,7 +113,9 @@ export function mapUiReducer(state: MapUiState, action: MapUiAction): MapUiState
             if (state.mode !== "directions") return state;
             const from = action.field === "from" ? action.place : state.from;
             const to = action.field === "to" ? action.place : state.to;
-            const activeField = action.place ? nextActive(from, to, action.field) : action.field;
+            const activeField = action.place
+                ? (action.field === state.activeField ? nextActive(from, to, action.field) : state.activeField)
+                : action.field;
             return { ...state, from, to, activeField };
         }
 
