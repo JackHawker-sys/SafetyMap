@@ -69,7 +69,7 @@ const DangerLayer = memo(function DangerLayer({ data }: { data: MapData }) {
                     <Popup>
                         <b>{inc.type}</b> ({inc.severity})<br />
                         {inc.description}<br />
-                        {inc.houseNumber && `Số ${inc.houseNumber}, `}Trần Văn Ơn
+                        {inc.houseNumber && `Số ${inc.houseNumber}, `}{inc.streetName}
                     </Popup>
                 </CircleMarker>
             ))}

@@ -10,4 +10,4 @@ export const VIETNAM_BOUNDS: LatLngBoundsExpression = [VN_SOUTH_WEST, VN_NORTH_E
 export const VN_BBOX = [VN_SOUTH_WEST[1], VN_SOUTH_WEST[0], VN_NORTH_EAST[1], VN_NORTH_EAST[0]].join(",");
 
 // Tâm mặc định: Phú Lợi (giai đoạn 1)
-export const DEFAULT_CENTER: [number, number] = [10.9822, 106.6719];
+export const DEFAULT_CENTER: [number, number] = [11.052740, 106.666485];

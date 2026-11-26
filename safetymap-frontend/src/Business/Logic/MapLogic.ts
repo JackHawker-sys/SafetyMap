@@ -2,7 +2,7 @@ import type {
     RoadSegment, DangerScore, Incident, IncidentSeverity, LineString,
 } from "../Models/MapModels";
 import { getDangerLevel, type DangerLevel } from "./DangerLevel";
-import { getRoadSegments, getDangerScores, getIncidents } from "../DAL/MapApi";
+import { getStreets, getRoadSegments, getDangerScores, getIncidents } from "../DAL/MapApi";
 
 // Dữ liệu đã xử lý xong, GUI chỉ việc vẽ
 export interface SegmentView {
@@ -23,6 +23,7 @@ export interface IncidentView {
     severity: IncidentSeverity;
     description: string;
     houseNumber: string | null;
+    streetName: string;
 }
 
 export interface MapData {
@@ -83,7 +84,11 @@ export function toSegmentViews(segments: RoadSegment[], scores: DangerScore[]): 
 }
 
 // Bản đồ công khai chỉ hiện sự cố đã xác minh
-export function toIncidentViews(incidents: Incident[]): IncidentView[] {
+export function toIncidentViews(
+    incidents: Incident[],
+    streets: { id: number; name: string }[] = [],
+): IncidentView[] {
+    const streetNames = new Map(streets.map((s) => [s.id, s.name]));
     return incidents
         .filter((i) => i.status === "VERIFIED")
         .map((i) => ({
@@ -94,18 +99,20 @@ export function toIncidentViews(incidents: Incident[]): IncidentView[] {
             severity: i.severity,
             description: i.description,
             houseNumber: i.house_number,
+            streetName: streetNames.get(i.street_id) ?? "Đường Demo",
         }));
 }
 
 // Hàm duy nhất GUI cần gọi
 export async function loadMapData(): Promise<MapData> {
-    const [segments, scores, incidents] = await Promise.all([
+    const [streets, segments, scores, incidents] = await Promise.all([
+        getStreets(),
         getRoadSegments(),
         getDangerScores(),
         getIncidents(),
     ]);
     return {
         segments: toSegmentViews(segments, scores),
-        incidents: toIncidentViews(incidents),
+        incidents: toIncidentViews(incidents, streets),
     };
 }
