@@ -21,7 +21,7 @@
       "id": 1,
       "province_id": 1,
       "parent_street_id": null,
-      "name": "Trần Văn Ơn",
+      "name": "TEST",
       "street_type": "ROAD"
     }
   ],
@@ -31,17 +31,23 @@
       "street_id": 1,
       "ward_id": 1,
       "segment_order": 1,
-      "start_latitude": 10.982572,
-      "start_longitude": 106.675314,
-      "end_latitude": 10.980179,
-      "end_longitude": 106.675711,
-      "length_m": 270,
+      "start_latitude": 11.055246,
+      "start_longitude": 106.665541,
+      "end_latitude": 11.055725,
+      "end_longitude": 106.667714,
+      "length_m": 243,
       "road_class": "SECONDARY",
       "road_shape": {
         "type": "LineString",
         "coordinates": [
-          [106.675314, 10.982572],
-          [106.675711, 10.980179]
+          [
+            106.665541,
+            11.055246
+          ],
+          [
+            106.667714,
+            11.055725
+          ]
         ]
       }
     },
@@ -50,17 +56,23 @@
       "street_id": 1,
       "ward_id": 1,
       "segment_order": 2,
-      "start_latitude": 10.980179,
-      "start_longitude": 106.675711,
-      "end_latitude": 10.975859,
-      "end_longitude": 106.675593,
-      "length_m": 481,
+      "start_latitude": 11.055725,
+      "start_longitude": 106.667714,
+      "end_latitude": 11.055888,
+      "end_longitude": 106.668379,
+      "length_m": 75,
       "road_class": "SECONDARY",
       "road_shape": {
         "type": "LineString",
         "coordinates": [
-          [106.675711, 10.980179],
-          [106.675593, 10.975859]
+          [
+            106.667714,
+            11.055725
+          ],
+          [
+            106.668379,
+            11.055888
+          ]
         ]
       }
     },
@@ -69,19 +81,405 @@
       "street_id": 1,
       "ward_id": 1,
       "segment_order": 3,
-      "start_latitude": 10.975859,
-      "start_longitude": 106.675593,
-      "end_latitude": 10.97093,
-      "end_longitude": 106.675335,
-      "length_m": 556,
+      "start_latitude": 11.055888,
+      "start_longitude": 106.668379,
+      "end_latitude": 11.049724,
+      "end_longitude": 106.669082,
+      "length_m": 690,
       "road_class": "SECONDARY",
       "road_shape": {
         "type": "LineString",
         "coordinates": [
-          [106.675593, 10.975859],
-          [106.675239, 10.97413],
-          [106.675518, 10.972984],
-          [106.675335, 10.97093]
+          [
+            106.668379,
+            11.055888
+          ],
+          [
+            106.669082,
+            11.049724
+          ]
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "street_id": 1,
+      "ward_id": 1,
+      "segment_order": 4,
+      "start_latitude": 11.049724,
+      "start_longitude": 106.669082,
+      "end_latitude": 11.047917,
+      "end_longitude": 106.669312,
+      "length_m": 202,
+      "road_class": "SECONDARY",
+      "road_shape": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.669082,
+            11.049724
+          ],
+          [
+            106.669312,
+            11.047917
+          ]
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "street_id": 1,
+      "ward_id": 1,
+      "segment_order": 5,
+      "start_latitude": 11.047917,
+      "start_longitude": 106.669312,
+      "end_latitude": 11.047933,
+      "end_longitude": 106.669484,
+      "length_m": 19,
+      "road_class": "SECONDARY",
+      "road_shape": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.669312,
+            11.047917
+          ],
+          [
+            106.669484,
+            11.047933
+          ]
+        ]
+      }
+    },
+    {
+      "id": 6,
+      "street_id": 1,
+      "ward_id": 1,
+      "segment_order": 6,
+      "start_latitude": 11.047933,
+      "start_longitude": 106.669484,
+      "end_latitude": 11.048143,
+      "end_longitude": 106.671281,
+      "length_m": 197,
+      "road_class": "SECONDARY",
+      "road_shape": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.669484,
+            11.047933
+          ],
+          [
+            106.671281,
+            11.048143
+          ]
+        ]
+      }
+    },
+    {
+      "id": 7,
+      "street_id": 1,
+      "ward_id": 1,
+      "segment_order": 7,
+      "start_latitude": 11.048143,
+      "start_longitude": 106.671281,
+      "end_latitude": 11.049186,
+      "end_longitude": 106.67245,
+      "length_m": 177,
+      "road_class": "SECONDARY",
+      "road_shape": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.671281,
+            11.048143
+          ],
+          [
+            106.671554,
+            11.048212
+          ],
+          [
+            106.671764,
+            11.048396
+          ],
+          [
+            106.67245,
+            11.049186
+          ]
+        ]
+      }
+    },
+    {
+      "id": 8,
+      "street_id": 1,
+      "ward_id": 1,
+      "segment_order": 8,
+      "start_latitude": 11.049186,
+      "start_longitude": 106.67245,
+      "end_latitude": 11.049686,
+      "end_longitude": 106.673121,
+      "length_m": 92,
+      "road_class": "SECONDARY",
+      "road_shape": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.67245,
+            11.049186
+          ],
+          [
+            106.673121,
+            11.049686
+          ]
+        ]
+      }
+    },
+    {
+      "id": 9,
+      "street_id": 1,
+      "ward_id": 1,
+      "segment_order": 9,
+      "start_latitude": 11.049686,
+      "start_longitude": 106.673121,
+      "end_latitude": 11.049244,
+      "end_longitude": 106.673459,
+      "length_m": 61,
+      "road_class": "SECONDARY",
+      "road_shape": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.673121,
+            11.049686
+          ],
+          [
+            106.673459,
+            11.049244
+          ]
+        ]
+      }
+    },
+    {
+      "id": 10,
+      "street_id": 1,
+      "ward_id": 1,
+      "segment_order": 10,
+      "start_latitude": 11.049244,
+      "start_longitude": 106.673459,
+      "end_latitude": 11.048043,
+      "end_longitude": 106.674339,
+      "length_m": 164,
+      "road_class": "SECONDARY",
+      "road_shape": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.673459,
+            11.049244
+          ],
+          [
+            106.674339,
+            11.048043
+          ]
+        ]
+      }
+    },
+    {
+      "id": 11,
+      "street_id": 1,
+      "ward_id": 1,
+      "segment_order": 11,
+      "start_latitude": 11.048043,
+      "start_longitude": 106.674339,
+      "end_latitude": 11.049791,
+      "end_longitude": 106.679124,
+      "length_m": 572,
+      "road_class": "SECONDARY",
+      "road_shape": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.674339,
+            11.048043
+          ],
+          [
+            106.677166,
+            11.049417
+          ],
+          [
+            106.677777,
+            11.049739
+          ],
+          [
+            106.678523,
+            11.049933
+          ],
+          [
+            106.678855,
+            11.049891
+          ],
+          [
+            106.679124,
+            11.049791
+          ]
+        ]
+      }
+    },
+    {
+      "id": 12,
+      "street_id": 1,
+      "ward_id": 1,
+      "segment_order": 12,
+      "start_latitude": 11.049791,
+      "start_longitude": 106.679124,
+      "end_latitude": 11.049491,
+      "end_longitude": 106.679837,
+      "length_m": 86,
+      "road_class": "SECONDARY",
+      "road_shape": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.679124,
+            11.049791
+          ],
+          [
+            106.679762,
+            11.049565
+          ],
+          [
+            106.679837,
+            11.049491
+          ]
+        ]
+      }
+    },
+    {
+      "id": 13,
+      "street_id": 1,
+      "ward_id": 1,
+      "segment_order": 13,
+      "start_latitude": 11.049491,
+      "start_longitude": 106.679837,
+      "end_latitude": 11.049175,
+      "end_longitude": 106.680304,
+      "length_m": 62,
+      "road_class": "SECONDARY",
+      "road_shape": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.679837,
+            11.049491
+          ],
+          [
+            106.680304,
+            11.049175
+          ]
+        ]
+      }
+    },
+    {
+      "id": 14,
+      "street_id": 1,
+      "ward_id": 1,
+      "segment_order": 14,
+      "start_latitude": 11.049175,
+      "start_longitude": 106.680304,
+      "end_latitude": 11.04858,
+      "end_longitude": 106.681194,
+      "length_m": 118,
+      "road_class": "SECONDARY",
+      "road_shape": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.680304,
+            11.049175
+          ],
+          [
+            106.681033,
+            11.048659
+          ],
+          [
+            106.681194,
+            11.04858
+          ]
+        ]
+      }
+    },
+    {
+      "id": 15,
+      "street_id": 1,
+      "ward_id": 1,
+      "segment_order": 15,
+      "start_latitude": 11.04858,
+      "start_longitude": 106.681194,
+      "end_latitude": 11.047296,
+      "end_longitude": 106.680272,
+      "length_m": 175,
+      "road_class": "SECONDARY",
+      "road_shape": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.681194,
+            11.04858
+          ],
+          [
+            106.680272,
+            11.047296
+          ]
+        ]
+      }
+    },
+    {
+      "id": 16,
+      "street_id": 1,
+      "ward_id": 1,
+      "segment_order": 16,
+      "start_latitude": 11.047296,
+      "start_longitude": 106.680272,
+      "end_latitude": 11.045758,
+      "end_longitude": 106.679172,
+      "length_m": 209,
+      "road_class": "SECONDARY",
+      "road_shape": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.680272,
+            11.047296
+          ],
+          [
+            106.679172,
+            11.045758
+          ]
+        ]
+      }
+    },
+    {
+      "id": 17,
+      "street_id": 1,
+      "ward_id": 1,
+      "segment_order": 17,
+      "start_latitude": 11.045758,
+      "start_longitude": 106.679172,
+      "end_latitude": 11.045153,
+      "end_longitude": 106.680046,
+      "length_m": 117,
+      "road_class": "SECONDARY",
+      "road_shape": {
+        "type": "LineString",
+        "coordinates": [
+          [
+            106.679172,
+            11.045758
+          ],
+          [
+            106.680046,
+            11.045153
+          ]
         ]
       }
     }
@@ -90,16 +488,40 @@
     {
       "id": 1,
       "segment_id": 1,
-      "score": 65.0,
-      "confidence_level": 0.8,
-      "incident_count": 2,
+      "score": 45,
+      "confidence_level": 0.85,
+      "incident_count": 1,
       "calculated_at": "2026-10-20T00:00:00Z"
     },
     {
       "id": 2,
       "segment_id": 3,
-      "score": 35.0,
-      "confidence_level": 0.6,
+      "score": 42,
+      "confidence_level": 0.75,
+      "incident_count": 1,
+      "calculated_at": "2026-10-20T00:00:00Z"
+    },
+    {
+      "id": 3,
+      "segment_id": 7,
+      "score": 72,
+      "confidence_level": 0.9,
+      "incident_count": 2,
+      "calculated_at": "2026-10-20T00:00:00Z"
+    },
+    {
+      "id": 4,
+      "segment_id": 11,
+      "score": 48,
+      "confidence_level": 0.8,
+      "incident_count": 2,
+      "calculated_at": "2026-10-20T00:00:00Z"
+    },
+    {
+      "id": 5,
+      "segment_id": 14,
+      "score": 68,
+      "confidence_level": 0.85,
       "incident_count": 1,
       "calculated_at": "2026-10-20T00:00:00Z"
     }
@@ -107,74 +529,128 @@
   "incidents": [
     {
       "id": 1,
-      "house_number": "12",
+      "house_number": null,
       "street_id": 1,
-      "neighborhood": "Khu phố Phú Lợi 6",
+      "neighborhood": "Thành phố mới Bình Dương",
       "ward_id": 1,
       "segment_id": 1,
-      "segment_position": 0.33,
-      "location_precision": "EXACT",
-      "description": "Va chạm giữa xe máy và ô tô tại ngã tư",
-      "severity": "HIGH",
-      "type": "ACCIDENT",
+      "segment_position": 0.5,
+      "location_precision": "STREET",
+      "description": "Đường thường xuyên có xe chạy ẩu, lấn lane, cần chú ý",
+      "severity": "MEDIUM",
+      "type": "OTHER",
       "status": "VERIFIED",
       "source": "USER_REPORT",
-      "latitude": 10.981782,
-      "longitude": 106.675445,
+      "latitude": 11.055485,
+      "longitude": 106.666628,
       "occurred_at": "2026-10-18T07:30:00Z"
     },
     {
       "id": 2,
       "house_number": null,
       "street_id": 1,
-      "neighborhood": null,
+      "neighborhood": "Thành phố mới Bình Dương",
       "ward_id": 1,
-      "segment_id": 1,
-      "segment_position": 0.73,
+      "segment_id": 3,
+      "segment_position": 0.45,
       "location_precision": "STREET",
-      "description": "Giật túi xách người đi bộ",
+      "description": "Va chạm nhẹ giờ tan tầm tại đoạn giao cắt",
       "severity": "MEDIUM",
-      "type": "ROBBERY",
+      "type": "ACCIDENT",
       "status": "VERIFIED",
-      "source": "NEWS_EXTRACTION",
-      "latitude": 10.975088,
-      "longitude": 106.6754,
-      "occurred_at": "2026-10-15T20:10:00Z"
+      "source": "USER_REPORT",
+      "latitude": 11.053114,
+      "longitude": 106.668695,
+      "occurred_at": "2026-10-17T17:20:00Z"
     },
     {
       "id": 3,
-      "house_number": "88",
+      "house_number": null,
       "street_id": 1,
-      "neighborhood": "Khu phố Phú Lợi 6",
+      "neighborhood": "Thành phố mới Bình Dương",
       "ward_id": 1,
-      "segment_id": 3,
-      "segment_position": 0.53,
+      "segment_id": 7,
+      "segment_position": 0.5,
       "location_precision": "EXACT",
-      "description": "Ngập nước sau mưa lớn, xe chết máy",
-      "severity": "LOW",
-      "type": "NATURAL_DISASTER",
+      "description": "Khúc cua khuất tầm nhìn, thường xảy ra va chạm",
+      "severity": "HIGH",
+      "type": "ACCIDENT",
       "status": "VERIFIED",
-      "source": "MANUAL",
-      "latitude": 10.978279,
-      "longitude": 106.675614,
-      "occurred_at": "2026-10-19T16:00:00Z"
+      "source": "USER_REPORT",
+      "latitude": 11.048304,
+      "longitude": 106.671659,
+      "occurred_at": "2026-10-16T08:15:00Z"
     },
     {
       "id": 4,
       "house_number": null,
       "street_id": 1,
-      "neighborhood": null,
+      "neighborhood": "Thành phố mới Bình Dương",
       "ward_id": 1,
-      "segment_id": 3,
-      "segment_position": 0.8,
+      "segment_id": 11,
+      "segment_position": 0.35,
       "location_precision": "STREET",
-      "description": "Người dùng báo có tai nạn, chưa xác minh",
+      "description": "Đoạn đường vắng và thiếu đèn chiếu sáng ban đêm",
       "severity": "MEDIUM",
+      "type": "ROBBERY",
+      "status": "VERIFIED",
+      "source": "NEWS_EXTRACTION",
+      "latitude": 11.049658,
+      "longitude": 106.677624,
+      "occurred_at": "2026-10-15T21:10:00Z"
+    },
+    {
+      "id": 5,
+      "house_number": null,
+      "street_id": 1,
+      "neighborhood": "Thành phố mới Bình Dương",
+      "ward_id": 1,
+      "segment_id": 11,
+      "segment_position": 0.75,
+      "location_precision": "EXACT",
+      "description": "Ngập nước cục bộ sau mưa lớn",
+      "severity": "LOW",
+      "type": "NATURAL_DISASTER",
+      "status": "VERIFIED",
+      "source": "MANUAL",
+      "latitude": 11.049902,
+      "longitude": 106.678772,
+      "occurred_at": "2026-10-19T16:00:00Z"
+    },
+    {
+      "id": 6,
+      "house_number": null,
+      "street_id": 1,
+      "neighborhood": "Thành phố mới Bình Dương",
+      "ward_id": 1,
+      "segment_id": 14,
+      "segment_position": 0.5,
+      "location_precision": "EXACT",
+      "description": "Giao lộ nhiều xe tải trọng lớn rẽ gấp",
+      "severity": "HIGH",
       "type": "ACCIDENT",
+      "status": "VERIFIED",
+      "source": "USER_REPORT",
+      "latitude": 11.048659,
+      "longitude": 106.681033,
+      "occurred_at": "2026-10-20T10:05:00Z"
+    },
+    {
+      "id": 7,
+      "house_number": null,
+      "street_id": 1,
+      "neighborhood": "Thành phố mới Bình Dương",
+      "ward_id": 1,
+      "segment_id": 16,
+      "segment_position": 0.5,
+      "location_precision": "STREET",
+      "description": "Mặt đường gồ ghề, đang chờ xác minh",
+      "severity": "LOW",
+      "type": "OTHER",
       "status": "PENDING",
       "source": "USER_REPORT",
-      "latitude": 10.971927,
-      "longitude": 106.675424,
+      "latitude": 11.046527,
+      "longitude": 106.679722,
       "occurred_at": "2026-10-21T05:00:00Z"
     }
   ]

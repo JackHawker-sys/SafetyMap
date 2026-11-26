@@ -2,6 +2,7 @@ import type { RoadSegment, DangerScore, Incident } from "../Models/MapModels";
 
 // Cấu trúc file public/db.json
 interface Db {
+    streets?: { id: number; name: string }[];
     road_segments: RoadSegment[];
     danger_scores: DangerScore[];
     incidents: Incident[];
@@ -20,6 +21,7 @@ function loadDb(): Promise<Db> {
     return dbPromise;
 }
 
+export const getStreets = async () => (await loadDb()).streets ?? [];
 export const getRoadSegments = async () => (await loadDb()).road_segments;
 export const getDangerScores = async () => (await loadDb()).danger_scores;
 export const getIncidents = async () => (await loadDb()).incidents;
